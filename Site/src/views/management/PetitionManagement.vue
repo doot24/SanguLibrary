@@ -98,30 +98,28 @@
         <table class="table table-borderless table-default">
           <thead>
             <tr>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">
                 სტატუსი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">
                 განცხადების ტიპი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">თარიღი</th>
-              <th scope="col" class="text-center" style="width: 10%">
-                განცხადების კომენტარი
-              </th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">თარიღი</th>
+            
+              <th scope="col" class="text-center" style="width: 40%">
                 განცხადების ტექსტი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">
                 განცხადების ავტორი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">
                 პირადი ნომერი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">
                 მობილურის ნომერი
               </th>
-              <th scope="col" class="text-center" style="width: 10%">მეილი</th>
-              <th scope="col" class="text-center" style="width: 10%">
+              <th scope="col" class="text-center" style="width: 15%">მეილი</th>
+              <th scope="col" class="text-center" style="width: 15%">
                 ქმედებები
               </th>
             </tr>
@@ -136,30 +134,27 @@
                   petition[0].petitionid === petition.petitionid,
               }"
             >
-            <td class="p-5">
+            <td class="p-5 pt-3">
                   <div v-bind:class="petition.status" class="bi-circle-fill" style="font-size: 1.3em;"></div>
                 </td>
-                <td class="statementText p-4 pt-5">
+                <td class="statementText text-center">
                   <span>{{ petition.usedtemplate[0].title }}</span>
                 </td>
-                <td class="p-4 pt-5 dateText">
+                <td class="dateText text-center">
                   <span>{{ formatDate(petition.timestamp) }}</span>
-                </td>
-                <td class="p-4 pt-5 ">
-                  <span>{{ petition.comment }}</span>
                 </td>
                 <td :id="petition._id" class="text-truncate" @click="toggleTruncation(petition._id)"
                 style="max-width: 300px; cursor: pointer;">{{ petition.text }}</td>
-                <td class="p-4 pt-5 ">
+                <td class="text-center">
                   <span>{{ petition.user[0].firstName + " " + petition.user[0].lastName}}</span>
                 </td>
-                <td class="p-4 pt-5 ">
+                <td class="text-center">
                   <span>{{ petition.user[0].publicNumber }}</span>
                 </td>
-                <td class="p-4 pt-5 ">
+                <td class="text-center">
                   <span>{{ petition.user[0].phoneNumber }}</span>
                 </td>
-                <td class="p-4 pt-5 ">
+                <td class="text-center">
                   <span>{{ petition.user[0].email }}</span>
                 </td>
             </tr>
@@ -358,23 +353,6 @@ table {
         this.isLoading = false;
       });
     },
-    setPageSize(size) {
-      this.pageSize = size;
-      if (this.searchInput) {
-        this.searchPetition();
-        return;
-      }
-      this.loadPetition();
-    },
-    selectPage(page) {
-      this.page = page;
-      if (this.searchInput) {
-        this.searchPetition();
-        return;
-      }
-      this.loadPetition();
-    },
-
     formatDate(timestamp) {
       var d = new Date(timestamp);
       const formattedDate = d.toLocaleDateString().split(',')[0];
@@ -387,8 +365,7 @@ table {
       } else {
         el.classList.add('text-truncate');
       }
-    },
-
+    }
   }
 }
 </script>
