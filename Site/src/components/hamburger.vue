@@ -204,7 +204,7 @@ button.selectedButton:focus {
   height: 100%;
   z-index: 100;
 
-  transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .menuRight {
@@ -215,7 +215,7 @@ button.selectedButton:focus {
   height: 100%;
   z-index: 100;
 
-  transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .showRight {

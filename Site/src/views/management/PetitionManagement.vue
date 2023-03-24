@@ -81,14 +81,14 @@
             type="text"
             v-model="searchInput"
             class="form-control rounded-pill"
-            v-on:keyup.enter="onEnter"
+            v-on:keyup.enter="searchFilthered()"
             placeholder="ძებნა..."
           />
           <div class="input-group-append" style="margin-left: 10px">
             <button
               class="btn text-light bi bi-search"
               style="font-size: 1.2em"
-              v-on:click="searchPetition()"
+              v-on:click="searchFilthered()"
               type="button"
             ></button>
           </div>
@@ -241,16 +241,18 @@ table {
 
         selectedPetition: {},
         hamburgerVisible: true,
-
+        
         confirmedDelete: false,
         isLoading: false,
-
+        
         userData: null,
-
+        
         SearchErrors: '',
         successMessage: '',
         errorMessage: '',
-        searchInput: ''
+
+        searchInput: '',
+        selectedOption: "publicNumber"
       }
     },
     mounted() {
@@ -259,7 +261,7 @@ table {
     watch: {
       searchInput(newValue) {
         if (!newValue.trim()) {
-          this.onInputEmpty()
+          this.getRecentPetitions()
         }
       }
     },
@@ -295,6 +297,10 @@ table {
       this.getRecentPetitions();
     },
     searchFilthered() {
+      if(!this.searchInput)
+      {
+        return;
+      }
       switch (this.selectedOption) {
         case "publicNumber":
           this.searchByPublicNumber();
@@ -312,12 +318,11 @@ table {
         page: this.page,
         pageSize: this.pageSize
       };
-      axios.get(getApiConnectionString() + '/search', {
+      axios.get(getApiConnectionString() + '/admin/petitionmanagement/search', {
         params,
         withCredentials: true,
       }).then((results) => {
         this.petitions = results.data.petitions;
-        console.log(this.petitions);
         this.paginationData = results.data;
         this.showSearchResults = true;
 
@@ -337,12 +342,11 @@ table {
         page: this.page,
         pageSize: this.pageSize
       };
-      axios.get(getApiConnectionString() + '/search', {
+      axios.get(getApiConnectionString() + '/admin/petitionmanagement/search', {
         params,
         withCredentials: true,
       }).then((results) => {
         this.petitions = results.data.petitions;
-        console.log(this.petitions);
         this.paginationData = results.data;
         this.showSearchResults = true;
 
