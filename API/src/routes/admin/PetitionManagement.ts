@@ -105,7 +105,6 @@ router.get("/", IsAuthenticated, HasRole("admin"), query("page").notEmpty().isNu
       });
     });
   }).catch((err) => {
-    console.error(err)
     res.status(400).json({
       status: "fail",
       message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
@@ -161,6 +160,19 @@ router.get("/search", IsAuthenticated, HasRole("admin") || HasRole("editor"), qu
       $limit: pageSize
     },
   ]).then((results : any) => {
+    console.log(results)
+
+    if(results.length === 0)
+    {
+      return res.status(200).json({
+        status: "success",
+        petitions: results,
+        totalPetitions: 0,
+        totalPages: 1,
+        currentPage: page
+      })
+    }
+
     PetitionSchema.countDocuments({owner : results[0].owner}).exec().then((totalPetitions) => {
       return res.status(200).json({
         status: "success",
