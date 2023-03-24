@@ -1,0 +1,345 @@
+/* theme */
+
+/* bootstrap experiment */
+.dark .btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #27252e;
+    --bs-btn-border-color: rgb(27, 27, 27);
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: #222027;
+    --bs-btn-hover-border-color: rgb(27, 27, 27);
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #27252e;
+    --bs-btn-active-border-color: #0a53be;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #333138;
+    --bs-btn-disabled-border-color: rgb(27, 27, 27);
+}
+
+/* begin, body */
+.dark .Bodybackground {
+    background-color: #1A181F;
+}
+
+.light .Bodybackground {
+    background-color: #f9f7ff;
+}
+
+/* end, body */
+
+/* begin, headerBar */
+.dark .colorToggle {
+    color: white;
+}
+
+.light .colorToggle {
+    color: #303030;
+}
+
+.dark .lightmodeToggle {
+    color: white;
+}
+
+.light .lightmodeToggle {
+    color: #FFD54F;
+}
+/* end, headerBar */
+
+/* Begin, Hamburger styles */
+.dark .hamburgerBackground {
+    background-color: rgba(35, 33, 40, 1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.light .hamburgerBackground {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.dark .hamburgetButton {
+    background-color: #27252c;
+    border: none;
+    color: white;
+}
+
+.light .hamburgetButton {
+    border-color: #adadad;
+    border-width: 0.1px;
+    color: white;
+}
+
+.hamburgetButtonHover:hover {
+    background-color: #C63B31;
+}
+
+.light .hamburgetButton span {
+    color: #27252c;
+}
+
+/* End, Hamburger styles */
+
+/* Begin, Table styles */
+.light table {
+    background-color: white;
+}
+
+.dark table {
+    background-color: #232128;
+}
+
+tbody tr#first td {
+    border-top: 1.87607px solid #000000;
+    border-collapse: separate;
+    border-spacing: 5px 5px;
+}
+
+.dark td,
+.dark th,
+.dark td {
+    color: white;
+}
+
+.light td,
+.light th,
+.light tr {
+    color: black;
+}
+
+/* End, Table styles */
+
+/* Begin, Home page styles */
+.dark .booksSection {
+    background-color: #322E3D;
+}
+
+.light .booksSection {
+    background-color: #ffffff;
+}
+
+.dark .footer {
+    background-color: #322E3D;
+}
+
+.light .footer {
+    background-color: #ffffff;
+}
+
+.dark .footer-section {
+    background: rgb(44, 39, 53);
+}
+
+.light .footer-section {
+    background: rgb(255, 255, 255);
+}
+
+.dark .footer-section h5 {
+    color: #ffffff;
+}
+
+.light .footer-section span,
+.footer-section h5 {
+    color: #322E3D;
+}
+
+
+/* End, Home page styles */
+
+/*Begin, Petitions Page Styles */
+.dark #button-statement span {
+    color: white;
+
+}
+
+.light #button-statement span {
+    color: #322E3D;
+}
+
+.dark #button-statement {
+    background: rgba(217, 217, 217, 0.04);
+    border: 0.815px solid #D9D9D9;
+    border-radius: 36.675px;
+}
+
+.light #button-statement {
+    background-color: rgb(255, 255, 255);
+    border: 0.815px solid #cfcfcf;
+    border-radius: 36.675px;
+}
+
+.dark .messageButton,
+.messageButton:hover {
+    border-color: white;
+    color: white;
+    font-size: 1.6em;
+    border-width: 2px;
+    width: 62.85px;
+    height: 62.85px;
+}
+
+.light .messageButton,
+.messageButton:hover {
+    border-color: rgb(68, 68, 68);
+    color: rgb(70, 70, 70);
+    font-size: 1.6em;
+    border-width: 2px;
+    width: 62.85px;
+    height: 62.85px;
+}
+
+.confirmed {
+    color: #236F00;
+}
+
+.rejected {
+    color: #D70E00;
+}
+
+.pending {
+    color: #EF7300;
+}
+/*End, Petitions Page Styles */
+
+/* begin, carousel styles */
+.dark .category-text {
+    color: white;
+}
+
+.light .category-text {
+    color: black;
+
+}
+
+.dark .category-icon {
+    color: white;
+    background-color: #6F6687;
+}
+
+.light .category-icon {
+    color: white;
+    background-color: #6F6687;
+}
+
+.dark .carouselButton {
+    background-color: transparent;
+    font-size: 2.2em;
+    border-style: solid;
+    border-color: white;
+    color: white;
+}
+
+.light .carouselButton {
+    background-color: transparent;
+    font-size: 2.2em;
+    border-style: solid;
+    border-color: #322E3D;
+    color: #36343b;
+}
+
+/* end, carousel styles */
+
+/* input field animation */
+.input_animated {
+    outline: none;
+}
+
+.input_animated:focus::-webkit-input-placeholder {
+    transform: translateY(-26px);
+    font-size: 10px;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+
+.input_animated:focus:-moz-placeholder {
+    transform: translateY(-26px);
+    font-size: 10px;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+
+.input_animated:focus::-moz-placeholder {
+    transform: translateY(-26px);
+    font-size: 10px;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+
+.input_animated:focus:-ms-input-placeholder {
+    transform: translateY(-26px);
+    font-size: 10px;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+
+/* Link Styles */
+.url {
+    color: #858585;
+    text-decoration: none;
+}
+
+.url:hover {
+    text-decoration: none;
+    color: #C4BFBF;
+}
+
+/* Table Styles */
+.table-default {
+    border-radius: 28.141px;
+}
+
+.table-default tr:hover {
+    background-color: rgb(62, 60, 70);
+    color: white;
+}
+
+.table-border {
+    border-top: 1.87607px solid #000000;
+    border-collapse: separate;
+    border-spacing: 5px 5px;
+}
+
+/* Button Styles */
+.button_transparent {
+    border: 1.35897px solid rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(255, 255, 255, 1);
+    border-radius: 19.0256px;
+    cursor: pointer;
+}
+
+.button_transparent:hover {
+    color: black;
+    background-color: rgb(255, 255, 255, 1);
+}
+
+/* scrollbar */
+:root {
+    --scrollbarBG: #27252c;
+    --thumbBG: #C63B31;
+}
+
+/* Applies the scrollbar styles globally */
+::-webkit-scrollbar {
+    width: 11px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--scrollbarBG);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbarBG);
+}
+
+/* Applies the scrollbar color to all scrollable elements */
+* {
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    scrollbar-width: thin;
+}
