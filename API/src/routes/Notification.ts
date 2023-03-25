@@ -17,11 +17,22 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
     let startIndex = (page - 1) * pageSize;
     let endIndex = page * pageSize;
 
+    let readStatus : Number = Number(req.query.read) || 0;
+
+    //by default get all messages that are week old.
+    let timeSpan : Number = Number(req.query.time) || 604800000;
+
+    const startTime = new Date(Date.now() - Number(timeSpan)); 
+    const startDate = startTime.getTime();  
+    
+    const endDate = Date.now();
+
     // add pagination stages to the pipeline
     const agg = [
         {
             '$match': {
-                'receiver': req.session.user.userid
+                'receiver': req.session.user.userid,
+                'read': readStatus
             }
         },
         {
@@ -33,7 +44,12 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
             }
         },
         {
-            '$unset': '__v'
+            '$match': {
+                'notification.created': {
+                    '$gte': startDate,
+                    '$lte' : endDate
+                }
+            }
         },
         {
             '$skip': startIndex
