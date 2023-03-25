@@ -160,15 +160,13 @@ router.get("/search", IsAuthenticated, HasRole("admin") || HasRole("editor"), qu
       $limit: pageSize
     },
   ]).then((results : any) => {
-    console.log(results)
-
     if(results.length === 0)
     {
       return res.status(200).json({
         status: "success",
         petitions: results,
         totalPetitions: 0,
-        totalPages: 1,
+        totalPages: 0,
         currentPage: page
       })
     }
