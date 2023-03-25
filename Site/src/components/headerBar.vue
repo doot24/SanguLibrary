@@ -2,21 +2,21 @@
   <div class="d-none p-2 menu d-md-flex justify-content-end">
     <div class="position-relative">
 
-      <calendar />
+      <!-- <calendar /> -->
       <button class="lightmodeToggle rounded menubutton" :class="buttonClass" @click="toggleButtonClass"
       style="font-size: 1.5em;"></button>
       <button class="colorToggle bi bi-bell rounded menubutton" style="font-size: 1.5em;" data-bs-toggle="dropdown"
       aria-expanded="false"></button>
       <span v-if="getUnreadAmount() != 0" class="position-absolute top-0 end-0 bi-circle-fill text-danger"
         style="font-size: 0.8em; line-height: 0.8em;"></span>
-      <div class="dropdown-menu dropdown-menu-end dropdown-lg" aria-labelledby="notificationDropdown"
+      <div  class="dropdown-menu dropdown-menu-end dropdown-lg" aria-labelledby="notificationDropdown"
         style="background-color: #322e3d">
-        <div style="list-style-type: none; overflow-y: scroll; height:400px;">
+        <div>
           <div style="width: 400px;" class="d-flex justify-content-between">
             <span class="text-light p-2">შეტყობინებები</span>
             <span class="text-light p-2">{{ getUnreadAmount() }} წაუკითხავი</span>
           </div>
-          <div class="table-border mt-2 mb-2"></div>
+          <div class="table-border mt-1 mb-1"></div>
 
           <li v-for="(meta) in notifications" :key="meta._id">
             <div class="dropdownItem dropdown-item d-flex flex-column" data-bs-toggle="modal"
@@ -24,7 +24,7 @@
               v-on:click="this.selectedNotificationMeta = meta; this.selectedNotification = meta.notification[0]; setRead()">
               <div class="d-flex justify-content-between">
                 <span style="color: #B3B3B3;">{{ meta.notification[0].title }}</span>
-                <span v-if="!meta.read" class="bi-circle-fill text-danger  align-self-end"
+                <span :class="{ 'text-danger': !meta.read, 'text-muted' : meta.read }" class="bi-circle-fill align-self-end"
                   style="font-size: 0.8em; line-height: 0.8em;"></span>
               </div>
               <span style="color:#716E6E">{{ formatDate(meta.notification[0].created) }}</span>
@@ -76,7 +76,7 @@
 
 .dropdownItem:hover {
   color: white;
-  background-color: #37353d;
+  background-color: #3e394b;
   cursor: pointer;
 }
 </style>
@@ -95,20 +95,23 @@ export default defineComponent({
   data() {
     return {
       page: 1,
-      PageSize: 20,
+      PageSize: 5,
       selectedNotification: {},
       selectedNotificationMeta: {},
 
       notifications: [],
 
       selectedDate: null,
+      read : 1,
+      time: 604800000,
 
       buttonClass: "bi bi-cloud-sun",
       theme: 'dark'
     }
   },
   mounted() {
-    this.getRecentNotifications();
+    this.getAllNotifications();
+
     const theme = Cookies.get('theme');
 
     if (theme) {
@@ -138,7 +141,7 @@ export default defineComponent({
       axios.post(getApiConnectionString() + '/notification/setread', body, {
         withCredentials: true,
       }).then((results) => {
-          this.getRecentNotifications();
+          this.getAllNotifications();
       }).catch((error) => {
       });
     },
@@ -158,31 +161,15 @@ export default defineComponent({
         document.documentElement.setAttribute('data-bs-theme', 'light')
 
       }
-
     },
 
     //CRUD
-    getRecentNotifications() {
+    getAllNotifications() {
       const params = {
         page: this.page,
         pageSize: this.PageSize
       };
-      axios.get(getApiConnectionString() + '/notification', {
-        params,
-        withCredentials: true,
-      }).then((results) => {
-        this.notifications = results.data.notifications;
-      }).catch((error) => {
-      });
-    },
-
-    getWithStatus(status) {
-      const params = {
-        read: status,
-        page: this.page,
-        pageSize: this.PageSize
-      };
-      axios.get(getApiConnectionString() + '/notification/status', {
+      axios.get(getApiConnectionString() + '/notification/', {
         params,
         withCredentials: true,
       }).then((results) => {
@@ -193,8 +180,8 @@ export default defineComponent({
 
     formatDate(timestamp) {
       var d = new Date(timestamp);
-  const formattedDate = d.toLocaleDateString();
-  return formattedDate;
+      const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
+      return formattedDate;
     },
 
     getUnreadAmount() {

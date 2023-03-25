@@ -16,11 +16,11 @@
           </div>
           <div class="col-12 my-3">
             <label for="time-dropdown" class="bi bi-clock text-light mb-3 d-block text-center"> დროის მიხედვით</label>
-            <select id="time-dropdown" class="d-flex smallButton p-3 w-100 text-center">
-              <option value="lastWeek" @click="setByTime('week')">ბოლო კვირა</option>
-              <option value="lastMonth" @click="setByTime('month')">ბოლო თვე</option>
-              <option value="lastYear" @click="setByTime('year')">ბოლო წელი</option>
-            </select>
+            <select id="time-dropdown" class="d-flex smallButton p-3 w-100 text-center" @change="setByTime($event.target.value)">
+    <option value="week">ბოლო კვირა</option>
+    <option value="month">ბოლო თვე</option>
+    <option value="year">ბოლო წელი</option>
+</select>
           </div>
         </div>
       </div>
@@ -119,36 +119,8 @@ export default {
   methods: {
     setReadValue(value) {
       this.read = value;
-  
+      
       this.getNotifications();
-    },
-    setByTime(span) {
-      switch (span) {
-        case "week":
-          this.time = 604800000;
-          break;
-  
-        case "month":
-          this.time = 2629743000;
-          break; 
-  
-          case "year":
-          this.time = 31556926000;
-          break;
-      }
-  
-      this.getNotifications();
-    },
-    setRead() {
-      const body = {
-        notificationid: this.selectedNotificationMeta._id
-      };
-      axios.post(getApiConnectionString() + '/notification/setread', body, {
-        withCredentials: true,
-      }).then((results) => {
-       this.getNotifications();
-      }).catch((error) => {
-      });
     },
     getNotifications() {
       const params = {
@@ -165,7 +137,33 @@ export default {
       }).catch((error) => {
       });
     },
-
+    setByTime(timeSpan) {
+      switch (timeSpan) {
+        case 'week':
+          this.time = 604800000;
+          break;
+  
+        case 'month':
+          this.time = 2629743000;
+          break; 
+  
+          case 'year':
+          this.time = 31556926000;
+          break;
+        }
+        this.getNotifications();
+    },
+    setRead() {
+      const body = {
+        notificationid: this.selectedNotificationMeta._id
+      };
+      axios.post(getApiConnectionString() + '/notification/setread', body, {
+        withCredentials: true,
+      }).then((results) => {
+       this.getNotifications();
+      }).catch((error) => {
+      });
+    },
     formatDate(timestamp) {
       var d = new Date(timestamp);
       const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
