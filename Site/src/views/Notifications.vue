@@ -1,30 +1,29 @@
 <template>
   <hamburger @click="hamburgerActive = !hamburgerActive" />
   <headerBar />
-  <div class="container-fluid d-flex flex-column min-vh-100 bodyClass py-5">
-    <div class="container d-flex flex-wrap justify-content-center" style="width: 99%;">
-      <div class="col-12 col-md-8 col-lg-6">
-        <h2 class="text-light mb-5 text-center"> შეტყობინებები </h2>
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-6 mb-3 mb-md-0">
-            <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }" class="smallButton p-3 w-100"
-              v-on:click="setReadValue(1); selectedSection = 'read'">წაკითხული</button>
-          </div>
-          <div class="col-12 col-md-6">
-            <button :class="{ 'smallButtonHighlight': selectedSection == 'notread' }" class="smallButton p-3 w-100"
-              v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
-          </div>
-          <div class="col-12 my-3">
-            <label for="time-dropdown" class="bi bi-clock text-light mb-3 d-block text-center"> დროის მიხედვით</label>
-            <select id="time-dropdown" class="d-flex smallButton p-3 w-100 text-center" @change="setByTime($event.target.value)">
-    <option value="week">ბოლო კვირა</option>
-    <option value="month">ბოლო თვე</option>
-    <option value="year">ბოლო წელი</option>
-</select>
-          </div>
-        </div>
-      </div>
+  <div class="container-fluid d-flex flex-column min-vh-100 bodyClass">
+    
+    <div class="row bodyClass py-5">
+  <div class="row" style="margin-bottom: 10px; margin-left: 60px;">
+    <h3 class="text-light mb-5">შეტყობინებები</h3>
+    <div class="col-md-5 col-xl-3 d-flex justify-content-between align-items-center">
+      <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }" class="smallButton p-3 flex-grow-2"
+        v-on:click="setReadValue(1); selectedSection = 'read'">წაკითხული</button>
+      <button :class="{ 'smallButtonHighlight': selectedSection == 'notread' }" class="smallButton p-3 flex-grow-2"
+        v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
     </div>
+    <div class="col-md-4 col-xl-3 mt-3 mt-md-0" style="margin-left: 400px;">
+      <select id="time-dropdown" class="d-flex justify-content-between smallButton p-3 text-center">
+        <option value="year">ყველა</option>
+        <option value="week">ბოლო კვირა</option>
+        <option value="month">ბოლო თვე</option>
+        <option value="year">ბოლო წელი</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
     <div class="mt-3 container-fluid vh-100 rounded d-flex flex-column gap-2 p-5"
       style="background-color: #322E3D; width: 90%; overflow-y: scroll;">
       <div v-for="(meta) in notifications" :key="meta._id"
@@ -54,18 +53,19 @@
       </div>
     </div>
   </div>
+ 
 </template>
 
 <style scoped>
 .bodyClass {
-  background-color: rgba(26, 24, 30, 1)
+  background-color: rgba(26, 24, 30, 1);
 }
 
 .smallButton {
   background: #322E3D;
   font-weight: 600;
   font-size: 15px;
-  line-height: 31px;
+  /* line-height: 31px; */
   border: none;
   color: #B3B3B3;
   border-radius: 40px;
@@ -75,6 +75,7 @@
   color: white;
   background: #d72926;
 }
+
 </style>
 
 <script>
