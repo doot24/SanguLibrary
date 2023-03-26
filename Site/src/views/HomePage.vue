@@ -8,46 +8,9 @@
     <div class="d-flex container-fluid flex-column">
       <!--Title section-->
       <titleBar />
-
-      <!--Begin, Search Bar-->
-      <div class="d-flex justify-content-center">
-        <div class="w-75 d-flex justify-content-center col-12 col-md-6">
-          <div class="w-100 rounded-pill d-flex align-self-center justify-content-center rounded gap-3 mt-3 p-2"
-            style="background: #322E3D;">
-
-            <div class="form-group">
-              <div class="dropdown">
-                <button class="bi-sliders btn text-light" type="button" id="categoryDropdown" data-bs-toggle="dropdown"
-                  aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em">
-                </button>
-                <div class="dropdown-menu text-dark" aria-labelledby="categoryDropdown">
-                  <a class="dropdown-item" :class="{ active: selectedOption === 'free' }" href="#"
-                    @click="selectedOption = 'free'">თავისუფალი</a>
-                  <a class="dropdown-item" :class="{ active: selectedOption === 'author' }" href="#"
-                    @click="selectedOption = 'author'">ავტორი</a>
-                  <a class="dropdown-item" :class="{ active: selectedOption === 'title' }" href="#"
-                    @click="selectedOption = 'title'">დასახელება</a>
-                </div>
-
-                <input type="hidden" v-model="selectedOption" id="category">
-              </div>
-            </div>
-
-            <div class="input-group d-flex align-items-center gap-2">
-              <input v-on:keyup.enter="onEnter" style="height: 40px;" class="form-control rounded-pill mr-sm-2"
-                v-model="searchInput" type="search" placeholder="Search" aria-label="Search" name="search">
-              <div class="input-group-append">
-                <button class="btn bi bi-search text-light" style="font-size:1.5em" v-on:click="searchBook()"
-                  type="submit"></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--End, Search Bar-->
-
+      <search class="w-75 align-self-center" :options="options" @cleared="onInputCleared" @search="handleSearch"/> 
       <!--Begin, Search Results-->
-      <div v-if="showSearchResults" class="mt-5 container-fluid p-3 rounded d-flex flex-column  min-vh-100"
+      <div v-if="showSearchResults" class="mt-5 container-fluid  p-3 rounded d-flex flex-column  min-vh-100"
         style=" background-color: #322E3D;">
         <div v-for="(book) in books">
 
@@ -71,7 +34,7 @@
       <!--End, Search Results-->
 
       <!--Begin, Books-->
-      <div v-if="!showSearchResults" class="booksSection p-3 mt-4 rounded d-flex flex-column"
+      <div v-if="!showSearchResults" class="booksSection shadow-sm p-3 mt-4 rounded d-flex flex-column"
         style="height:800px; overflow-y: scroll;">
         <carousel />
         <carousel />
@@ -91,7 +54,7 @@
       </div>
       <!--End, Section-->
     </div>
-    <footerBar />
+    <footerBar/>
   </div>
 </template>
 
@@ -107,6 +70,8 @@ import footerBar from '@/components/home/footerBar.vue'
 import carousel from '@/components/home/carousel.vue'
 import axios from 'axios'
 
+import search from '@/components/search.vue'
+
 import { getApiConnectionString } from '@/assets/js/utils'
 
 export default {
@@ -116,7 +81,8 @@ export default {
     headerBar,
     titleBar,
     footerBar,
-    carousel
+    carousel,
+    search
   },
   data() {
     return {
@@ -127,26 +93,26 @@ export default {
       isLoading: false,
       showSearchResults: false,
       hamburgerVisible: true,
-
       showDropdown: false,
       selectedOption: 'free',
-
+      options: [
+        { label: 'თავისუფალი', value: 'free' },
+        { label: 'ავტორი', value: 'author' },
+        { label: 'დასახელება', value: 'title' }
+      ],
       books: [],
       paginationData: {}
     }
   },
-  watch: {
-    searchInput(newValue) {
-      if (!newValue.trim()) {
-        this.books = [];
-        this.showSearchResults = false;
-      }
-    }
-  },
-
   methods: {
-    onEnter() {
+    handleSearch(event) {
+      this.selectedOption = event.selectedOption;
+      this.searchInput = event.searchInput;
       this.searchBook();
+    },
+    onInputCleared(event) {
+      this.books = [];
+      this.showSearchResults = false;
     },
     searchFilthered() {
       switch (this.selectedOption) {

@@ -19,32 +19,8 @@
           aria-label="Close"></button>
       </div>
 
-      <div class="d-flex justify-content-between align-items-center mb-3 ">
-
-        <div class="input-group d-flex align-items-center w-50 p-3 pt-2 pb-2 rounded-pill" style="background: #322E3D;">
-
-          <div class="form-group">
-
-            <div class="dropdown">
-              <button class="bi-sliders btn text-light" type="button" id="categoryDropdown" data-bs-toggle="dropdown"
-                aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em">
-              </button>
-              <div class="dropdown-menu text-dark" aria-labelledby="categoryDropdown">
-                <a class="dropdown-item" :class="{ active: selectedOption === 'publicNumber' }" href="#"
-                  @click="selectedOption = 'publicNumber'">პირადი ნომერი</a>
-                <a class="dropdown-item" :class="{ active: selectedOption === 'phoneNumber' }" href="#"
-                  @click="selectedOption = 'phoneNumber'">მობილურის ნომერი</a>
-              </div>
-              <input type="hidden" v-model="selectedOption" id="category">
-            </div>
-          </div>
-          <input type="text" v-model="searchInput" class="form-control rounded-pill" v-on:keyup.enter="onEnter"
-            placeholder="ძებნა...">
-          <div class="input-group-append" style="margin-left: 10px;">
-            <button class="btn text-light bi bi-search" style="font-size:1.2em" v-on:click="searchUser()"
-              type="button"></button>
-          </div>
-        </div>
+      <div class="d-flex justify-content-center align-items-center mb-3 ">
+        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch"/>
       </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
@@ -178,6 +154,7 @@ table {
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
+import search from '@/components/search.vue'
 import { getApiConnectionString } from '@/assets/js/utils'
 
 import axios from 'axios'
@@ -186,7 +163,8 @@ export default {
   components: {
     hamburger,
     loadingSpinner,
-    headerBar
+    headerBar,
+    search
   },
   data() {
     return {
@@ -206,15 +184,9 @@ export default {
       successMessage: '',
       errorMessage: '',
       searchInput: '',
-
+      
+      options : [{label : 'პირადი ნომერი',value : 'publicNumber'},{label : 'მობილური ნომერი',value : 'phoneNumber'}],
       selectedOption: 'publicNumber'
-    }
-  },
-  watch: {
-    searchInput(newValue) {
-      if (!newValue.trim()) {
-        this.onInputEmpty()
-      }
     }
   },
 
@@ -222,11 +194,14 @@ export default {
     this.loadUser()
   },
   methods: {
-    onEnter: function () {
-      this.loadUser();
+    handleSearch(event) {
+      this.searchInput = event.searchInput;
+      this.selectedOption = event.selectedOption;
+      this.searchUser();
     },
-    onInputEmpty() {
-      this.loadUser()
+    onInputCleared(event) {
+      this.searchInput = '';
+      this.loadUser();
     },
 
     searchUser() {

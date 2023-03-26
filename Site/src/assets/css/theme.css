@@ -1,5 +1,15 @@
 /* theme */
 
+.dark {
+    --scrollbarBG: #27252c;
+    --thumbBG: #C63B31;
+}
+
+.light {
+    --scrollbarBG: #f1f1f1;
+    --thumbBG: #C63B31;
+}
+
 /* bootstrap experiment */
 .dark .btn-primary {
     --bs-btn-color: #fff;
@@ -303,6 +313,37 @@ tbody tr#first td {
     border-spacing: 5px 5px;
 }
 
+/* search component */
+.dark
+.searchBox {
+    background-color: rgb(50, 46, 61);
+}
+
+.light
+.searchBox {
+    background-color: white;
+}
+
+.dark
+.searchButton:hover {
+    color : white;
+}
+
+.light
+.searchButton:hover {
+    color: #27252c ;
+}
+
+.dark
+.searchButton {
+    color: white;
+}
+
+.light
+.searchButton {
+    color: #27252c;
+}
+
 /* Button Styles */
 .button_transparent {
     border: 1.35897px solid rgba(255, 255, 255, 1);
@@ -318,10 +359,6 @@ tbody tr#first td {
 }
 
 /* scrollbar */
-:root {
-    --scrollbarBG: #27252c;
-    --thumbBG: #C63B31;
-}
 
 /* Applies the scrollbar styles globally */
 ::-webkit-scrollbar {
