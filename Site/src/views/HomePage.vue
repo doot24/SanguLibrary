@@ -10,7 +10,7 @@
       <titleBar />
       <search class="w-75 align-self-center" :options="options" @cleared="onInputCleared" @search="handleSearch"/> 
       <!--Begin, Search Results-->
-      <div v-if="showSearchResults" class="mt-5 container-fluid  p-3 rounded d-flex flex-column  min-vh-100"
+      <div v-if="showSearchResults" class="mt-4 container-fluid  p-3 rounded d-flex flex-column  min-vh-100"
         style=" background-color: #322E3D;">
         <div v-for="(book) in books">
 
