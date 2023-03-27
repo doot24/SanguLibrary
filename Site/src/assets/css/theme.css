@@ -249,6 +249,31 @@ tbody tr#first td {
 
 /* end, carousel styles */
 
+/* begin, notifications page */
+
+.dark
+.notificationDisplay {
+    background-color: #322E3D;
+    color: white;
+}
+
+.dark
+.notificationDisplay span {
+    color: #716E6E;
+}
+
+.light
+.notificationDisplay {
+    background-color: white;
+    color: black;
+}
+
+.light 
+.notificationDisplay span {
+    color: black;
+}
+/* end, notification page */
+
 /* input field animation */
 .input_animated {
     outline: none;
