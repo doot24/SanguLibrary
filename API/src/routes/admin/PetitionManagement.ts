@@ -43,9 +43,8 @@ router.post("/updatestatus", IsAuthenticated, HasRole("admin"), body("petitionid
     {
       throw new Error("petition not found");
     }
-    let author : string = String(req.session.user.firstName + " " + req.session.user.lastName);
     let text: string = `თქვენს მიერ გაკეთებული განცხადების სტატუსი განახლდა.`;
-    SendToUser(String(petition.owner), author, "განცხადების სტატუსი შეიცვალა", text);
+    SendToUser(String(petition.owner), "სისტემა", "განცხადების სტატუსი შეიცვალა", text);
     res.status(200).json({ status: "success" });
   }).catch(() => {
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
@@ -67,9 +66,8 @@ router.post("/setcomment", IsAuthenticated, HasRole("admin"), body("petitionid")
       throw new Error("petition not found");
     }
 
-    let author : string = String(req.session.user.firstName + " " + req.session.user.lastName);
     let text: string = `თქვენს მიერ გაკეთებული განცხადებას დაემატა ახალი კომენტარი.`;
-    SendToUser(String(petition.owner), author, "განცხადებას დაემატა კომენტარი", text)
+    SendToUser(String(petition.owner), "სისტემა", "განცხადებას დაემატა კომენტარი", text)
 
     res.status(200).json({ status: "success" });
   }).catch(() => {

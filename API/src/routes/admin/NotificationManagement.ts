@@ -22,20 +22,23 @@ router.get("/", IsAuthenticated, HasRole("admin") || HasRole("editor"), query("p
 
   // add pagination stages to the pipeline
   const agg = [
-      {
-         $match : {}
-      },
-      {
-          '$skip': startIndex
-      },
-      {
-          '$limit': pageSize
+    {
+      $match: {
+        author: { $ne: "სისტემა" }
       }
+    },
+    {
+      $skip: startIndex
+    },
+    {
+      $limit: pageSize
+    }
   ];
+  
 
   // execute the aggregation pipeline with pagination stages
   NotificationSchema.aggregate(agg).then((results) => {
-    NotificationSchema.countDocuments().exec().then((totalNotifications) => {
+    NotificationSchema.countDocuments({ author: { $ne: "სისტემა" } }).exec().then((totalNotifications) => {
           return res.status(200).json({
               status: "success",
               notifications: results,
