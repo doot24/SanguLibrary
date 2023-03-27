@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { INotification, INotificationMetadata } from '../interfaces/Notification';
 
 const notificationMetaDataSchema: Schema = new Schema<INotificationMetadata>({
@@ -18,3 +18,4 @@ const notificationSchema: Schema = new Schema<INotification>({
 
 export const NotificationMetaDataSchema = mongoose.model<INotificationMetadata>('NotificationMetaData', notificationMetaDataSchema);
 export const NotificationSchema = mongoose.model<INotification>('Notification', notificationSchema);
+

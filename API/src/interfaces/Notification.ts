@@ -24,7 +24,6 @@ export class Notification implements INotification {
 
 export class NotificationMetaData implements INotificationMetadata {
     _id: String = "";
-    created: Number = 0;
     attachedNotification: String = "";
     receiver: String = "";
     read: Boolean = false;
