@@ -1,47 +1,48 @@
 <template>
   <!-- Begin, PC version -->
 
-  <div class="menu d-none d-md-block">
+  <div id="hamburger" class="menu d-none d-md-block">
     <button class="navbar-toggler" @click="toggleMenu()">
       <div class="hamburger">
-        <figure :class="{ 'rotate': showMenu, 'endrotate': !showMenu }" id="hamburger_toggle" class="colorToggle bi bi-list icon"
-          style=" font-size:2em"></figure>
+        <figure :class="{ 'rotate': showMenu, 'endrotate': !showMenu }" id="hamburger_toggle"
+          class="colorToggle bi bi-list icon" style=" font-size:2em"></figure>
       </div>
     </button>
 
-    <div ref="element" class="hamburgerBackground menu" :class="{ 'show': showMenu }">
+    <div ref="element" id="hamburgerDisplay" class="hamburgerBackground menu" :class="{ 'show': showMenu }">
       <!-- Navbar links go here -->
       <div class="d-flex flex-column">
-<button @click="loadRoute('/user')" :class="{ 'selectedButton': $route.path === '/user' }"
-  class="mt-5 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
-  <div class="menuButtonIcons">
-    <img class="me-3 ms-3 rounded-circle" width="35" height="35" :src="userData.photo" />
-  </div>
-  <span>{{ userData.firstName + ' ' + userData.lastName }}</span>
-</button>
+        <button @click="loadRoute('/user')" :class="{ 'selectedButton': $route.path === '/user' }"
+          class="mt-5 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          <div class="menuButtonIcons">
+            <img class="me-3 ms-3 rounded-circle" width="35" height="35" :src="userData.photo" />
+          </div>
+          <span>{{ userData.firstName + ' ' + userData.lastName }}</span>
+        </button>
 
-<button @click="loadRoute('/')" :class="{ 'selectedButton': $route.path === '/' }"
-  class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
-  <div class="menuButtonIcons">
-    <span class="bi bi-house-fill me-3 ms-3" style="font-size: 2em;"></span>
-  </div>
-  <span class="mr-auto">მთავარი გვერდი</span>
-</button>
+        <button @click="loadRoute('/')" :class="{ 'selectedButton': $route.path === '/' }"
+          class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          <div class="menuButtonIcons">
+            <span class="bi bi-house-fill me-3 ms-3" style="font-size: 2em;"></span>
+          </div>
+          <span class="mr-auto">მთავარი გვერდი</span>
+        </button>
 
-<button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
-  class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
-  <div class="menuButtonIcons">
-    <span class="bi bi-plus me-2 ms-2" style="font-size: 3em;"></span>
-  </div>
-  <span class="mr-auto">განცხადებები</span>
-</button>
+        <button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
+          class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          <div class="menuButtonIcons">
+            <span class="bi bi-plus me-2 ms-2" style="font-size: 3em;"></span>
+          </div>
+          <span class="mr-auto">განცხადებები</span>
+        </button>
 
-<button @click="LogOut()" class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
-  <div class="menuButtonIcons">
-    <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
-  </div>
-  <span class="mr-auto">გასვლა</span>
-</button>
+        <button @click="LogOut()"
+          class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          <div class="menuButtonIcons">
+            <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
+          </div>
+          <span class="mr-auto">გასვლა</span>
+        </button>
 
 
         <!-- Begin, Editor panel -->
@@ -170,6 +171,7 @@
 .selectedButton {
   background-color: #C63B31;
 }
+
 button.selectedButton,
 button.selectedButton:active,
 button.selectedButton:focus {
@@ -204,7 +206,7 @@ button.selectedButton:focus {
   height: 100%;
   z-index: 100;
 
-  transition: all 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.5s ease;
 }
 
 .menuRight {
@@ -215,7 +217,7 @@ button.selectedButton:focus {
   height: 100%;
   z-index: 100;
 
-  transition: all 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.5s ease;
 }
 
 .showRight {
@@ -224,12 +226,12 @@ button.selectedButton:focus {
 
 .rotate {
   transform: rotate(90deg);
-  transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.5s ease;
 }
 
 .endrotate {
   transform: rotate(180deg);
-  transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: all 0.5s ease;
 }
 
 .show {
@@ -278,8 +280,20 @@ export default defineComponent({
 
     // closes the hamburger menu when mouse clicks outside of it.
     handleClickOutside(event) {
-      if (this.showMenu && this.$refs.element && !this.$refs.element.contains(event.target) && event.target.id !== 'hamburger_toggle') {
-        this.showMenu = !this.showMenu;
+      if (this.$refs.element && !this.$refs.element.contains(event.target)) {
+        if (event.target.id === 'hamburger_toggle') {
+          return;
+        }
+
+        if (event.target.id === 'hamburgerDisplay') {
+          return;
+        }
+
+        let elementName = event.target.tagName.toLowerCase();
+        if (elementName === 'button' || elementName === 'span' || elementName === 'img') {
+          return;
+        }
+        this.showMenu = false;
       }
     },
     LogOut() {
