@@ -13,7 +13,7 @@
             v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
         </div>
         <div class="col-md-4 col-xl-3 mt-3 mt-md-0" style="margin-left: 400px;">
-          <span class="bi bi-clock text-light" style="position: absolute; top: 100px;"> დროის მიხედვით</span>
+          <span class="bi bi-clock headerText" style="position: absolute; top: 100px;"> დროის მიხედვით</span>
           <select id="time-dropdown" class="d-flex justify-content-between smallButton p-3 text-center">
             <option value="week">ბოლო კვირა</option>
             <option value="month">ბოლო თვე</option>
@@ -29,7 +29,7 @@
       <div v-for="(meta) in notifications" :key="meta._id"
         v-on:click="this.selectedNotificationMeta = meta; this.selectedNotification = meta.notification[0]; setRead();"
         data-bs-toggle="modal" data-bs-target="#notificationModalsMobile" class="d-flex flex-column gap-2">
-        <h3>{{ meta.notification[0].title }}</h3>
+        <h3 class="headerText">{{ meta.notification[0].title }}</h3>
         <span>{{ formatDate(meta.notification[0].created) }}</span>
         <div class="table-border mt-3"></div>
       </div>
@@ -54,12 +54,12 @@
     </div>
   </div>
   <!-- Begin for phone screen -->
-  <div class="container-fluid d-flex flex-column d-block d-sm-block d-md-none min-vh-100 py-2 bodyClass">
+  <div class="container-fluid d-flex flex-column d-block d-sm-block d-md-none min-vh-100 py-2 Bodybackground">
 
-    <div class="container-fluid d-flex flex-column min-vh-100 bodyClass py-5">
+    <div class="container-fluid d-flex flex-column min-vh-100 Bodybackground py-5">
       <div class="container d-flex flex-wrap " style="width: 99%;">
         <div class="col-12 col-md-8 col-lg-6">
-          <h2 class="text-light mb-5 text-center"> შეტყობინებები </h2>
+          <h2 class="headerText mb-5 text-center"> შეტყობინებები </h2>
           <div class="row">
             <div class="col-12 col-md-6 mb-3 mb-md-0">
               <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }"
@@ -70,7 +70,7 @@
                 v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
             </div>
             <div class="col-12 my-3">
-              <label for="time-dropdown" class="bi bi-clock text-light mb-3 d-block text-center"> დროის მიხედვით</label>
+              <label for="time-dropdown" class="bi bi-clock headerText mb-3 d-block text-center"> დროის მიხედვით</label>
               <select id="time-dropdown" class="d-flex smallButton p-3 w-100 text-center"
                 @change="setByTime($event.target.value)">
                 <option value="week">ყველა</option>
@@ -89,7 +89,7 @@
         <div v-for="(meta) in notifications" :key="meta._id"
           v-on:click="this.selectedNotificationMeta = meta; this.selectedNotification = meta.notification[0]; setRead();"
           data-bs-toggle="modal" data-bs-target="#notificationModals" class="d-flex flex-column gap-2">
-          <h3 class="text-light">{{ meta.notification[0].title }}</h3>
+          <h3 class="headerText">{{ meta.notification[0].title }}</h3>
           <span style="color: #716E6E;">{{ formatDate(meta.notification[0].created) }}</span>
           <div class="table-border mt-3"></div>
         </div>
@@ -118,10 +118,24 @@
 </template>
 
 <style scoped>
-.bodyClass {
-  background-color: rgba(26, 24, 30, 1);
+
+.dark
+.notificationModal {
+  background-color: #322E3D;
 }
 
+.dark
+.headerText {
+  color:white;
+}
+
+
+.light
+.headerText {
+  color:#4e4e4e;
+}
+
+.dark
 .smallButton {
   background: #322E3D;
   font-weight: 600;
@@ -132,6 +146,24 @@
   border-radius: 40px;
 }
 
+.light
+.smallButton {
+  background: #f0f0f0;
+  font-weight: 600;
+  font-size: 15px;
+  /* line-height: 31px; */
+  border: none;
+  color: #4e4e4e;
+  border-radius: 40px;
+}
+
+.dark
+.smallButtonHighlight {
+  color: white;
+  background: #d72926;
+}
+
+.light
 .smallButtonHighlight {
   color: white;
   background: #d72926;

@@ -145,7 +145,7 @@
 
       <button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
         class="hamburgetButton hamburgetButtonHover menuButton d-flex justify-content-center align-items-center w-25">
-        <span class="bi bi-plus me-2 ms-2" style="font-size: 3em;"></span>
+        <span class="bi bi-file-text me-2 ms-2" style="font-size: 2em;"></span>
       </button>
 
       <button @click="loadRoute('/notifications')" :class="{ 'selectedButton': $route.path === '/notifications' }"

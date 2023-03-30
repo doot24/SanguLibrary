@@ -1,10 +1,10 @@
 <template>
-  <div class="d-none p-2 menu d-md-flex justify-content-end">
+  <div class="p-2 menu d-md-flex justify-content-end">
     <div class="position-relative">
 
-      <button class="lightmodeToggle rounded menubutton" :class="buttonClass" @click="toggleButtonClass"
+      <button class="lightmodeToggle colorToggle rounded menubutton" :class="buttonClass" @click="toggleButtonClass"
       style="font-size: 1.5em;"></button>
-      <button class="colorToggle bi bi-bell rounded menubutton" style="font-size: 1.5em;" data-bs-toggle="dropdown"
+      <button class=" colorToggle bi bi-bell rounded menubutton d-none d-md-inline" style="font-size: 1.5em;" data-bs-toggle="dropdown"
       aria-expanded="false"></button>
       <span v-if="getUnreadAmount() != 0" class="position-absolute top-0 end-0 bi-circle-fill text-danger"
         style="font-size: 0.8em; line-height: 0.8em;"></span>
