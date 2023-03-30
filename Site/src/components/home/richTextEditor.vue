@@ -1,7 +1,7 @@
 <template>
   <!-- Begin the editor body -->
   <div ref="editorWrapper">
-    <button @click="showEditor = !showEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
+    <button @click="showEditor = !showEditor" class="rounded-circle  messageButton bi-chat-left-text"></button>
 
     <div v-if="showEditor" class="editor-container">
       <div class="title1">დაწერეთ კომენტარი</div>

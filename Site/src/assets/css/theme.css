@@ -58,6 +58,22 @@
 /* end, headerBar */
 
 /* Begin, Hamburger styles */
+
+.dark
+.hamburgerTitle {
+    color: white;
+}
+
+
+.light
+.hamburgerTitle {
+    color: #27252c;
+}
+
+.light
+menuButtonIcons{
+    color: white;
+}
 .dark .hamburgerBackground {
     background-color: rgba(35, 33, 40, 1);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -75,9 +91,13 @@
 }
 
 .light .hamburgetButton {
-    border-color: #adadad;
-    border-width: 0.1px;
+    border-color: #adadad3f;
+    border-width: 0.05px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     color: white;
+    background-color: white;
 }
 
 .hamburgetButtonHover:hover {
@@ -93,6 +113,11 @@
 /* Begin, Table styles */
 .light table {
     background-color: white;
+}
+
+.light
+.table-hover {
+    background-color: rebeccapurple;
 }
 
 .dark table {
@@ -178,9 +203,10 @@ tbody tr#first td {
     border-radius: 36.675px;
 }
 
-.dark .messageButton,
-.messageButton:hover {
+.dark
+.messageButton {
     border-color: white;
+    background-color: transparent;
     color: white;
     font-size: 1.6em;
     border-width: 2px;
@@ -188,9 +214,9 @@ tbody tr#first td {
     height: 62.85px;
 }
 
-.light .messageButton,
-.messageButton:hover {
+.light .messageButton {
     border-color: rgb(68, 68, 68);
+    background-color: transparent;
     color: rgb(70, 70, 70);
     font-size: 1.6em;
     border-width: 2px;
@@ -208,6 +234,16 @@ tbody tr#first td {
 
 .pending {
     color: #EF7300;
+}
+
+.dark
+.sentPetitionsText {
+    color: #ffffff;
+}
+
+.light
+.sentPetitionsText {
+    color: #222027;
 }
 /*End, Petitions Page Styles */
 
@@ -327,9 +363,16 @@ tbody tr#first td {
     border-radius: 28.141px;
 }
 
+.dark
 .table-default tr:hover {
     background-color: rgb(62, 60, 70);
     color: white;
+}
+
+.light
+.table-default tr:hover {
+    background-color: rgb(248, 248, 248);
+    color: #27252c;
 }
 
 .table-border {
