@@ -1,100 +1,73 @@
 <template>
-  <!-- Begin the editor body -->
-  <div ref="editorWrapper">
-    <button @click="showEditor = !showEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
+  <div class="d-flex" style="border:none;">
+    <button @click="toggleEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
 
-    <div v-if="showEditor" class="editor-container">
-      <div class="title1">დაწერეთ კომენტარი</div>
-      <QuillEditor theme="snow" toolbar="#custom-toolbar">
-        <template #toolbar>
-          <div id="custom-toolbar">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-            <button class="ql-align" value="center"></button>
-            <button class="ql-align" value="right"></button>
-          </div>
-        </template>
-      </QuillEditor>
-      <!-- Beggin the დამატება button -->
-      <div class="editor-bottom">
-        <button class="btn btn-primary mb-3" style="position: absolute; bottom: 10px; right: 10px;background: rgba(240, 238, 238, 0.31);
-  border: 0.767857px solid #D70E00;
-  border-radius: 20.7321px; color:black;">დამატება</button>
+    <div v-if="showEditor" class="position-absolute top-50 start-50 translate-middle editor-container">
+      <button @click="toggleEditor" class="btn-close closeBtn position-absolute top-3 end-(-3)" aria-label="Close"></button>
+      <QuillEditor ref="editor" v-model="editorContent" theme="snow" :options="editorOptions" style="border:none"/>
+
+      <div class="editor-bottom position-absolute bottom-0 end-0">
+        <button @click="saveContent" class="btn btn-primary position-absolute bottom-0 end-0 mb-3 me-3 saveButton" style="background-color: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00; border-radius: 20.7321px; color: black;">დამატება</button>
       </div>
-      <!-- End button -->
-      <div class="changeStatus d-flex justify-content-center">
-        <fieldset>
-        <h5>სტატუსის შეცვლა</h5>
-      </fieldset>
-        <fieldset>
-        </fieldset>
+
+      <div class="changeStatus d-flex justify-content-center position-absolute bottom-0 start-0 mb-3 ms-3">
+
+          <h5 class="text-white">სტატუსის შეცვლა</h5>
+
       </div>
     </div>
   </div>
-  <!-- End editor -->
 </template>
 
 <script>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
-
 export default {
   components: { QuillEditor },
   data() {
     return {
       showEditor: false,
+      editorContent: '',
       editorOptions: {
         modules: {
-          toolbar: {
-            container: "#custom-toolbar",
-            handlers: {
-              align: this.handleAlign
-            }
-          }
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'align': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'font': [] }],
+          ]
         }
       }
     }
   },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutsideEditor);
+  methods: {
+    toggleEditor() {
+      this.showEditor = !this.showEditor;
+    },
+    saveContent() {
+      console.log(this.editorContent);
+      this.toggleEditor();
+    }
   },
   beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutsideEditor);
-  },
-  methods: {
-    handleClickOutsideEditor(event) {
-      if (this.showEditor && !this.$refs.editorWrapper.contains(event.target)) {
-        this.showEditor = false;
-      }
-    },
-    handleAlign(value){
-      const quill = this.$refs.quillEditor.quill;
-      const selection = quill.getSelection();
-      if(selection){
-        quill.format('align', value);
-      }
-    }
+    console.log(this.editorContent);
   }
 }
 </script>
 
 <style>
 .editor-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50vw;
+  width: 65vw;
   height: 500px;
   background-color: white;
   color: black;
   border-radius: 12.1857px;
   border: none;
+  border-bottom: none;
+  margin-top: 10%;
 }
-.title1{
+.closeBtn {
   position: absolute;
   top: 5px;
   right: 10px;
@@ -105,24 +78,17 @@ export default {
   outline: none;
   cursor: pointer;
 }
-.changeStatus{
-  width:330px; 
-  height:120px; 
-  border:1px solid black; 
-  position: absolute; 
-  bottom:10px; 
-  left:10px;
+
+.changeStatus {
+  width: 330px;
+  height: 120px;
+  border: 1px solid black;
   background-color: #322E3D;
   border: 1px solid #322E3D;
   border-radius: 15px;
-  color:#E0D9F1;
+  color: #E0D9F1;
 }
-fieldset {
-  border: none;
-  border-bottom: 2px solid #E0D9F1;
-}
-
-fieldset:last-of-type {
-  border-bottom: none;
+.ql-toolbar.ql-snow {
+  border:none;
 }
 </style>
