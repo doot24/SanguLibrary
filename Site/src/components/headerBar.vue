@@ -2,7 +2,6 @@
   <div class="d-none p-2 menu d-md-flex justify-content-end">
     <div class="position-relative">
 
-      <!-- <calendar /> -->
       <button class="lightmodeToggle rounded menubutton" :class="buttonClass" @click="toggleButtonClass"
       style="font-size: 1.5em;"></button>
       <button class="colorToggle bi bi-bell rounded menubutton" style="font-size: 1.5em;" data-bs-toggle="dropdown"
@@ -86,12 +85,8 @@ import { defineComponent } from 'vue';
 import { getApiConnectionString } from '@/assets/js/utils';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import calendar from '@/components/home/calendar.vue'
 export default defineComponent({
   name: 'headerBar',
-  components: {
-    calendar
-  },
   data() {
     return {
       page: 1,

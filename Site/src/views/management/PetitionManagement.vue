@@ -1,8 +1,8 @@
 <template>
+  
   <hamburger />
   <loadingSpinner v-if="isLoading" />
   <headerBar />
-
   <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
     <div id="tableContainer" class="mt-5 d-flex flex-column">
       <div v-if="SearchErrors" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -81,6 +81,9 @@
               <td class="text-center">
                 <span>{{ petition.user[0].email }}</span>
               </td>
+              <td>
+              <richTextEditor />
+            </td>
             </tr>
           </tbody>
         </table>
@@ -132,6 +135,7 @@ import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import search from '@/components/search.vue'
+import richTextEditor from '@/components/home/richTextEditor.vue'
 
 import { getApiConnectionString } from '@/assets/js/utils'
 
@@ -142,7 +146,8 @@ export default {
     hamburger,
     loadingSpinner,
     headerBar,
-    search
+    search,
+    richTextEditor
   },
   data() {
     return {
