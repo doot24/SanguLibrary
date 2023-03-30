@@ -12,10 +12,11 @@
     <div ref="element" id="hamburgerDisplay" class="hamburgerBackground menu" :class="{ 'show': showMenu }">
       <!-- Navbar links go here -->
       <div class="d-flex flex-column">
+        <span style="width:58%" class="hamburgerTitle align-self-center mt-3">დახურვა</span>
         <button @click="loadRoute('/user')" :class="{ 'selectedButton': $route.path === '/user' }"
-          class="mt-5 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          class="mt-3 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
           <div class="menuButtonIcons">
-            <img class="me-3 ms-3 rounded-circle" width="35" height="35" :src="userData.photo" />
+            <img class="me-3 ms-1 rounded-circle" width="35" height="35" :src="userData.photo" />
           </div>
           <span>{{ userData.firstName + ' ' + userData.lastName }}</span>
         </button>
@@ -23,7 +24,7 @@
         <button @click="loadRoute('/')" :class="{ 'selectedButton': $route.path === '/' }"
           class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
           <div class="menuButtonIcons">
-            <span class="bi bi-house-fill me-3 ms-3" style="font-size: 2em;"></span>
+            <span class="bi bi-house me-3 ms-1" style="font-size: 2em;"></span>
           </div>
           <span class="mr-auto">მთავარი გვერდი</span>
         </button>
@@ -31,26 +32,17 @@
         <button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
           class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
           <div class="menuButtonIcons">
-            <span class="bi bi-plus me-2 ms-2" style="font-size: 3em;"></span>
+            <span class="bi bi-file-text me-3 ms-1" style="font-size: 2em;"></span>
           </div>
           <span class="mr-auto">განცხადებები</span>
         </button>
-
-        <button @click="LogOut()"
-          class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
-          <div class="menuButtonIcons">
-            <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
-          </div>
-          <span class="mr-auto">გასვლა</span>
-        </button>
-
 
         <!-- Begin, Editor panel -->
         <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor')">
           <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-book-fill me-3 ms-3" style="font-size: 2em;"></span>
-            <span class="mr-auto">წიგნების მენეჯმენტი</span>
+            <span class="bi bi-box-seam me-3 ms-1" style="font-size: 2em;"></span>
+            <span class="mr-auto text-nowrap">რესურსების მენეჯმენტი</span>
           </button>
         </div>
         <!-- End, Editor panel -->
@@ -59,23 +51,31 @@
         <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('admin')">
           <button @click="loadRoute('/usermanagement')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-person-circle me-3 ms-3" style="font-size: 2em;"></span>
-            <span class="mr-auto">მომხმარებლის მენეჯმენტი</span>
+            <span class="bi bi-person-circle me-3 ms-1" style="font-size: 2em;"></span>
+            <span class="mr-auto text-nowrap">მომხმარებლის მენეჯმენტი</span>
           </button>
           <button @click="loadRoute('/notificationmanagement')"
             :class="{ 'selectedButton': $route.path === '/notificationmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-app-indicator me-3 ms-3" style="font-size: 2em;"></span>
+            <span class="bi bi-app-indicator me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">შეტყობინებების მენეჯმენტი</span>
           </button>
           <button @click="loadRoute('/petitionsmanagement')"
             :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-journal-bookmark me-3 ms-3" style="font-size: 2em;"></span>
+            <span class="bi bi-journal-bookmark me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">განცხადებების მენეჯმენტი</span>
           </button>
         </div>
         <!-- End, Admin panel -->
+
+        <button @click="LogOut()"
+          class="w-100 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          <div class="menuButtonIcons">
+            <span class="bi bi-door-open-fill me-3 ms-1" style="font-size: 2em;"></span>
+          </div>
+          <span class="mr-auto">გასვლა</span>
+        </button>
       </div>
     </div>
   </div>
@@ -87,26 +87,22 @@
     <div class="d-flex flex-column">
       <button @click="loadRoute('/user')" :class="{ 'selectedButton': $route.path === '/user' }"
         class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
-        <img id="profileImage" class="me-3 ms-3" width="35" height="35" :src="userData.photo" />
+        <img id="profileImage" class="me-2 ms-3" width="35" height="35" :src="userData.photo" />
         <span>{{ userData.firstName + ' ' + userData.lastName }}</span>
       </button>
       <div class="table-border"></div>
       <button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
         class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
-        <span class="bi bi-plus me-2 ms-2" style="font-size: 3em;"></span>
+        <span class="bi bi-file-text me-3 ms-3" style="font-size: 2em;"></span>
         <span class="mr-auto">განცხადებები</span>
       </button>
 
-      <button @click="LogOut()" class="hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
-        <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
-        <span class="mr-auto">გასვლა</span>
-      </button>
-
+      
       <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor')">
         <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-          <span class="bi bi-book-fill me-3 ms-3" style="font-size: 2em;"></span>
-          <span class="mr-auto">წიგნების მენეჯმენტი</span>
+          <span class="bi bi-box-seam me-3 ms-3" style="font-size: 2em;"></span>
+          <span class="mr-auto">რესურსების მენეჯმენტი</span>
         </button>
       </div>
 
@@ -125,13 +121,17 @@
         </button>
 
         <button @click="loadRoute('/petitionsmanagement')"
-          :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
-          class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-          <span class="bi bi-journal-bookmark me-3 ms-3" style="font-size: 2em;"></span>
-          <span class="mr-auto">განცხადებების მენეჯმენტი</span>
-        </button>
+        :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
+        class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
+        <span class="bi bi-journal-bookmark me-3 ms-3" style="font-size: 2em;"></span>
+        <span class="mr-auto">განცხადებების მენეჯმენტი</span>
+      </button>
+      <button @click="LogOut()" class="w-100 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
+        <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
+        <span class="mr-auto">გასვლა</span>
+      </button>
       </div>
-
+      
     </div>
   </div>
 
@@ -154,7 +154,7 @@
       </button>
 
       <button @click="showMobileMenu = !showMobileMenu"
-        class="hamburgetButton menuButton d-md-none d-flex justify-content-center align-items-center w-25">
+        class="hamburgetButton colorToggle menuButton d-md-none d-flex justify-content-center align-items-center w-25">
         <span :class="{ 'rotate': showMobileMenu, 'endrotate': !showMobileMenu }" class="bi bi-list me-2 ms-3"
           style="font-size: 2em;"></span>
       </button>
@@ -198,11 +198,24 @@ button.selectedButton:focus {
   position: fixed;
 }
 
+.navbar-toggler figure:hover {
+  color: #d6625a;
+}
+
+.navbar-title {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  z-index: 101;
+  position: fixed;
+}
+
+
 .menu {
   position: fixed;
   top: 0;
   left: -100%;
-  width: 330px;
+  width: 290px;
   height: 100%;
   z-index: 100;
 

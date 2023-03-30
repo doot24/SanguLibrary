@@ -13,17 +13,17 @@
         </button>
       </div>
       <div style="margin-left: 20px;" class="mt-5 mb-3">
-        <span class="text-light">გაგზავნილი განცხადებები </span>
+        <span class="sentPetitionsText">გაგზავნილი განცხადებები </span>
       </div>
       <div class="d-flex justify-content-start">
         <div class="table-responsive w-100">
           <table class="table table-borderless table-default">
             <thead>
               <tr>
-                <th style="width: 20%;" class="p-4 text-light">სტატუსი</th>
-                <th class="p-4 text-light">განცხადების ტიპი</th>
-                <th class="p-4 text-light">თარიღი</th>
-                <th class="p-4 text-light"></th>
+                <th style="width: 20%;" class="p-4">სტატუსი</th>
+                <th class="p-4">განცხადების ტიპი</th>
+                <th class="p-4">თარიღი</th>
+                <th class="p-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
                   <span>{{ formatDate(petition.timestamp) }}</span>
                 </td>
                 <td class="pt-4 w-25"><button @click="selectedPetition = petition" data-bs-toggle="modal" data-bs-target="#largeModal"
-                    class="rounded-circle btn messageButton bi-chat-left-text"></button></td>
+                    class="rounded-circle messageButton bi-chat-left-text"></button></td>
               </tr>
 
             </tbody>

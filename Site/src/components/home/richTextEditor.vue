@@ -1,10 +1,7 @@
 <template>
-  <div class="d-flex" style="border:none;">
-    <button @click="toggleEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
-
-    <div v-if="showEditor" class="position-absolute top-50 start-50 translate-middle editor-container">
-      <button @click="toggleEditor" class="btn-close closeBtn position-absolute top-3 end-(-3)" aria-label="Close"></button>
-      <QuillEditor ref="editor" v-model="editorContent" theme="snow" :options="editorOptions" style="border:none"/>
+  <!-- Begin the editor body -->
+  <div ref="editorWrapper">
+    <button @click="showEditor = !showEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
 
       <div class="editor-bottom position-absolute bottom-0 end-0">
         <button @click="saveContent" class="btn btn-primary position-absolute bottom-0 end-0 mb-3 me-3 saveButton" style="background-color: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00; border-radius: 20.7321px; color: black;">დამატება</button>
