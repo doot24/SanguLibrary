@@ -63,7 +63,7 @@
           <button @click="loadRoute('/petitionsmanagement')"
             :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-journal-bookmark me-3 ms-1" style="font-size: 2em;"></span>
+            <span class="bi bi-file-text me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">განცხადებების მენეჯმენტი</span>
           </button>
         </div>
