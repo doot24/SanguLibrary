@@ -12,6 +12,7 @@ import PetitionManagement from '../views/management/PetitionManagement.vue'
 
 import {
     isAuthenticated,
+    requireRoles,
     requireAuth,
     redirectIfAuth,
     requireRole
@@ -37,12 +38,12 @@ const routes = [
     {
         path: '/bookmanagement',
         component: BookManagement,
-        beforeEnter: requireRole('editor')
+        beforeEnter: requireRoles(['editor','admin'])
     },
     {
         path: '/notificationmanagement',
         component: NotificationManagement,
-        beforeEnter: requireRole('admin')
+        beforeEnter: requireRoles(['editor','admin'])
     },
     {
         path: '/petitions',
@@ -57,12 +58,12 @@ const routes = [
     {
         path: '/usermanagement',
         component: UserManagement,
-        beforeEnter: requireRole('admin')
+        beforeEnter: requireRoles(['editor','admin', 'employee'])
     },
     {
         path: '/petitionsmanagement',
         component: PetitionManagement,
-        beforeEnter: requireRole('admin')
+        beforeEnter: requireRoles(['editor','admin', 'employee'])
     }
 ]
 

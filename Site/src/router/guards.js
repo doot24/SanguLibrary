@@ -50,10 +50,29 @@ function requireRole(role, to, from,) {
     }
   }
   
+  function requireRoles(roles) {
+    return function(to, from, next) {
+      isAuthenticated().then((authenticated) => {
+        if (authenticated) {
+          const userRoles = store.getters.GetUser.roles;
+          const match = userRoles.some((userRole) => roles.includes(userRole));
+          if (match) {
+            next();
+          } else {
+            next({ path: '/' });
+          }
+        } else {
+          next({ path: '/login' });
+        }
+      });
+    }
+  }
+  
 
 export {
     isAuthenticated,
     requireAuth,
     redirectIfAuth,
-    requireRole
+    requireRole,
+    requireRoles
 };

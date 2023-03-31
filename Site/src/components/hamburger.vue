@@ -36,7 +36,7 @@
         </button>
 
         <!-- Begin, Editor panel -->
-        <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor')">
+        <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')">
           <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-box-seam me-3 ms-1" style="font-size: 2em;"></span>
@@ -46,19 +46,19 @@
         <!-- End, Editor panel -->
 
         <!-- Begin, Admin panel -->
-        <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('admin')">
-          <button @click="loadRoute('/usermanagement')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
+        <div class="d-flex align-items-center flex-column">
+          <button @click="loadRoute('/usermanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-person-circle me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">მომხმარებლის მენეჯმენტი</span>
           </button>
-          <button @click="loadRoute('/notificationmanagement')"
+          <button @click="loadRoute('/notificationmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor')"
             :class="{ 'selectedButton': $route.path === '/notificationmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-app-indicator me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">შეტყობინებების მენეჯმენტი</span>
           </button>
-          <button @click="loadRoute('/petitionsmanagement')"
+          <button @click="loadRoute('/petitionsmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')"
             :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-file-text me-3 ms-1" style="font-size: 2em;"></span>
@@ -96,7 +96,7 @@
       </button>
 
       
-      <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor')">
+      <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')">
         <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
           <span class="bi bi-box-seam me-3 ms-3" style="font-size: 2em;"></span>
@@ -104,21 +104,21 @@
         </button>
       </div>
 
-      <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('admin')">
+      <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')">
         <button @click="loadRoute('/usermanagement')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
           <span class="bi bi-person-circle me-3 ms-3" style="font-size: 2em;"></span>
           <span class="mr-auto">მომხმარებლის მენეჯმენტი</span>
         </button>
 
-        <button @click="loadRoute('/notificationmanagement')"
+        <button @click="loadRoute('/notificationmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor')"
           :class="{ 'selectedButton': $route.path === '/notificationmanagement' }"
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
           <span class="bi bi-app-indicator me-3 ms-3" style="font-size: 2em;"></span>
           <span class="mr-auto">შეტყობინებების მენეჯმენტი</span>
         </button>
 
-        <button @click="loadRoute('/petitionsmanagement')"
+        <button @click="loadRoute('/petitionsmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')"
         :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
         class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
         <span class="bi bi-journal-bookmark me-3 ms-3" style="font-size: 2em;"></span>

@@ -32,8 +32,8 @@
               <th scope="col" class="text-center" style="width: 10%;">მეილი</th>
               <th scope="col" class="text-center" style="width: 10%;">პირადი ნომერი</th>
               <th scope="col" class="text-center" style="width: 10%;">მობილურის ნომერი</th>
-              <th scope="col" class="text-center" style="width: 10%;">როლები</th>
-              <th scope="col" class="text-center" style="width: 10%;">ქმედებები</th>
+              <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">როლები</th>
+              <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">ქმედებები</th>
             </tr>
           </thead>
           <tbody>
@@ -49,7 +49,7 @@
               <td class="text-center">{{ user.email }}</td>
               <td class="text-center">{{ user.publicNumber }}</td>
               <td class="text-center">{{ user.phoneNumber }}</td>
-              <td>
+              <td v-if="user.roles.includes('admin')">
                 <!--<li v-for="role in user.roles" :key="role">{{ translateRole(role) }}</li> -->
                 <div class="form-check form-switch">
                   <input class="form-check-input" :checked="user.roles.includes('admin')"
@@ -67,7 +67,7 @@
                   <label class="form-check-label" for="flexSwitchCheckDefault">თანამშრომელი</label>
                 </div>
               </td>
-              <td>
+              <td v-if="user.roles.includes('admin')">
                 <div class="d-flex justify-content-center align-content-center gap-2">
                   <button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-light bi bi-trash3-fill"
                     v-on:click="selectedUser = user"></button>
@@ -161,7 +161,7 @@ import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import search from '@/components/search.vue'
 import { getApiConnectionString } from '@/assets/js/utils'
-
+ 
 import axios from 'axios'
 
 export default {
@@ -183,7 +183,7 @@ export default {
       confirmedDelete: false,
       isLoading: false,
 
-      userData: null,
+      userData: {},
 
       SearchErrors: '',
       successMessage: '',
@@ -194,7 +194,9 @@ export default {
       selectedOption: 'publicNumber'
     }
   },
-
+  created () {
+    this.userData = this.$store.getters.GetUser
+  },
   mounted() {
     this.loadUser()
   },
