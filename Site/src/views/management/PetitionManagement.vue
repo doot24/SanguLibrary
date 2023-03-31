@@ -1,14 +1,14 @@
 <template>
-  
   <hamburger />
   <loadingSpinner v-if="isLoading" />
   <headerBar />
+
   <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
     <div id="tableContainer" class="mt-5 d-flex flex-column">
-      <div v-if="SearchErrors" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-info-circle-fill"></i>
-        {{ SearchErrors }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="SearchErrors = ''"
+        {{ errorMessage }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
           aria-label="Close"></button>
       </div>
 
@@ -20,7 +20,7 @@
       </div>
 
       <div class="d-flex justify-content-center align-items-center mb-3">
-        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch"/>
+        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
@@ -82,12 +82,14 @@
                 <span>{{ petition.user[0].email }}</span>
               </td>
               <td>
-              <richTextEditor />
-            </td>
+                <div class="d-flex justify-content-center align-content-center gap-2">
+                  <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-light bi bi-pencil-square"
+                    v-on:click="selectPetition(petition)"></button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
-        <div></div>
       </div>
       <!-- Begin, Pagination -->
       <div class="d-flex flex-row align-content-center gap-3">
@@ -117,6 +119,48 @@
       </div>
       <!-- End, Pagination -->
     </div>
+
+    <!-- Begin, Edit modal -->
+    <div style="height:300px" class="modal fade h-100" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">განცხადების რედაქტირება</h5>
+            <button type="button" @click="deselectPetition()" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mt-2 d-flex flex-column">
+              <textarea v-model="comment" class="align-self-center" cols="45" rows="12" style="resize:none" />
+              <h5 class="modal-title mt-2 mb-2" id="exampleModalLabel">სტატუსის რედაქტირება</h5>
+
+              <div class="form-check">
+                <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
+                  class="form-check-input" type="radio">
+                <label class="form-check-label">
+                  დადასტურება
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" @click="status = 'rejected'"
+                  :checked="status === 'rejected'">
+                <label class="form-check-label">
+                  უარყოფა
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click=deselectPetition() class="btn btn-secondary"
+              data-bs-dismiss="modal">დახურვა</button>
+            <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary">შენახვა</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End, Edit modal -->
+
   </div>
 </template>
 
@@ -135,7 +179,6 @@ import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import search from '@/components/search.vue'
-import richTextEditor from '@/components/home/richTextEditor.vue'
 
 import { getApiConnectionString } from '@/assets/js/utils'
 
@@ -146,8 +189,7 @@ export default {
     hamburger,
     loadingSpinner,
     headerBar,
-    search,
-    richTextEditor
+    search
   },
   data() {
     return {
@@ -168,7 +210,10 @@ export default {
       successMessage: '',
       errorMessage: '',
 
-      options : [{label : 'პირადი ნომერი',value : 'publicNumber'},{label : 'მობილური ნომერი',value : 'phoneNumber'}],
+      status: '',
+      comment: '',
+
+      options: [{ label: 'პირადი ნომერი', value: 'publicNumber' }, { label: 'მობილური ნომერი', value: 'phoneNumber' }],
       searchInput: '',
       selectedOption: "publicNumber"
     }
@@ -195,6 +240,18 @@ export default {
       this.getRecentPetitions();
     },
 
+    selectPetition(petition) {
+      this.selectedPetition = petition;
+      this.comment = petition.comment;
+      this.status = petition.status;
+    },
+
+    deselectPetition() {
+      this.selectedPetition = {};
+      this.comment = '';
+      this.status = '';
+    },
+
     // CRUD
     getRecentPetitions() {
       const params = {
@@ -208,13 +265,34 @@ export default {
         withCredentials: true,
       }).then((results) => {
         this.petitions = results.data.petitions;
-        console.log(this.petitions);
         this.paginationData = results.data;
         this.isLoading = false;
       }).catch((error) => {
-        this.AddErrorMessage = error.response.data.message;
+        this.errorMessage = error.response.data.message;
         this.isLoading = false;
       });
+    },
+    updatePetition() {
+      this.isLoading = true;
+
+      this.successMessage = '';
+      this.errorMessage = '';
+
+      axios.post(getApiConnectionString() + '/admin/petitionmanagement/update', {
+        petitionid: this.selectedPetition._id,
+        status: this.status,
+        comment: this.comment
+      }, {
+        withCredentials: true,
+      }).then((results) => {
+        this.successMessage = 'კომენტარი გაიგზავნა!';
+        this.isLoading = false;
+        this.getRecentPetitions();
+        this.deselectPetition();
+      }).catch((error) => {
+        this.errorMessage = error.response.data.message;
+        this.isLoading = false;
+      })
     },
     setPageSize(size) {
       this.pageSize = size;
