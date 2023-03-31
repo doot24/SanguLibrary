@@ -1,0 +1,63 @@
+.dark #button-statement span {
+    color: white;
+
+}
+
+.light #button-statement span {
+    color: #322E3D;
+}
+
+.dark #button-statement {
+    background: rgba(217, 217, 217, 0.04);
+    border: 0.815px solid #D9D9D9;
+    border-radius: 36.675px;
+}
+
+.light #button-statement {
+    background-color: rgb(255, 255, 255);
+    border: 0.815px solid #cfcfcf;
+    border-radius: 36.675px;
+}
+
+.dark
+.messageButton {
+    border-color: white;
+    background-color: transparent;
+    color: white;
+    font-size: 1.6em;
+    border-width: 2px;
+    width: 62.85px;
+    height: 62.85px;
+}
+
+.light .messageButton {
+    border-color: rgb(68, 68, 68);
+    background-color: transparent;
+    color: rgb(70, 70, 70);
+    font-size: 1.6em;
+    border-width: 2px;
+    width: 62.85px;
+    height: 62.85px;
+}
+
+.confirmed {
+    color: #236F00;
+}
+
+.rejected {
+    color: #D70E00;
+}
+
+.pending {
+    color: #EF7300;
+}
+
+.dark
+.sentPetitionsText {
+    color: #ffffff;
+}
+
+.light
+.sentPetitionsText {
+    color: #222027;
+}

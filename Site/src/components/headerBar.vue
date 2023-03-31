@@ -59,26 +59,7 @@
 </template>
 
 
-<style scoped>
-.menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9999;
-}
-
-.menubutton {
-  background: none;
-  border: none;
-  color: whitesmoke;
-}
-
-.dropdownItem:hover {
-  color: white;
-  background-color: #3e394b;
-  cursor: pointer;
-}
-</style>
+<style src="@/assets/css/components/headerBar.css" scoped/>
 
 <script>
 import { defineComponent } from 'vue';

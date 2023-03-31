@@ -1,0 +1,37 @@
+/* begin, headerBar */
+.dark .colorToggle {
+    color: white;
+}
+
+.light .colorToggle {
+    color: #303030;
+}
+
+.dark .lightmodeToggle {
+    color: white;
+}
+
+.light .lightmodeToggle {
+    color: #FFD54F;
+}
+
+/* end, headerBar */
+
+.menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.menubutton {
+    background: none;
+    border: none;
+    color: whitesmoke;
+}
+
+.dropdownItem:hover {
+    color: white;
+    background-color: #3e394b;
+    cursor: pointer;
+}

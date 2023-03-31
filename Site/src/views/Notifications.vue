@@ -117,58 +117,7 @@
   </div>
 </template>
 
-<style scoped>
-
-.dark
-.notificationModal {
-  background-color: #322E3D;
-}
-
-.dark
-.headerText {
-  color:white;
-}
-
-
-.light
-.headerText {
-  color:#4e4e4e;
-}
-
-.dark
-.smallButton {
-  background: #322E3D;
-  font-weight: 600;
-  font-size: 15px;
-  /* line-height: 31px; */
-  border: none;
-  color: #B3B3B3;
-  border-radius: 40px;
-}
-
-.light
-.smallButton {
-  background: #f0f0f0;
-  font-weight: 600;
-  font-size: 15px;
-  /* line-height: 31px; */
-  border: none;
-  color: #4e4e4e;
-  border-radius: 40px;
-}
-
-.dark
-.smallButtonHighlight {
-  color: white;
-  background: #d72926;
-}
-
-.light
-.smallButtonHighlight {
-  color: white;
-  background: #d72926;
-}
-</style>
+<style src="@/assets/css/pages/notifications.css" scoped/>
 
 <script>
 import hamburger from '@/components/hamburger.vue'

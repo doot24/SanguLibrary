@@ -108,7 +108,8 @@
   </div>
 </template>
 
-<style scoped></style>
+<style src="@/assets/css/pages/petitionspage.css" scoped/>
+
 <script>
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'

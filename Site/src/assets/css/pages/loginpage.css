@@ -1,0 +1,46 @@
+.bg-image {
+    background: url('@/assets/images/library.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .login-container {
+    max-width: 600px;
+    padding: 4em 20px 2em;
+    border-radius: 18px;
+    background: rgba(30, 30, 30, 0.62);
+  }
+  
+  .alert:hover {
+    cursor: pointer;
+  }
+  
+  #loginEmailInput {
+    height: 55px;
+    color: rgb(238, 227, 227);
+    background-color: rgba(30, 30, 30, 0);
+    border: none;
+    border-bottom: 2px solid #716E6E;
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: 0.065em;
+  }
+  
+  #loginPasswordInput {
+    height: 55px;
+    color: rgb(238, 227, 227);
+    border: none;
+  
+    background-color: rgba(30, 30, 30, 0);
+    border-bottom: 2px solid #716E6E;
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: 0.065em;
+    margin-top: 2em;
+  }
+  
+  #loginButton {
+    width: 150px;
+    height: 50px;
+  }

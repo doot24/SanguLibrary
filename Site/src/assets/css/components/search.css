@@ -1,0 +1,31 @@
+
+/* search component */
+.dark
+.searchBox {
+    background-color: rgb(50, 46, 61);
+}
+
+.light
+.searchBox {
+    background-color: white;
+}
+
+.dark
+.searchButton:hover {
+    color : white;
+}
+
+.light
+.searchButton:hover {
+    color: #27252c ;
+}
+
+.dark
+.searchButton {
+    color: white;
+}
+
+.light
+.searchButton {
+    color: #27252c;
+}

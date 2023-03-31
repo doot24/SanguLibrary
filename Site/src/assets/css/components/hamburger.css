@@ -1,0 +1,142 @@
+
+.dark
+.hamburgerTitle {
+    color: white;
+}
+
+
+.light
+.hamburgerTitle {
+    color: #27252c;
+}
+
+.dark
+.colorToggle {
+  color: white;
+}
+
+.light
+.menuButtonIcons{
+    color: white;
+}
+.dark .hamburgerBackground {
+    background-color: rgba(35, 33, 40, 1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.light .hamburgerBackground {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.dark .hamburgetButton {
+    background-color: #27252c;
+    border: none;
+    color: white;
+}
+
+.light .hamburgetButton {
+    border-color: #adadad3f;
+    border-width: 0.05px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: white;
+    background-color: white;
+}
+
+.hamburgetButtonHover:hover {
+    background-color: #C63B31;
+}
+
+.light .hamburgetButton span {
+    color: #27252c;
+}
+
+.bottomMenu {
+  background-color: rgba(35, 33, 40, 1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.selectedButton {
+  background-color: #C63B31;
+}
+
+button.selectedButton,
+button.selectedButton:active,
+button.selectedButton:focus {
+  background-color: #C63B31;
+}
+
+#profileImage {
+  border-radius: 30px;
+}
+
+#profileButton {
+  border: none;
+}
+
+.menuButton {
+  height: 4em;
+}
+
+.navbar-toggler {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 101;
+  position: fixed;
+}
+
+.navbar-toggler figure:hover {
+  color: #d6625a;
+}
+
+.navbar-title {
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  z-index: 101;
+  position: fixed;
+}
+
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 290px;
+  height: 100%;
+  z-index: 100;
+
+  transition: all 0.5s ease;
+}
+
+.menuRight {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 300px;
+  height: 100%;
+  z-index: 100;
+
+  transition: all 0.5s ease;
+}
+
+.showRight {
+  right: 0;
+}
+
+.rotate {
+  transform: rotate(90deg);
+  transition: all 0.5s ease;
+}
+
+.endrotate {
+  transform: rotate(180deg);
+  transition: all 0.5s ease;
+}
+
+.show {
+  left: 0;
+}

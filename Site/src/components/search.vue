@@ -27,7 +27,9 @@
         </div>
     </div>
 </template>
-  
+
+<style src="@/assets/css/components/search.css" scoped/>
+
 <script>
 export default {
     name: 'SearchBox',

@@ -58,9 +58,8 @@
   </div>
 </template>
 
-<style scoped>
+<style src="@/assets/css/pages/homepage.css" scoped/>
 
-</style>
 <script>
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'

@@ -114,7 +114,7 @@
   </div>
 </template>
 
-<style scoped></style>
+<style src="@/assets/css/components/carousel.css" scoped/>
 <script>
 import { defineComponent } from 'vue';
 import uuid4 from "uuid4";
