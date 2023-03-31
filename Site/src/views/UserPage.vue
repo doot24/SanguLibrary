@@ -8,19 +8,19 @@
         <table class="table table-dark">
           <tbody>
             <tr>
-              <div class="p-2 d-flex justify-content-between" style="background: #1C1A20;">
+              <div class="p-2 d-flex justify-content-between sectionDark">
                 <span scope="row">სახელი</span>
                 <span class="text-muted">{{ userData.firstName }}</span>
               </div>
             </tr>
             <tr>
-              <div class="p-2 d-flex justify-content-between" style="background: #1A181E;">
+              <div class="p-2 d-flex justify-content-between sectionLight">
                 <span scope="row">გვარი</span>
                 <span class="text-muted">{{ userData.lastName }}</span>
               </div>
             </tr>
             <tr>
-              <div class="p-2 d-flex justify-content-between text-wrap" style="background: #1C1A20;">
+              <div class="p-2 d-flex justify-content-between text-wrap sectionDark">
                 <span style="padding-right: 60px;" class="text-nowrap" scope="row">ელ-ფოსტა</span>
                 <span class="text-muted">{{ userData.email }}</span>
               </div>
@@ -33,7 +33,25 @@
 </template>
 
 <style scoped>
+.dark
+.sectionDark {
+  background: #1C1A20;
+}
 
+.light
+.sectionDark {
+  background: #f0f0f0;
+}
+
+.dark
+.sectionLight {
+  background: #1A181E;
+}
+
+.light
+.sectionLight {
+  background: #f3f3f3;
+}
 </style>
 
 <script>

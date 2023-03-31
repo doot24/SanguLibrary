@@ -20,39 +20,6 @@
 }
 
 .dark
-.messageButton {
-    border-color: white;
-    background-color: transparent;
-    color: white;
-    font-size: 1.6em;
-    border-width: 2px;
-    width: 62.85px;
-    height: 62.85px;
-}
-
-.light .messageButton {
-    border-color: rgb(68, 68, 68);
-    background-color: transparent;
-    color: rgb(70, 70, 70);
-    font-size: 1.6em;
-    border-width: 2px;
-    width: 62.85px;
-    height: 62.85px;
-}
-
-.confirmed {
-    color: #236F00;
-}
-
-.rejected {
-    color: #D70E00;
-}
-
-.pending {
-    color: #EF7300;
-}
-
-.dark
 .sentPetitionsText {
     color: #ffffff;
 }

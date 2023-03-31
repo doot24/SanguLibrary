@@ -1,8 +1,7 @@
 <template>
   <!-- Begin, PC version -->
-
   <div id="hamburger" class="menu d-none d-md-block">
-    <button class="navbar-toggler" @click="toggleMenu()">
+    <button  class="navbar-toggler" @click="toggleMenu()">
       <div class="hamburger">
         <figure :class="{ 'rotate': showMenu, 'endrotate': !showMenu }" id="hamburger_toggle"
           class="colorToggle bi bi-list icon" style=" font-size:2em"></figure>
@@ -12,9 +11,8 @@
     <div ref="element" id="hamburgerDisplay" class="hamburgerBackground menu" :class="{ 'show': showMenu }">
       <!-- Navbar links go here -->
       <div class="d-flex flex-column">
-        <span style="width:58%" class="hamburgerTitle align-self-center mt-3">დახურვა</span>
         <button @click="loadRoute('/user')" :class="{ 'selectedButton': $route.path === '/user' }"
-          class="mt-3 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
+          class="mt-5 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
           <div class="menuButtonIcons">
             <img class="me-3 ms-1 rounded-circle" width="35" height="35" :src="userData.photo" />
           </div>
@@ -135,12 +133,13 @@
     </div>
   </div>
 
+  <!-- Begin, mobile bottom menu -->
   <div class="d-block d-md-none fixed-bottom">
     <!-- Navbar links go here -->
     <div class="d-flex flex-row bottomMenu">
       <button @click="loadRoute('/')" :class="{ 'selectedButton': $route.path === '/' }"
         class="hamburgetButton  menuButton d-flex justify-content-center align-items-center w-25">
-        <span class="bi bi-house-fill me-3 ms-3" style="font-size: 2em;"></span>
+        <span class="bi bi-house me-3 ms-3" style="font-size: 2em;"></span>
       </button>
 
       <button @click="loadRoute('/petitions')" :class="{ 'selectedButton': $route.path === '/petitions' }"
@@ -160,6 +159,8 @@
       </button>
     </div>
   </div>
+  <!-- End, mobile bottom menu -->
+  
   <!-- End, Mobile version -->
 </template>
 <style src="@/assets/css/components/hamburger.css" scoped/>
