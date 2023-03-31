@@ -7,6 +7,7 @@ import { IsAuthenticated } from "../utils/AuthGuards";
 import { Petition } from "../interfaces/Petition";
 import { PetitionSchema, PetitionTemplateSchema } from "../schemas/PetitionSchema";
 import { randomUUID } from "crypto";
+import { SendToSystem } from "../utils/Notification";
 
 router.post("/send", IsAuthenticated, body("template").notEmpty().isUUID(), body("text").notEmpty().isString(), (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -23,6 +24,7 @@ router.post("/send", IsAuthenticated, body("template").notEmpty().isUUID(), body
   petition.text = req.body.text;
 
   new PetitionSchema(petition).save().then(() => {
+    SendToSystem("ახალი განცხადება",`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
     res.status(200).json({ status: "success" });
   }).catch(() => {
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });

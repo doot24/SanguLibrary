@@ -47,8 +47,8 @@ router.post("/update", IsAuthenticated, HasRole("admin") || HasRole("editor"), b
       throw new Error("petition not found");
     }
 
-    let text: string = `თქვენს მიერ გაკეთებული განცხადებას დაემატა ახალი კომენტარი.`;
-    SendToUser(String(petition.owner), "სისტემა", "განცხადებას დაემატა კომენტარი", text)
+    let text: string = `თქვენს მიერ გაკეთებულ განცხადებას შეეცვალა სტატუსი ან დაემატა კომენტარი.`;
+    SendToUser(String(petition.owner), "სისტემა", "განთავსებული განცხადება განახლდა", text)
 
     res.status(200).json({ status: "success" });
   }).catch(() => {
