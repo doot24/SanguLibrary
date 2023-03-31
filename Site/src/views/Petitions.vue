@@ -175,7 +175,7 @@ export default {
       this.isLoading = true;
       const params = {
         page: 1,
-        pageSize: 5
+        pageSize: 80
       };
       axios.get(getApiConnectionString() + '/petitions/', {
         params,

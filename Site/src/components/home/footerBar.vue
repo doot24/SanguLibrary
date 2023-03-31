@@ -71,7 +71,7 @@
   </div>
 </template>
 
-<style scoped>
+<style src="@/assets/css/components/footer.css" scoped>
 
 </style>
   

@@ -26,28 +26,28 @@
         <table class="table table-borderless table-default">
           <thead>
             <tr>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center" style="width: 10%">
                 სტატუსი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center text-nowrap" style="width: 15%">
                 განცხადების ტიპი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">თარიღი</th>
+              <th scope="col" class="text-center" style="width: 20%">თარიღი</th>
 
-              <th scope="col" class="text-center" style="width: 40%">
+              <th scope="col" class="text-center text-nowrap" style="width: 25%">
                 განცხადების ტექსტი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center text-nowrap" style="width: 30%">
                 განცხადების ავტორი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center text-nowrap" style="width: 35%">
                 პირადი ნომერი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center text-nowrap" style="width: 40%">
                 მობილურის ნომერი
               </th>
-              <th scope="col" class="text-center" style="width: 15%">მეილი</th>
-              <th scope="col" class="text-center" style="width: 15%">
+              <th scope="col" class="text-center" style="width: 45%">მეილი</th>
+              <th scope="col" class="text-center" style="width: 50%">
                 ქმედებები
               </th>
             </tr>
@@ -67,7 +67,7 @@
               <td class="dateText text-center">
                 <span>{{ formatDate(petition.timestamp) }}</span>
               </td>
-              <td :id="petition._id" class="text-truncate" @click="toggleTruncation(petition._id)"
+              <td :id="petition._id" class="text-truncate text-center" @click="toggleTruncation(petition._id)"
                 style="max-width: 300px; cursor: pointer;">{{ petition.text }}</td>
               <td class="text-center">
                 <span>{{ petition.user[0].firstName + " " + petition.user[0].lastName }}</span>
@@ -92,7 +92,7 @@
         </table>
       </div>
       <!-- Begin, Pagination -->
-      <div class="d-flex flex-row align-content-center gap-3">
+      <div class="d-flex mt-3 flex-row align-content-center gap-3">
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="pageSizeDropdown" data-bs-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -285,7 +285,7 @@ export default {
       }, {
         withCredentials: true,
       }).then((results) => {
-        this.successMessage = 'კომენტარი გაიგზავნა!';
+        this.successMessage = 'განცხადება წარმატებით განახლდა!';
         this.isLoading = false;
         this.getRecentPetitions();
         this.deselectPetition();

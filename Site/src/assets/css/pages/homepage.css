@@ -5,28 +5,3 @@
 .light .booksSection {
     background-color: #ffffff;
 }
-
-.dark .footer {
-    background-color: #322E3D;
-}
-
-.light .footer {
-    background-color: #ffffff;
-}
-
-.dark .footer-section {
-    background: rgb(44, 39, 53);
-}
-
-.light .footer-section {
-    background: rgb(255, 255, 255);
-}
-
-.dark .footer-section h5 {
-    color: #ffffff;
-}
-
-.light .footer-section span,
-.footer-section h5 {
-    color: #322E3D;
-}
