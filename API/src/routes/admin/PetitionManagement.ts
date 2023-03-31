@@ -29,37 +29,18 @@ router.post("/addtemplate", IsAuthenticated, HasRole("admin"), body("title").not
   });
 });
 
-router.post("/updatestatus", IsAuthenticated, HasRole("admin"), body("petitionid").notEmpty().isUUID(), body("status").notEmpty().isString(), (req: Request, res: Response) => {
+router.post("/update", IsAuthenticated, HasRole("admin") || HasRole("editor"), body("petitionid").notEmpty().isUUID(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
   }
 
-  PetitionSchema.findOneAndUpdate(
-    { _id: req.body.petitionid },
-    { status: req.body.status }
-  ).then((petition) => {
-    if(!petition)
-    {
-      throw new Error("petition not found");
-    }
-    let text: string = `თქვენს მიერ გაკეთებული განცხადების სტატუსი განახლდა.`;
-    SendToUser(String(petition.owner), "სისტემა", "განცხადების სტატუსი შეიცვალა", text);
-    res.status(200).json({ status: "success" });
-  }).catch(() => {
-    res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
-  });
-});
-
-router.post("/setcomment", IsAuthenticated, HasRole("admin"), body("petitionid").notEmpty().isUUID(), body("comment").notEmpty().isString(), (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
-  }
+  let commentInput : string = String(req.body.comment) || "";
+  let statusInput : string = String(req.body.status) || "pending";
 
   PetitionSchema.findOneAndUpdate(
     { _id: req.body.petitionid },
-    { comment: req.body.comment }
+    { comment: commentInput, status : statusInput }
   ).then((petition) => {
     if(!petition)
     {
