@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "serve": "npm i && vue-cli-service serve",
+    "build": "npm i && vue-cli-service build"
   },
   "dependencies": {
     "@vueup/vue-quill": "^1.0.0-beta.11",
@@ -25,6 +25,7 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "dotenv": "^16.0.3",
-    "dotenv-webpack": "^8.0.1"
+    "dotenv-webpack": "^8.0.1",
+    "mini-css-extract-plugin": "^2.7.5"
   }
 }

@@ -1,19 +1,22 @@
 <template>
-  <div class="d-flex" style="border:none;">
-    <button @click="toggleEditor" class="rounded-circle btn messageButton bi-chat-left-text"></button>
+  <div class="editor-root">
+    <div v-if="showEditor" class="editor-overlay"></div>
+    <div class="d-flex" style="border:none;">
+      <button @click="toggleEditor" class="rounded-circle btn messageButton bi bi-file-earmark-plus"></button>
 
-    <div v-if="showEditor" class="position-absolute top-50 start-50 translate-middle editor-container">
-      <button @click="toggleEditor" class="btn-close closeBtn position-absolute top-3 end-(-3)" aria-label="Close"></button>
-      <QuillEditor ref="editor" v-model="editorContent" theme="snow" :options="editorOptions" style="border:none"/>
+      <div v-if="showEditor" class="position-absolute top-50 start-50 translate-middle editor-container">
+        <button @click="toggleEditor" class="btn-close closeBtn position-absolute top-3 end-(-3)" aria-label="Close"></button>
+        <QuillEditor ref="editor" v-model="editorContent" theme="snow" :options="editorOptions" style="border:none"/>
 
-      <div class="editor-bottom position-absolute bottom-0 end-0">
-        <button @click="saveContent" class="btn btn-primary position-absolute bottom-0 end-0 mb-3 me-3 saveButton" style="background-color: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00; border-radius: 20.7321px; color: black;">დამატება</button>
-      </div>
+        <div class="editor-bottom position-absolute bottom-0 end-0">
+          <button @click="saveContent" class="btn btn-primary position-absolute bottom-0 end-0 mb-3 me-3 saveButton" style="background-color: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00; border-radius: 20.7321px; color: black;">დამატება</button>
+        </div>
 
-      <div class="changeStatus d-flex justify-content-center position-absolute bottom-0 start-0 mb-3 ms-3">
+        <div class="changeStatus d-flex justify-content-center position-absolute bottom-0 start-0 mb-3 ms-3">
 
           <h5 class="text-white">სტატუსის შეცვლა</h5>
 
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +57,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 .editor-container {
