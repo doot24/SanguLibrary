@@ -11,7 +11,7 @@ router.get("/profile", IsAuthenticated, (req: Request, res: Response) => {
         res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
         return;
     }
-    UserSchema.findOne({userid : req.session.user.userid}).then((userResult) => {
+    UserSchema.findOne({_id : req.session.user._id}).then((userResult) => {
         res.status(200).json({status : "success", user : userResult});
     }).catch(()=>{
         res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });

@@ -34,7 +34,7 @@ router.post("/login", IsNotAuthenticated, body("email").isEmail().normalizeEmail
         UserSchema.findOne({email : emailBody}).then((userResult) => {
             if(!userResult)
             {
-                sanguUser.userid = randomUUID();
+                sanguUser._id = randomUUID();
                 let sanguUserSchema = new UserSchema(sanguUser);
 
                 sanguUserSchema.save().then(() => {
@@ -49,9 +49,9 @@ router.post("/login", IsNotAuthenticated, body("email").isEmail().normalizeEmail
                 });
             }
             else {
-                sanguUser.userid = userResult.userid;
+                sanguUser._id = userResult._id;
                 sanguUser.roles = userResult.roles;
-                UserSchema.updateOne({userid : sanguUser.userid}, {
+                UserSchema.updateOne({_id : sanguUser._id}, {
                     firstName : sanguUser.firstName,
                     lastName : sanguUser.lastName,
                     email : sanguUser.email,

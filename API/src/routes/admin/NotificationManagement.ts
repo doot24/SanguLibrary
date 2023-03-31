@@ -2,14 +2,14 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 import { body,query, validationResult } from 'express-validator';
-import { IsAuthenticated, HasRole } from "../../utils/AuthGuards";
+import { IsAuthenticated, HasRole,HasRoles } from "../../utils/AuthGuards";
 import { randomUUID } from "crypto";
 
 import { Notification, NotificationMetaData } from "../../interfaces/Notification";
 import { NotificationSchema, NotificationMetaDataSchema } from "../../schemas/NotificationSchema";
 import { UserSchema } from "../../schemas/UserSchema";
 
-router.get("/", IsAuthenticated, HasRole("admin") || HasRole("editor"), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
       return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -58,7 +58,7 @@ router.get("/", IsAuthenticated, HasRole("admin") || HasRole("editor"), query("p
 });
 
 
-router.post("/createglobal", IsAuthenticated, HasRole("admin"), body("title").notEmpty().isString(), body("text").notEmpty().isString(), (req: Request, res: Response) => {
+router.post("/createglobal", IsAuthenticated, HasRoles(["admin", "editor"]), body("title").notEmpty().isString(), body("text").notEmpty().isString(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -77,7 +77,7 @@ router.post("/createglobal", IsAuthenticated, HasRole("admin"), body("title").no
         _id : randomUUID(),
         created : Date.now(),
         attachedNotification : notification._id,
-        receiver : user.userid,
+        receiver : user._id,
         read : false
       }));
 

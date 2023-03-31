@@ -29,7 +29,7 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
     // add pagination stages to the pipeline
     let pipeline : Array<PipelineStage> = [];
 
-    pipeline.push({ $match: { receiver: req.session.user.userid } });
+    pipeline.push({ $match: { receiver: req.session.user._id } });
     if(req.query.read)
     {
         pipeline.push({ $match: { read: readStatus } });
@@ -110,7 +110,7 @@ router.post("/setread", IsAuthenticated, body("notificationid").notEmpty().isUUI
     NotificationMetaDataSchema.findOneAndUpdate(
         {
             _id: req.body.notificationid,
-            receiver: req.session.user.userid
+            receiver: req.session.user._id
         },
         {
             $set: { read: true }
@@ -145,7 +145,7 @@ router.get("/status", IsAuthenticated, query("read").notEmpty().isNumeric(), que
     let endIndex = page * pageSize;
 
     let pipeline = [
-        { $match: { read: Number(req.query.read), receiver: req.session.user.userid } },
+        { $match: { read: Number(req.query.read), receiver: req.session.user._id } },
         {
             '$lookup': {
                 'from': 'notifications',

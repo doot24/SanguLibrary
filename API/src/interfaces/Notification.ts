@@ -1,28 +1,12 @@
-export interface INotificationMetadata {
-    _id : String,
-    attachedNotification : String,
-    receiver : String,
-    read : Boolean,
-}
-
-export interface INotification {
-    _id : String,
-    title : String,
-    created : Number,
-    text : String,
-    author : String
-}
-
-export class Notification implements INotification {
+export class Notification {
     _id: String = "";
     title: String = "";
     created : Number = Date.now()
     text: String = "";
     author: String = "";
-
 }
 
-export class NotificationMetaData implements INotificationMetadata {
+export class NotificationMetaData {
     _id: String = "";
     attachedNotification: String = "";
     receiver: String = "";

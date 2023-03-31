@@ -3,32 +3,36 @@ const router = Router();
 
 import { body, query, validationResult } from 'express-validator';
 import { validateUpdateUser } from "../validations/UserManagementValidation";
-import { IsAuthenticated, HasRole } from "../../utils/AuthGuards";
+import { IsAuthenticated, HasRole, HasRoles } from "../../utils/AuthGuards";
 
 import { UserSchema } from "../../schemas/UserSchema";
 
 
 router.post('/setroles', IsAuthenticated, HasRole("admin"), validateUpdateUser, (req: Request, res: Response) => {
     const roles: Array<string> = JSON.parse(req.body.roles);
-    const userID: string = String(req.body.userid);
-
+    const _id: string = String(req.body._id);
+    
     UserSchema.findOneAndUpdate(
-        { userid: userID },
+        { _id: _id },
         { $set: { roles: roles } },
         { new: true }
-    ).then(() => {
+    ).then((user) => {
+        if(!user)
+        {
+            throw new Error("user not found");
+        }
         res.status(200).json({ status: "success" });
     }).catch(() => {
         res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
     });
 });
 
-router.post("/delete", IsAuthenticated, HasRole("admin"), body("userid").notEmpty().isUUID(), (req: Request, res: Response) => {
+router.post("/delete", IsAuthenticated, HasRole("admin"), body("_id").notEmpty().isUUID(), (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
     }
-    UserSchema.deleteOne({ userid: req.body.userid }).then(() => {
+    UserSchema.deleteOne({ _id: req.body._id }).then(() => {
         res.status(200).json({ status: "success" });
 
     }).catch(() => {
@@ -36,7 +40,7 @@ router.post("/delete", IsAuthenticated, HasRole("admin"), body("userid").notEmpt
     })
 });
 
-router.get("/search/publicnum", IsAuthenticated, HasRole("admin"), query("publicNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/search/publicnum", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("publicNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -63,7 +67,7 @@ router.get("/search/publicnum", IsAuthenticated, HasRole("admin"), query("public
         });
 });
 
-router.get("/search/phonenum", IsAuthenticated, HasRole("admin"), query("phoneNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/search/phonenum", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("phoneNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -90,7 +94,7 @@ router.get("/search/phonenum", IsAuthenticated, HasRole("admin"), query("phoneNu
         });
 });
 
-router.get("/users", IsAuthenticated, HasRole("admin"), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/users", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

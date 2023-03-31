@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 import { body, query, validationResult } from 'express-validator';
-import { IsAuthenticated, HasRole } from "../../utils/AuthGuards";
+import { IsAuthenticated, HasRole, HasRoles } from "../../utils/AuthGuards";
 import { randomUUID } from "crypto";
 
 import { PetitionTemplate } from "../../interfaces/Petition";
@@ -11,7 +11,7 @@ import { PetitionSchema, PetitionTemplateSchema } from "../../schemas/PetitionSc
 import { SendToUser } from "../../utils/Notification";
 import { Error } from "mongoose";
 
-router.post("/addtemplate", IsAuthenticated, HasRole("admin"), body("title").notEmpty().isString(), body("text").notEmpty().isString(), (req: Request, res: Response) => {
+router.post("/addtemplate", IsAuthenticated, HasRoles(["admin", "editor"]), body("title").notEmpty().isString(), body("text").notEmpty().isString(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -29,7 +29,7 @@ router.post("/addtemplate", IsAuthenticated, HasRole("admin"), body("title").not
   });
 });
 
-router.post("/update", IsAuthenticated, HasRole("admin") || HasRole("editor"), body("petitionid").notEmpty().isUUID(), (req: Request, res: Response) => {
+router.post("/update", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), body("petitionid").notEmpty().isUUID(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -56,7 +56,7 @@ router.post("/update", IsAuthenticated, HasRole("admin") || HasRole("editor"), b
   });
 });
 
-router.get("/", IsAuthenticated, HasRole("admin"), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -80,7 +80,7 @@ router.get("/", IsAuthenticated, HasRole("admin"), query("page").notEmpty().isNu
       $lookup: {
         from: 'users',
         localField : 'owner',
-        foreignField : 'userid',
+        foreignField : '_id',
         as: 'user'
       }
     },
@@ -110,7 +110,7 @@ router.get("/", IsAuthenticated, HasRole("admin"), query("page").notEmpty().isNu
   });
 });
 
-router.get("/search", IsAuthenticated, HasRole("admin") || HasRole("editor"), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/search", IsAuthenticated, HasRoles(["admin", "editor", "employee"]) , query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
@@ -142,7 +142,7 @@ router.get("/search", IsAuthenticated, HasRole("admin") || HasRole("editor"), qu
       $lookup: {
         from: 'users',
         localField : 'owner',
-        foreignField : 'userid',
+        foreignField : '_id',
         as: 'user'
       }
     },

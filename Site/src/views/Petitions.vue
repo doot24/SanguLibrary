@@ -182,7 +182,6 @@ export default {
         withCredentials: true,
       }).then((results) => {
         this.isLoading = false;
-        console.log(results.data)
         this.petitions = results.data.petitions;
       }).catch(() => {
         this.isLoading = false;

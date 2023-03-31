@@ -1,14 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
-import { INotification, INotificationMetadata } from '../interfaces/Notification';
+import { Notification, NotificationMetaData } from '../interfaces/Notification';
 
-const notificationMetaDataSchema: Schema = new Schema<INotificationMetadata>({
+const notificationMetaDataSchema: Schema = new Schema<NotificationMetaData>({
   _id : { required : true, type: String},
   attachedNotification : { required : true, type: String},
   receiver : { type: String },
   read : { type: Number },
 });
 
-const notificationSchema: Schema = new Schema<INotification>({
+const notificationSchema: Schema = new Schema<Notification>({
   _id : { required : true, type: String},
   author : { required : true, type: String},
   created : {type : Number},
@@ -16,6 +16,6 @@ const notificationSchema: Schema = new Schema<INotification>({
   text : { type: String }
 });
 
-export const NotificationMetaDataSchema = mongoose.model<INotificationMetadata>('NotificationMetaData', notificationMetaDataSchema);
-export const NotificationSchema = mongoose.model<INotification>('Notification', notificationSchema);
+export const NotificationMetaDataSchema = mongoose.model<NotificationMetaData>('NotificationMeta', notificationMetaDataSchema);
+export const NotificationSchema = mongoose.model<Notification>('Notification', notificationSchema);
 

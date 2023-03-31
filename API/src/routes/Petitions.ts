@@ -18,13 +18,13 @@ router.post("/send", IsAuthenticated, body("template").notEmpty().isUUID(), body
   let petition: Petition = new Petition();
   petition._id = randomUUID();
   petition.status = "pending";
-  petition.owner = req.session.user.userid;
+  petition.owner = req.session.user._id;
   petition.timestamp = Date.now();
   petition.template = req.body.template;
   petition.text = req.body.text;
 
   new PetitionSchema(petition).save().then(() => {
-    SendToSystem("ახალი განცხადება",`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
+    SendToSystem("ახალი განცხადება",["editor", "employee"],`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
     res.status(200).json({ status: "success" });
   }).catch(() => {
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
@@ -52,7 +52,7 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
   PetitionSchema.aggregate([
     {
       $match: {
-        owner: req.session.user.userid
+        owner: req.session.user._id
       }
     },
     {
@@ -70,7 +70,7 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
       $limit: pageSize
     }
   ]).then((results) => {
-    PetitionSchema.countDocuments({ owner: req.session.user.userid }).exec().then((totalPetitions) => {
+    PetitionSchema.countDocuments({ owner: req.session.user._id }).exec().then((totalPetitions) => {
       return res.status(200).json({
         status: "success",
         petitions: results,

@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 
 export const validateUpdateUser = [
-  body("userid").notEmpty().isUUID(),
-  body('roles').notEmpty().custom((value: any) => {
+  body("_id").notEmpty().isUUID(),
+  body("roles").notEmpty().custom((value: any) => {
     let parsedValue : Array<String> = JSON.parse(value);
-    if (!Array.isArray(parsedValue) || !parsedValue.every((item : String) => ["admin", "editor"].includes(String(item)))) {
+    
+    if (!Array.isArray(parsedValue) || !parsedValue.every((item : String) => ["admin", "editor", "employee"].includes(String(item)))) {
       throw new Error('Invalid roles');
     }
     return true;
@@ -18,3 +19,4 @@ export const validateUpdateUser = [
     next();
   }
 ];
+

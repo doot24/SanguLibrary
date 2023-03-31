@@ -37,9 +37,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(user) in users" :key="user.userid"
-              :class="{ 'table-border': user.length > 0 && user[0].userid === user.userid }">
-              <td :key="user.userid">
+            <tr v-for="(user) in users" :key="user._id"
+              :class="{ 'table-border': user.length > 0 && user[0]._id === user._id }">
+              <td :key="user._id">
                   <img class="img-fluid rounded" :src="user.photo || require('@/assets/images/person.png')"
                        style="min-width: 160px; max-width: 100%; height: auto;"
                        :alt="user.photo ? 'User profile picture' : 'Default icon'">
@@ -60,6 +60,11 @@
                   <input class="form-check-input" :checked="user.roles.includes('editor')"
                     v-on:click="addRemoveRoleValue(user, 'editor')" type="checkbox" id="flexSwitchCheckDefault">
                   <label class="form-check-label" for="flexSwitchCheckDefault">რედაქტორი</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" :checked="user.roles.includes('employee')"
+                    v-on:click="addRemoveRoleValue(user, 'employee')" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">თანამშრომელი</label>
                 </div>
               </td>
               <td>
@@ -225,7 +230,7 @@ export default {
       } else {
         user.roles.push(value);
       }
-      this.updateUserRoles(user.userid, user.roles)
+      this.updateUserRoles(user._id, user.roles)
     },
 
     // pagination
@@ -295,10 +300,10 @@ export default {
       })
     },
 
-    updateUserRoles(userID, Roles) {
+    updateUserRoles(_id, Roles) {
       this.isLoading = true;
 
-      axios.post(getApiConnectionString() + '/admin/usermanagement/setroles', { userid: userID, roles: JSON.stringify(Roles) }, { withCredentials: true },).then(() => {
+      axios.post(getApiConnectionString() + '/admin/usermanagement/setroles', { _id: _id, roles: JSON.stringify(Roles) }, { withCredentials: true },).then(() => {
         this.isLoading = false;
         this.selectedUser = {};
         this.successMessage = "მომხმარებელის როლი წარმატებით განახლდა!";
@@ -312,7 +317,7 @@ export default {
     deleteUser() {
       this.isLoading = true;
 
-      axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { userid: this.selectedUser.userid }, { withCredentials: true },).then(() => {
+      axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { _id: this.selectedUser._id }, { withCredentials: true },).then(() => {
         this.isLoading = false;
         this.selectedUser = {};
         this.successMessage = "მომხმარებელის წარმატებით წაიშალა!";
