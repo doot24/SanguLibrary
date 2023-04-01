@@ -49,7 +49,7 @@
               <td class="text-center">{{ user.email }}</td>
               <td class="text-center">{{ user.publicNumber }}</td>
               <td class="text-center">{{ user.phoneNumber }}</td>
-              <td v-if="user.roles.includes('admin')">
+              <td v-if="userData.roles.includes('admin')">
                 <!--<li v-for="role in user.roles" :key="role">{{ translateRole(role) }}</li> -->
                 <div class="form-check form-switch">
                   <input class="form-check-input" :checked="user.roles.includes('admin')"
@@ -67,7 +67,7 @@
                   <label class="form-check-label" for="flexSwitchCheckDefault">თანამშრომელი</label>
                 </div>
               </td>
-              <td v-if="user.roles.includes('admin')">
+              <td v-if="userData.roles.includes('admin')">
                 <div class="d-flex justify-content-center align-content-center gap-2">
                   <button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-light bi bi-trash3-fill"
                     v-on:click="selectedUser = user"></button>

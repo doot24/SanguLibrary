@@ -22,6 +22,9 @@
       <div class="d-flex justify-content-center align-items-center mb-3">
         <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
+      <div class="d-flex justify-content-end mb-2 mt-2">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> ახალი განცხადების სახე </button>
+      </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
           <thead>
@@ -161,6 +164,38 @@
     </div>
     <!-- End, Edit modal -->
 
+
+    <!-- Begin, add template modal -->
+    <div style="height:300px" class="modal fade h-100" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">განცხადების სახის დამატება</h5>
+            <button type="button" @click="deselectPetition()" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mt-2 d-flex flex-column">
+              <h5>სათაური</h5>
+              <input v-model="templateTitle" type="text" class="form-control"/>
+</div>
+            <div class="mt-2 d-flex flex-column">
+              <h5>ტექსტი</h5>
+              <textarea v-model="templateText" class="align-self-center form-control" cols="45" rows="12" style="resize:none" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click=clearTemplateInputs() class="btn btn-secondary"
+              data-bs-dismiss="modal">დახურვა</button>
+            <button type="button" @click="addPetitionTempate();" class="btn btn-primary">შენახვა</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End, add template modal -->
+
+
   </div>
 </template>
 
@@ -213,6 +248,9 @@ export default {
       status: '',
       comment: '',
 
+      templateTitle: '',
+      templateText: '',
+
       options: [{ label: 'პირადი ნომერი', value: 'publicNumber' }, { label: 'მობილური ნომერი', value: 'phoneNumber' }],
       searchInput: '',
       selectedOption: "publicNumber"
@@ -252,6 +290,11 @@ export default {
       this.status = '';
     },
 
+    clearTemplateInputs() {
+      this.templateTitle = '';
+      this.templateText = '';
+    },
+
     // CRUD
     getRecentPetitions() {
       const params = {
@@ -271,6 +314,26 @@ export default {
         this.errorMessage = error.response.data.message;
         this.isLoading = false;
       });
+    },
+    addPetitionTempate() {
+      this.isLoading = true;
+
+      this.successMessage = '';
+      this.errorMessage = '';
+
+      axios.post(getApiConnectionString() + '/admin/petitionmanagement/addtemplate', {
+        title: this.templateTitle,
+        text: this.templateText
+      }, {
+        withCredentials: true,
+      }).then((results) => {
+        this.successMessage = 'განცხადების ნიმუში წარმატებით დაემატა!';
+        this.isLoading = false;
+        this.clearTemplateInputs();
+      }).catch((error) => {
+        this.errorMessage = error.response.data.message;
+        this.isLoading = false;
+      })
     },
     updatePetition() {
       this.isLoading = true;
