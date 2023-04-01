@@ -490,8 +490,19 @@ table {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-
 }
+.dropdown-menu {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.dropdown-item {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-item.active {
+  background-color: rgba(228, 44, 68, 0.8);
+}
+
 </style>
 <script>
 import hamburger from '@/components/hamburger.vue'

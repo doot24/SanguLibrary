@@ -48,38 +48,39 @@
     </div>
 
     <!-- Begin, send statement modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" @pointerleave="selectedTemplate = {}; text = ''; selectedOption = ''; " aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
-          <div class="modal-header">
-            <h5 class="modal-title text-white" id="exampleModalLabel">ახალი განცხადება</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="dropdown" v-cloak>
-              <input class="form-control text-light p-2" :placeholder="placeholderText"
-                @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
-                style="background: #D9D9D9; font-size:1em">
-              <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
-                <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
-                  class="dropdown-item text-dark" @click="selectOption(template.title); selectedTemplate = template; text = selectedTemplate.text"
-                  href="#">{{ template.title }}</a>
-              </div>
-            </div>
-            <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
-              :placeholder="userData.email">
-            <textarea v-model="text" cols="20" rows="20" class="form-control mt-5 rounded"
-              style="background: #D9D9D9"></textarea>
-          </div>
-          <div class="modal-footer d-flex justify-content-between">
-            <button  class="btn btn-outline-danger" v-on:click="selectedTemplate = {}; text = ''; selectedOption = ''"
-              data-bs-dismiss="modal">გაუქმება</button>
-            <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; " v-on:click="sendPetition(); selectedTemplate = {}; text = ''; "
-              class="btn btn-danger">გაგზავნა</button>
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
+      <div class="modal-header">
+        <h5 class="modal-title text-white" id="exampleModalLabel">ახალი განცხადება</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="dropdown" v-cloak>
+          <input class="form-control text-light p-2" :placeholder="placeholderText"
+            @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
+            style="background: #D9D9D9; font-size:1em">
+          <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
+            <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
+              class="dropdown-item text-dark" @click="selectOption(template.title); selectedTemplate = template; text = selectedTemplate.text"
+              href="#">{{ template.title }}</a>
           </div>
         </div>
+        <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
+          :placeholder="userData.email">
+        <textarea v-model="text" cols="20" rows="20" class="form-control mt-5 rounded"
+          style="background: #D9D9D9"></textarea>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button  class="btn btn-outline-danger" v-on:click="selectedTemplate = {}; text = ''; selectedOption = ''"
+          data-bs-dismiss="modal">გაუქმება</button>
+        <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; " v-on:click="sendPetition(); selectedTemplate = {}; text = ''; "
+          class="btn btn-danger">გაგზავნა</button>
       </div>
     </div>
+  </div>
+</div>
+
     <!-- End, send statement modal -->
 
     <!-- Begin, comment modal -->

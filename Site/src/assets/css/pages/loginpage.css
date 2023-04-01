@@ -31,7 +31,7 @@
     height: 55px;
     color: rgb(238, 227, 227);
     border: none;
-  
+    
     background-color: rgba(30, 30, 30, 0);
     border-bottom: 2px solid #716E6E;
     font-size: 18px;
@@ -44,3 +44,22 @@
     width: 150px;
     height: 50px;
   }
+  .input_animated {
+    border: none;
+    border-bottom: 1px solid #bbb;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    /* Add -moz prefix for firefox*/
+    -moz-transition: all 0.3s ease-in-out; 
+    /* "-webkit-" prefix is used for webkit-based browsers such as Google Chrome and Safari.  */
+    -webkit-transition: all 0.3s ease-in-out; 
+    /* "-o-" prefix is used for Opera */
+    -o-transition: all 0.3s ease-in-out;
+    /* "-ms-" prefix is used for Microsoft Edge and Internet Explorer. */
+    -ms-transition: all 0.3s ease-in-out;
+  }
+  
+  .input_animated:focus {
+    border-bottom: 1px solid #4c4c4c;
+  }
+  
