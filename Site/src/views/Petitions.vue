@@ -75,7 +75,7 @@
         <button  class="btn btn-outline-danger" v-on:click="selectedTemplate = {}; text = ''; selectedOption = ''"
           data-bs-dismiss="modal">გაუქმება</button>
         <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; " v-on:click="sendPetition(); selectedTemplate = {}; text = ''; "
-          class="btn btn-danger">გაგზავნა</button>
+          class="btn btn-danger" data-bs-dismiss="modal">გაგზავნა</button>
       </div>
     </div>
   </div>
