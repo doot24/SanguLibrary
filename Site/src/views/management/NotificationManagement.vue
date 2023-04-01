@@ -93,7 +93,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="text">ტექსტი</label>
-                <textarea type="text" rows="20" v-model="text" class="form-control" id="text" required></textarea>
+                <textarea type="text" rows="10" v-model="text" class="form-control" id="text" required></textarea>
               </div>
 
               <div class="mt-3 d-flex flex-column gap-2 justify-content-center align-items-center">

@@ -3,17 +3,17 @@
     <!--Begin, Mobile Version-->
     <div class="d-block d-sm-block d-md-none">
       <div class="container-fluid mt-3 mb-5">
-          <div class="background rounded p-2 mb-3">
+          <div class="background footer-section rounded p-2 mb-3">
             <div class="">
               <div class="light p-2">
-                <h5 class="text-light fw-bold mb-1">საკონტაქტო ინფორმაცია:</h5>
+                <h5 class="fw-bold mb-1">საკონტაქტო ინფორმაცია:</h5>
                 <div class="text-muted py-1">598-30-53-63</div>
                 <div class="text-muted py-1">library@sangu.edu.ge</div>
               </div>
             </div>
             <div class="mt-2">
               <div class="light p-2">
-                <h5 class="text-light fw-bold mx-auto  mb-1">ბიბლიოთეკის სამუშაო საათები:</h5>
+                <h5 class="fw-bold mx-auto  mb-1">ბიბლიოთეკის სამუშაო საათები:</h5>
                 <div class="text-muted  py-1">ორშაბათიდან პარასკევის ჩათვლით, 09:00 საათიდან 20:00 საათამდე.
                 </div>
                 <div class="text-muted py-1">შაბათი 10:00 საათიდან 15:00 საათამდე.</div>
@@ -23,7 +23,7 @@
             </div>
             <div class="mt-2">
               <div class="light p-2 py-3 ">
-                <h5 class="text-light fw-bold">პროექტის ავტორები:</h5>
+                <h5 class="fw-bold">პროექტის ავტორები:</h5>
                 <label class="text-muted d-block my-2">მარიამ დოხნაძე</label>
                 <label class="text-muted d-block my-2">აკაკი ხურციძე</label>
                 <label class="text-muted d-block my-2">მათე ასკილაშვილი</label>

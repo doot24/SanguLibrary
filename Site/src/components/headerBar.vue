@@ -6,7 +6,7 @@
       style="font-size: 1.5em;"></button>
       <button class=" colorToggle bi bi-bell rounded menubutton d-none d-md-inline" style="font-size: 1.5em;" data-bs-toggle="dropdown"
       aria-expanded="false"></button>
-      <span v-if="getUnreadAmount() != 0" class="position-absolute top-0 end-0 bi-circle-fill text-danger"
+      <span v-if="getUnreadAmount() != 0" class="d-none d-md-inline position-absolute top-0 end-0 bi-circle-fill text-danger"
         style="font-size: 0.8em; line-height: 0.8em;"></span>
       <div  class="dropdown-menu dropdown-menu-end dropdown-lg" aria-labelledby="notificationDropdown"
         style="background-color: #322e3d">
