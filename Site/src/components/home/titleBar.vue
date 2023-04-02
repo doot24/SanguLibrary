@@ -24,7 +24,6 @@
   margin-top: -12px;
 }
 
-
 @media only screen and (max-width: 400px) {
   .title {
     font-size: 31.8px;

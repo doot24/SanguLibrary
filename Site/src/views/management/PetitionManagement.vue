@@ -86,8 +86,10 @@
               </td>
               <td>
                 <div class="d-flex justify-content-center align-content-center gap-2">
-                  <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-light bi bi-pencil-square"
-                    v-on:click="selectPetition(petition)"></button>
+                  <!-- <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-light bi bi-pencil-square"
+                    v-on:click="selectPetition(petition)"></button> -->
+                    <!-- <button @click="showEditor = !showEditor" class="btn btn-light bi bi-pencil-square" ></button> -->
+                    <texteditor />
                 </div>
               </td>
             </tr>
@@ -124,44 +126,45 @@
     </div>
 
     <!-- Begin, Edit modal -->
-    <div style="height:300px" class="modal fade h-100" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-      aria-hidden="true" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">განცხადების რედაქტირება</h5>
-            <button type="button" @click="deselectPetition()" class="btn-close" data-bs-dismiss="modal"
-              aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mt-2 d-flex flex-column">
-              <textarea v-model="comment" class="align-self-center" cols="45" rows="12" style="resize:none" />
-              <h5 class="modal-title mt-2 mb-2" id="exampleModalLabel">სტატუსის რედაქტირება</h5>
+    <!-- <div style="height:300px" class="modal fade h-100" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-bs-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">განცხადების რედაქტირება</h5>
+        <button type="button" @click="deselectPetition()" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mt-2 d-flex flex-column">
+          <textarea v-model="comment" class="align-self-center" cols="45" rows="12" style="resize:none"></textarea>
+          <h5 class="modal-title mt-2 mb-2" id="exampleModalLabel">სტატუსის რედაქტირება</h5>
 
-              <div class="form-check">
-                <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
-                  class="form-check-input" type="radio">
-                <label class="form-check-label">
-                  დადასტურება
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" @click="status = 'rejected'"
-                  :checked="status === 'rejected'">
-                <label class="form-check-label">
-                  უარყოფა
-                </label>
-              </div>
-            </div>
+          <div class="form-check">
+            <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
+              class="form-check-input" type="radio">
+            <label class="form-check-label">
+              დადასტურება
+            </label>
           </div>
-          <div class="modal-footer">
-            <button type="button" @click=deselectPetition() class="btn btn-secondary"
-              data-bs-dismiss="modal">დახურვა</button>
-            <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary">შენახვა</button>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" @click="status = 'rejected'"
+              :checked="status === 'rejected'">
+            <label class="form-check-label">
+              უარყოფა
+            </label>
           </div>
         </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" @click=deselectPetition() class="btn btn-secondary"
+          data-bs-dismiss="modal">დახურვა</button>
+        <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary">შენახვა</button>
+      </div>
     </div>
+  </div>
+</div> -->
+
     <!-- End, Edit modal -->
 
 
@@ -214,6 +217,7 @@ import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import search from '@/components/search.vue'
+import texteditor from '@/components/texteditor.vue'
 
 import { getApiConnectionString } from '@/assets/js/utils'
 
@@ -224,7 +228,8 @@ export default {
     hamburger,
     loadingSpinner,
     headerBar,
-    search
+    search,
+    texteditor
   },
   data() {
     return {
