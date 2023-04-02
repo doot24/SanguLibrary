@@ -9,7 +9,7 @@
 
 </style>
 
-<script>
+<script langu="ts">
 export default {
   name: "App"
 

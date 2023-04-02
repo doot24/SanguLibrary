@@ -26,8 +26,8 @@
 
     <div class="mt-3 container-fluid notificationDisplay vh-100 rounded d-flex flex-column gap-2 p-5"
       style="width: 90%; overflow-y: scroll;">
-      <div v-for="(meta) in notifications" :key="meta._id"
-        v-on:click="this.selectedNotificationMeta = meta; this.selectedNotification = meta.notification[0]; setRead();"
+      <div v-for="(meta) in notifications"
+        v-on:click="selectedNotificationMeta = meta; selectedNotification = meta.notification[0]; setRead();"
         data-bs-toggle="modal" data-bs-target="#notificationModalsMobile" class="d-flex flex-column gap-2">
         <h3 class="headerText">{{ meta.notification[0].title }}</h3>
         <span>{{ formatDate(meta.notification[0].created) }}</span>
@@ -40,14 +40,14 @@
       <div class="modal-dialog modal-dialog-top">
         <div class="modal-content" style="background-color: #322E3D;">
           <div class="modal-header">
-            <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification.title }}
+            <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification?.title }}
             </h5>
             <button type="button" class="btn-close"
-              v-on:click="this.selectedNotification = {}; this.selectedNotificationMeta = {}" data-bs-dismiss="modal"
+              v-on:click="selectedNotification = null; selectedNotificationMeta = null" data-bs-dismiss="modal"
               aria-label="Close"></button>
           </div>
           <div class="modal-body" style="color: #B3B3B3;">
-            <p>{{ selectedNotification.text }}</p>
+            <p>{{ selectedNotification?.text }}</p>
           </div>
         </div>
       </div>
@@ -71,8 +71,8 @@
             </div>
             <div class="col-12 my-3">
               <label for="time-dropdown" class="bi bi-clock headerText mb-3 d-block text-center"> დროის მიხედვით</label>
-              <select id="time-dropdown" class="d-flex smallButton p-3 w-100 text-center"
-                @change="setByTime($event.target.value)">
+              <select id="time-dropdown" v-model="selectedTime" class="d-flex smallButton p-3 w-100 text-center"
+                @change="setByTime(selectedTime)">
                 <option value="week">ყველა</option>
                 <option value="week">ბოლო კვირა</option>
                 <option value="month">ბოლო თვე</option>
@@ -86,8 +86,8 @@
 
       <div class="mt-3 notificationDisplay container-fluid vh-100 rounded d-flex flex-column gap-2 p-5"
         style="width: 90%; overflow-y: scroll;">
-        <div v-for="(meta) in notifications" :key="meta._id"
-          v-on:click="this.selectedNotificationMeta = meta; this.selectedNotification = meta.notification[0]; setRead();"
+        <div v-for="(meta) in notifications"
+          v-on:click="selectedNotificationMeta = meta; selectedNotification = meta.notification[0]; setRead();"
           data-bs-toggle="modal" data-bs-target="#notificationModals" class="d-flex flex-column gap-2">
           <h3 class="headerText">{{ meta.notification[0].title }}</h3>
           <span style="color: #716E6E;">{{ formatDate(meta.notification[0].created) }}</span>
@@ -100,14 +100,14 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content" style="background-color: #322E3D;">
             <div class="modal-header">
-              <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification.title }}
+              <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification?.title }}
               </h5>
               <button type="button" class="btn-close"
-                v-on:click="this.selectedNotification = {}; this.selectedNotificationMeta = {}" data-bs-dismiss="modal"
+                v-on:click="selectedNotification = null; selectedNotificationMeta = null" data-bs-dismiss="modal"
                 aria-label="Close"></button>
             </div>
             <div class="modal-body" style="color: #B3B3B3;">
-              <p>{{ selectedNotification.text }}</p>
+              <p>{{ selectedNotification?.text }}</p>
             </div>
           </div>
         </div>
@@ -119,47 +119,52 @@
 
 <style src="@/assets/css/pages/notifications.css" scoped/>
 
-<script>
+<script lang="ts">
 import hamburger from '@/components/hamburger.vue'
 import headerBar from '@/components/headerBar.vue'
 import { getApiConnectionString } from '@/assets/js/utils';
 import axios from 'axios';
+import { defineComponent } from 'vue'
 
-export default {
+import { User } from '@/interfaces/User';
+import {Notification, NotificationMetaData} from '../interfaces/Notification'
+import store from '@/store';
+export default defineComponent({
   components: {
     hamburger,
     headerBar
   },
   data() {
     return {
-      page: 1,
-      PageSize: 20,
+      page: 1 as number,
+      PageSize: 20 as number,
 
-      hamburgerActive: false,
-      selectedNotification: {},
-      selectedNotificationMeta: {},
-      notifications: [],
+      hamburgerActive: false as boolean,
+      selectedNotification: null as Notification | null,
+      selectedNotificationMeta: null as NotificationMetaData | null,
+      notifications: [] as NotificationMetaData[],
 
-      read: 1,
-      time: 604800000,
+      read: 1 as number,
+      time: 604800000 as number,
 
-      selectedSection: "read",
+      selectedTime : '' as string,
+      selectedSection: "read" as string,
 
-      userData: null
+      userData: {} as User,
     }
   },
   created() {
     // Retrieve the user object from the Vuex store and assign it to the userData property
-    this.userData = this.$store.getters.GetUser
+    this.userData = store.getters.GetUser
   },
 
   mounted() {
     this.getNotifications();
-    document.getElementById("read").focus()
+    document.getElementById("read")?.focus()
   },
 
   methods: {
-    setReadValue(value) {
+    setReadValue(value : number) : void {
       this.read = value;
 
       this.getNotifications();
@@ -179,7 +184,7 @@ export default {
       }).catch((error) => {
       });
     },
-    setByTime(timeSpan) {
+    setByTime(timeSpan : string) : void {
       switch (timeSpan) {
         case 'week':
           this.time = 604800000;
@@ -195,9 +200,9 @@ export default {
       }
       this.getNotifications();
     },
-    setRead() {
+    setRead() : void {
       const body = {
-        notificationid: this.selectedNotificationMeta._id
+        notificationid: this.selectedNotificationMeta?._id
       };
       axios.post(getApiConnectionString() + '/notification/setread', body, {
         withCredentials: true,
@@ -206,7 +211,7 @@ export default {
       }).catch((error) => {
       });
     },
-    formatDate(timestamp) {
+    formatDate(timestamp : number) {
       var d = new Date(timestamp);
       const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
       return formattedDate;
@@ -216,5 +221,5 @@ export default {
       return this.notifications.filter(notification => !notification.read).length;
     }
   }
-}
+});
 </script>

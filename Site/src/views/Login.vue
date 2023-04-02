@@ -41,28 +41,33 @@
 
 <style src="@/assets/css/pages/loginpage.css" scoped/>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+import store from '@/store';
+
+export default defineComponent({
   data() {
     return {
-      loginText: 'შესვლა',
-      email: '',
-      password: '',
-      showAlert: false,
-      alertMessage: 'ელ.ფოსტა ან პაროლი ცარიელია',
-      loggingIn: false
+      loginText: 'შესვლა' as String,
+      email: '' as String,
+      password: '' as String,
+      showAlert: false as boolean,
+      waitingForResponse : false as boolean,
+      alertMessage: 'ელ.ფოსტა ან პაროლი ცარიელია' as String,
+      loggingIn: false as boolean
     }
   },
   mounted () {
-    const form = document.getElementById('mainform');
+    const form : any = document.getElementById('mainform') || null;
 
-    form.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event : any) => {
       event.preventDefault(); 
       this.Login();
     });
   },
   methods: {
-    Login() {
+    Login() : void {
+
       if (this.email && this.password) {
         if(this.loggingIn)
         {
@@ -72,11 +77,11 @@ export default {
         this.loginText = "იტვირთება...";
         this.loggingIn = true;
 
-        this.$store.dispatch('Login', { email: this.email, password: this.password })
+        store.dispatch('Login', { email: this.email, password: this.password })
           .then(() => {
             this.$router.push({ path: '/' });
           })
-          .catch((error) => {
+          .catch((error : any) => {
             this.alertMessage = error.response.data.message;
             this.loginText = "შესვლა";
             this.waitingForResponse = false;
@@ -91,5 +96,5 @@ export default {
       }
     }
   },
-};
+});
 </script>

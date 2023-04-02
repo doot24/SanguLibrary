@@ -55,24 +55,27 @@
 
 </style>
 
-<script>
+<script lang="ts">
 import hamburger from '@/components/hamburger.vue'
 import headerBar from '@/components/headerBar.vue'
 
-export default {
+import { defineComponent } from 'vue'
+import store from '@/store';
+
+export default defineComponent({
   components: {
     hamburger,
     headerBar
   },
   data() {
     return {
-      hamburgerActive: false,
-      userData: null
+      hamburgerActive: false as boolean,
+      userData: {} as object
     }
   },
   created() {
     // Retrieve the user object from the Vuex store and assign it to the userData property
-    this.userData = this.$store.getters.GetUser
+    this.userData = store.getters.GetUser
   }
-}
+});
 </script>

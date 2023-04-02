@@ -6,16 +6,15 @@
                 <div class="form-group">
                     <div class="dropdown">
                         <button class="bi-sliders btn searchButton" type="button" id="categoryDropdown"
-                            data-bs-toggle="dropdown" aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em"/>
+                            data-bs-toggle="dropdown" aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em" />
                         <div class="dropdown-menu" aria-labelledby="categoryDropdown">
                             <a v-for="(option, index) in options" :key="index" class="dropdown-item"
                                 :class="{ active: selectedOption === option.value }" href="#"
                                 @click="selectedOption = option.value">{{ option.label }}</a>
                         </div>
-                        <input type="hidden" v-model="selectedOption" id="category"/>
+                        <input type="hidden" v-model="selectedOption" id="category" />
                     </div>
                 </div>
-
                 <div class="input-group d-flex align-items-center gap-2">
                     <input v-on:keyup.enter="onEnter" style="height: 40px;" class="form-control rounded-pill mr-sm-2"
                         v-model="searchInput" type="search" placeholder="ძიება" aria-label="Search" name="search">
@@ -27,15 +26,21 @@
         </div>
     </div>
 </template>
+<style src="@/assets/css/components/search.css" scoped />
 
-<style src="@/assets/css/components/search.css" scoped/>
+<script lang="ts">
+import { defineComponent,PropType } from 'vue';
 
-<script>
-export default {
+interface SearchOption {
+    Label : String,
+    Value : String
+}
+
+export default defineComponent({
     name: 'SearchBox',
     props: {
         options: {
-            type: Array,
+            type:  Array as PropType<Array<SearchOption>>,
             required: true
         },
         cleared: {
@@ -45,7 +50,7 @@ export default {
     },
     data() {
         return {
-            selectedOption: this.options[0].value,
+            selectedOption: this.options[0].Value,
             searchInput: '',
             clearedInput: false
         };
@@ -71,8 +76,6 @@ export default {
             this.searchBook();
         }
     }
-};
+});
 </script>
-  
 <style scoped></style>
-  
