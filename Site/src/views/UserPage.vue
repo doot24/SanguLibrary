@@ -59,6 +59,8 @@
 import hamburger from '@/components/hamburger.vue'
 import headerBar from '@/components/headerBar.vue'
 
+import { User } from '@/interfaces/User';
+
 import { defineComponent } from 'vue'
 import store from '@/store';
 
@@ -70,7 +72,7 @@ export default defineComponent({
   data() {
     return {
       hamburgerActive: false as boolean,
-      userData: {} as object
+      userData: {} as User
     }
   },
   created() {

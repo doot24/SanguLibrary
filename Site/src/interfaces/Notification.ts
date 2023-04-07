@@ -1,15 +1,15 @@
 export class Notification {
-    _id: String = "";
-    title: String = "";
+    _id: string = "";
+    title: string = "";
     created : number = 0;
-    text: String = "";
-    author: String = "";
+    text: string = "";
+    author: string = "";
 }
 
 export class NotificationMetaData {
-    _id: String = "";
-    attachedNotification: String = "";
-    receiver: String = "";
-    read: Boolean = false;
+    _id: string = "";
+    attachedNotification: string = "";
+    receiver: string = "";
+    read: boolean = false;
     notification : Notification[] = [];
 }

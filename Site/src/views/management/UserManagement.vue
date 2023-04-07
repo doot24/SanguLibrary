@@ -20,7 +20,7 @@
       </div>
 
       <div class="d-flex justify-content-center align-items-center mb-3 ">
-        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch"/>
+        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
@@ -33,16 +33,17 @@
               <th scope="col" class="text-center" style="width: 10%;">პირადი ნომერი</th>
               <th scope="col" class="text-center" style="width: 10%;">მობილურის ნომერი</th>
               <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">როლები</th>
-              <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">ქმედებები</th>
+              <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">ქმედებები
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(user) in users" :key="user._id"
-              :class="{ 'table-border': user.length > 0 && user[0]._id === user._id }">
+              :class="{ 'table-border': users.length > 0 && user._id === users[0]._id }">
               <td :key="user._id">
-                  <img class="img-fluid rounded" :src="user.photo || require('@/assets/images/person.png')"
-                       style="min-width: 160px; max-width: 100%; height: auto;"
-                       :alt="user.photo ? 'User profile picture' : 'Default icon'">
+                <img class="img-fluid rounded" :src="user.photo || require('@/assets/images/person.png')"
+                  style="min-width: 160px; max-width: 100%; height: auto;"
+                  :alt="user.photo ? 'User profile picture' : 'Default icon'">
               </td>
               <td class="text-center text-wrap" style="width: 6rem;">{{ user.firstName }}</td>
               <td class="text-center text-wrap" style="width: 6rem;">{{ user.lastName }}</td>
@@ -155,16 +156,22 @@ table {
   background-color: rgba(35, 33, 40, 1);
 }
 </style>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import store from '@/store'
+import axios from 'axios'
+
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import search from '@/components/search.vue'
-import { getApiConnectionString } from '@/assets/js/utils'
- 
-import axios from 'axios'
 
-export default {
+import { getApiConnectionString } from '@/assets/js/utils'
+import { User } from '@/interfaces/User'
+import { SearchOptions } from '@/interfaces/SearchOptions'
+import { PaginationData } from '@/interfaces/PaginationData'
+
+export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
@@ -173,45 +180,45 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      pageSize: 10,
-      users: [],
-      paginationData: {},
+      page: 1 as number,
+      pageSize: 10 as number,
+      users: [] as User[],
+      paginationData: {} as PaginationData,
 
-      selectedUser: {},
+      selectedUser: null as User | null,
 
-      confirmedDelete: false,
-      isLoading: false,
+      confirmedDelete: false as boolean,
+      isLoading: false as boolean,
 
-      userData: {},
+      userData: {} as User,
 
-      SearchErrors: '',
-      successMessage: '',
-      errorMessage: '',
-      searchInput: '',
-      
-      options : [{label : 'პირადი ნომერი',value : 'publicNumber'},{label : 'მობილური ნომერი',value : 'phoneNumber'}],
-      selectedOption: 'publicNumber'
+      SearchErrors: '' as string,
+      successMessage: '' as string,
+      errorMessage: '' as string,
+      searchInput: '' as string,
+
+      options: [{ Label: 'პირადი ნომერი', Value: 'publicNumber' }, { Label: 'მობილური ნომერი', Value: 'phoneNumber' }] as SearchOptions[],
+      selectedOption: 'publicNumber' as string
     }
   },
-  created () {
-    this.userData = this.$store.getters.GetUser
+  created() {
+    this.userData = store.getters.GetUser
   },
   mounted() {
     this.loadUser()
   },
   methods: {
-    handleSearch(event) {
+    handleSearch(event: any) {
       this.searchInput = event.searchInput;
       this.selectedOption = event.selectedOption;
       this.searchUser();
     },
-    onInputCleared(event) {
+    onInputCleared(event: any) {
       this.searchInput = '';
       this.loadUser();
     },
 
-    searchUser() {
+    searchUser(): void {
       if (!this.searchInput) {
         return;
       }
@@ -225,7 +232,7 @@ export default {
       }
     },
 
-    addRemoveRoleValue(user, value) {
+    addRemoveRoleValue(user: any, value: string): void {
       if (user.roles.includes(value)) {
         const index = user.roles.indexOf(value);
         user.roles.splice(index, 1);
@@ -236,7 +243,7 @@ export default {
     },
 
     // pagination
-    setPageSize(size) {
+    setPageSize(size: number): void {
       this.pageSize = size;
       if (this.searchInput) {
         this.searchUser();
@@ -244,7 +251,7 @@ export default {
       }
       this.loadUser();
     },
-    selectPage(page) {
+    selectPage(page: number): void {
       this.page = page;
       if (this.searchInput) {
         this.searchUser();
@@ -254,7 +261,7 @@ export default {
     },
 
     // CRUD
-    loadUser() {
+    loadUser(): void {
       if (this.searchInput) {
         this.searchUser();
         return;
@@ -278,7 +285,7 @@ export default {
       })
     },
 
-    searchByPublicNumber() {
+    searchByPublicNumber(): void {
       this.isLoading = true;
       axios.get(getApiConnectionString() + '/admin/usermanagement/search/publicnum?publicNum=' + this.searchInput, { withCredentials: true },).then((results) => {
         this.users = []
@@ -290,7 +297,7 @@ export default {
       })
     },
 
-    searchByPhoneNumber() {
+    searchByPhoneNumber(): void {
       this.isLoading = true;
       axios.get(getApiConnectionString() + '/admin/usermanagement/search/phoneNum?phoneNum=' + this.searchInput, { withCredentials: true },).then((results) => {
         this.users = []
@@ -302,12 +309,12 @@ export default {
       })
     },
 
-    updateUserRoles(_id, Roles) {
+    updateUserRoles(_id: string, Roles: any): void {
       this.isLoading = true;
 
       axios.post(getApiConnectionString() + '/admin/usermanagement/setroles', { _id: _id, roles: JSON.stringify(Roles) }, { withCredentials: true },).then(() => {
         this.isLoading = false;
-        this.selectedUser = {};
+        this.selectedUser = null;
         this.successMessage = "მომხმარებელის როლი წარმატებით განახლდა!";
         this.loadUser();
       }).catch((error) => {
@@ -316,12 +323,12 @@ export default {
       })
     },
 
-    deleteUser() {
+    deleteUser(): void {
       this.isLoading = true;
 
-      axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { _id: this.selectedUser._id }, { withCredentials: true },).then(() => {
+      axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { _id: this.selectedUser?._id }, { withCredentials: true },).then(() => {
         this.isLoading = false;
-        this.selectedUser = {};
+        this.selectedUser = null;
         this.successMessage = "მომხმარებელის წარმატებით წაიშალა!";
         this.loadUser();
       }).catch((error) => {
@@ -330,5 +337,5 @@ export default {
       })
     }
   }
-}
+});
 </script>

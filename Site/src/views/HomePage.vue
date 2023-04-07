@@ -60,20 +60,24 @@
 
 <style src="@/assets/css/pages/homepage.css" scoped/>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
+
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
 import titleBar from '@/components/home/titleBar.vue'
 import footerBar from '@/components/home/footerBar.vue'
 import carousel from '@/components/home/carousel.vue'
-import axios from 'axios'
-
 import search from '@/components/search.vue'
 
-import { getApiConnectionString } from '@/assets/js/utils'
+import {Book} from '@/interfaces/Book'
 
-export default {
+import { getApiConnectionString } from '@/assets/js/utils'
+import {SearchOptions} from '@/interfaces/SearchOptions'
+
+export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
@@ -85,35 +89,35 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      pageSize: 10,
-      searchInput: '',
+      page: 1 as number,
+      pageSize: 10 as number,
+      searchInput: '' as string,
 
-      isLoading: false,
-      showSearchResults: false,
-      hamburgerVisible: true,
-      showDropdown: false,
-      selectedOption: 'free',
+      isLoading: false as boolean,
+      showSearchResults: false as boolean,
+      hamburgerVisible: true as boolean,
+      showDropdown: false as boolean,
+      selectedOption: 'free' as string,
       options: [
-        { label: 'თავისუფალი', value: 'free' },
-        { label: 'ავტორი', value: 'author' },
-        { label: 'დასახელება', value: 'title' }
-      ],
-      books: [],
+        { Label: 'თავისუფალი', Value: 'free' },
+        { Label: 'ავტორი', Value: 'author' },
+        { Label: 'დასახელება', Value: 'title' }
+      ] as SearchOptions[],
+      books: [] as Book[],
       paginationData: {}
     }
   },
   methods: {
-    handleSearch(event) {
+    handleSearch(event : any) : void {
       this.selectedOption = event.selectedOption;
       this.searchInput = event.searchInput;
       this.searchBook();
     },
-    onInputCleared(event) {
+    onInputCleared(event : any) : void {
       this.books = [];
       this.showSearchResults = false;
     },
-    searchFilthered() {
+    searchFilthered() : void {
       switch (this.selectedOption) {
         case "title":
           this.searchByTitle();
@@ -123,7 +127,7 @@ export default {
           break;
       }
     },
-    searchByTitle() {
+    searchByTitle() : void{
       this.isLoading = true;
 
       const params = {
@@ -141,11 +145,11 @@ export default {
 
         this.isLoading = false;
 
-      }).catch((error) => {
+      }).catch((error : any) => {
         this.isLoading = false;
       });
     },
-    searchByAuthor() {
+    searchByAuthor() : void {
       this.isLoading = true;
 
       const params = {
@@ -167,7 +171,7 @@ export default {
         this.isLoading = false;
       });
     },
-    searchBook() {
+    searchBook() : void {
       if (this.selectedOption !== "free") {
         this.searchFilthered();
         return;
@@ -197,6 +201,6 @@ export default {
       }
     }
   }
-}
+});
 
 </script>

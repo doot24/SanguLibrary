@@ -1,16 +1,19 @@
+import { User } from "./User";
+
 export class PetitionTemplate {
-    _id : String = ""
-    title : String = ""
-    text : String = ""
+    _id : string = ""
+    title : string = ""
+    text : string = ""
 }
 
 export class Petition {
-    _id: String = "";
-    status: String = "";
-    template: String = "";
+    _id: string = "";
+    status: string = "";
+    template: string = "";
     timestamp: number = 0;
-    owner: String = "";
-    text: String = "";
+    owner: string = "";
+    text: string = "";
     usedtemplate : PetitionTemplate[] = [];
-    comment: String = "";
+    user : User[] = [];
+    comment: string = "";
 }

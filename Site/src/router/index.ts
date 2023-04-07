@@ -57,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/usermanagement',
     component: UserManagement,
-    beforeEnter: requireRoles(['editor', 'admin', 'employee']),
+    beforeEnter: requireRoles(['admin']),
   },
   {
     path: '/petitionsmanagement',

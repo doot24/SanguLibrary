@@ -43,29 +43,32 @@
             <span class="mr-auto text-nowrap">რესურსების მენეჯმენტი</span>
           </button>
         </div>
+        <button @click="loadRoute('/notificationmanagement')" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')"
+          :class="{ 'selectedButton': $route.path === '/notificationmanagement' }"
+          class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
+          <span class="bi bi-app-indicator me-3 ms-1" style="font-size: 2em;"></span>
+          <span class="mr-auto text-nowrap">შეტყობინებების მენეჯმენტი</span>
+        </button>
         <!-- End, Editor panel -->
 
         <!-- Begin, Admin panel -->
         <div class="d-flex align-items-center flex-column">
-          <button @click="loadRoute('/usermanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
+          <button @click="loadRoute('/usermanagement')" v-if="userData.roles.includes('admin')" :class="{ 'selectedButton': $route.path === '/usermanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-person-circle me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">მომხმარებლის მენეჯმენტი</span>
           </button>
-          <button @click="loadRoute('/notificationmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor')"
-            :class="{ 'selectedButton': $route.path === '/notificationmanagement' }"
-            class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-app-indicator me-3 ms-1" style="font-size: 2em;"></span>
-            <span class="mr-auto text-nowrap">შეტყობინებების მენეჯმენტი</span>
-          </button>
-          <button @click="loadRoute('/petitionsmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')"
-            :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
-            class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
-            <span class="bi bi-file-text me-3 ms-1" style="font-size: 2em;"></span>
-            <span class="mr-auto text-nowrap">განცხადებების მენეჯმენტი</span>
-          </button>
         </div>
         <!-- End, Admin panel -->
+        
+        <!-- Begin, Shared -->
+        <button @click="loadRoute('/petitionsmanagement')" v-if="userData.roles.includes('employee') || userData.roles.includes('editor') || userData.roles.includes('admin')"
+          :class="{ 'selectedButton': $route.path === '/petitionsmanagement' }"
+          class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
+          <span class="bi bi-file-text me-3 ms-1" style="font-size: 2em;"></span>
+          <span class="mr-auto text-nowrap">განცხადებების მენეჯმენტი</span>
+        </button>
+        <!-- End, Shared-->
 
         <button @click="LogOut()"
           class="w-100 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center position-relative">
@@ -228,7 +231,6 @@ export default defineComponent({
           this.$router.push({ path: '/login' });
         })
         .catch(error => {
-          console.log(error)
         })
     }
   }

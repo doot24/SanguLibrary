@@ -23,7 +23,6 @@
                 <th style="width: 20%;" class="p-4">სტატუსი</th>
                 <th class="p-4">განცხადების ტიპი</th>
                 <th class="p-4">თარიღი</th>
-                <th class="p-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -41,7 +40,6 @@
                 <td class="pt-4 w-25"><button @click="selectedPetition = petition" data-bs-toggle="modal"
                     data-bs-target="#largeModal" class="rounded-circle messageButton bi-chat-left-text"></button></td>
               </tr>
-
             </tbody>
           </table>
         </div>
@@ -175,6 +173,9 @@ export default defineComponent({
 
       this.text = '';
       this.selectedOption = '';
+      this.placeholderText = 'აირჩიეთ ტიპი';
+
+      this.showDropdown = false;
     },
 
     // CRUD

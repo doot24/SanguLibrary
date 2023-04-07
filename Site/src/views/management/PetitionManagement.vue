@@ -56,10 +56,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="petition in petitions" :key="petition.petitionid" :class="{
+            <tr v-for="petition in petitions" :class="{
               'table-border':
-                petition.length > 0 &&
-                petition[0].petitionid === petition.petitionid,
+                petitions.length > 0 &&
+                petitions[0]._id === petition._id,
             }">
               <td class="p-5 pt-3">
                 <div v-bind:class="petition.status" class="bi-circle-fill" style="font-size: 1.3em;"></div>
@@ -212,7 +212,11 @@ table {
   background-color: rgba(35, 33, 40, 1);
 }
 </style>
-<script>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
+
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
@@ -220,10 +224,12 @@ import search from '@/components/search.vue'
 import texteditor from '@/components/texteditor.vue'
 
 import { getApiConnectionString } from '@/assets/js/utils'
+import { Petition } from '@/interfaces/Petition'
+import { PaginationData } from '@/interfaces/PaginationData'
+import { User } from '@/interfaces/User'
+import { SearchOptions } from '@/interfaces/SearchOptions'
 
-import axios from 'axios'
-
-export default {
+export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
@@ -233,39 +239,39 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      pageSize: 10,
-      petitions: [],
-      paginationData: {},
+      page: 1 as number,
+      pageSize: 10 as number,
+      petitions: [] as Petition[],
+      paginationData: {} as PaginationData,
 
-      selectedPetition: {},
-      hamburgerVisible: true,
+      selectedPetition: null as Petition | null,
+      hamburgerVisible: true as boolean,
 
-      confirmedDelete: false,
-      isLoading: false,
+      confirmedDelete: false as boolean,
+      isLoading: false as boolean,
 
-      userData: null,
+      userData: null as User | null,
 
-      SearchErrors: '',
-      successMessage: '',
-      errorMessage: '',
+      SearchErrors: '' as string,
+      successMessage: '' as string,
+      errorMessage: '' as string,
 
-      status: '',
-      comment: '',
+      status: '' as string,
+      comment: '' as string,
 
-      templateTitle: '',
-      templateText: '',
+      templateTitle: '' as string,
+      templateText: '' as string,
 
-      options: [{ label: 'პირადი ნომერი', value: 'publicNumber' }, { label: 'მობილური ნომერი', value: 'phoneNumber' }],
-      searchInput: '',
-      selectedOption: "publicNumber"
+      options: [{ Label: 'პირადი ნომერი', Value: 'publicNumber' }, { Label: 'მობილური ნომერი', Value: 'phoneNumber' }] as SearchOptions[],
+      searchInput: '' as string,
+      selectedOption: "publicNumber" as string
     }
   },
   mounted() {
     this.getRecentPetitions()
   },
   watch: {
-    searchInput(newValue) {
+    searchInput(newValue) : void {
       if (!newValue.trim()) {
         this.getRecentPetitions()
       }
@@ -273,35 +279,35 @@ export default {
   },
 
   methods: {
-    handleSearch(event) {
+    handleSearch(event : any) : void {
       this.searchInput = event.searchInput;
       this.selectedOption = event.selectedOption;
       this.searchFilthered();
     },
-    onInputCleared(event) {
+    onInputCleared(event : any) : void {
       this.searchInput = '';
       this.getRecentPetitions();
     },
 
-    selectPetition(petition) {
+    selectPetition(petition : Petition) : void{
       this.selectedPetition = petition;
       this.comment = petition.comment;
       this.status = petition.status;
     },
 
-    deselectPetition() {
-      this.selectedPetition = {};
+    deselectPetition() : void {
+      this.selectedPetition = null;
       this.comment = '';
       this.status = '';
     },
 
-    clearTemplateInputs() {
+    clearTemplateInputs() : void {
       this.templateTitle = '';
       this.templateText = '';
     },
 
     // CRUD
-    getRecentPetitions() {
+    getRecentPetitions() : void{
       const params = {
         page: this.page,
         pageSize: this.pageSize
@@ -320,7 +326,7 @@ export default {
         this.isLoading = false;
       });
     },
-    addPetitionTempate() {
+    addPetitionTempate() : void {
       this.isLoading = true;
 
       this.successMessage = '';
@@ -340,14 +346,14 @@ export default {
         this.isLoading = false;
       })
     },
-    updatePetition() {
+    updatePetition() : void{
       this.isLoading = true;
 
       this.successMessage = '';
       this.errorMessage = '';
 
       axios.post(getApiConnectionString() + '/admin/petitionmanagement/update', {
-        petitionid: this.selectedPetition._id,
+        petitionid: this.selectedPetition?._id,
         status: this.status,
         comment: this.comment
       }, {
@@ -362,15 +368,15 @@ export default {
         this.isLoading = false;
       })
     },
-    setPageSize(size) {
+    setPageSize(size : number) : void {
       this.pageSize = size;
       this.getRecentPetitions();
     },
-    selectPage(page) {
+    selectPage(page : number) : void {
       this.page = page;
       this.getRecentPetitions();
     },
-    searchFilthered() {
+    searchFilthered() : void{
       if (!this.searchInput) {
         return;
       }
@@ -383,7 +389,7 @@ export default {
           break;
       }
     },
-    searchByPublicNumber() {
+    searchByPublicNumber() : void {
       this.isLoading = true;
 
       const params = {
@@ -397,7 +403,6 @@ export default {
       }).then((results) => {
         this.petitions = results.data.petitions;
         this.paginationData = results.data;
-        this.showSearchResults = true;
 
         this.isLoading = false;
 
@@ -407,7 +412,7 @@ export default {
         this.isLoading = false;
       });
     },
-    searchByPhoneNumber() {
+    searchByPhoneNumber() : void {
       this.isLoading = true;
 
       const params = {
@@ -421,7 +426,6 @@ export default {
       }).then((results) => {
         this.petitions = results.data.petitions;
         this.paginationData = results.data;
-        this.showSearchResults = true;
 
         this.isLoading = false;
 
@@ -431,13 +435,13 @@ export default {
         this.isLoading = false;
       });
     },
-    formatDate(timestamp) {
+    formatDate(timestamp : number) {
       var d = new Date(timestamp);
       const formattedDate = d.toLocaleDateString().split(',')[0];
       return formattedDate;
     },
-    toggleTruncation(_id) {
-      const el = document.getElementById(_id);
+    toggleTruncation(_id : string) {
+      const el : any = document.getElementById(_id);
       if (el.classList.contains('text-truncate')) {
         el.classList.remove('text-truncate');
       } else {
@@ -445,5 +449,5 @@ export default {
       }
     }
   }
-}
+});
 </script>

@@ -33,7 +33,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(meta) in notifications" :key="meta._id">
+            <tr v-for="(meta) in notifications">
               <td>{{ meta.title }}</td>
               <td :id="meta._id" class="text-truncate" @click="toggleTruncation(meta._id)"
                 style="max-width: 300px; cursor: pointer;">{{ meta.text }}</td>
@@ -73,12 +73,11 @@
         </nav>
       </div>
       <!-- End, Pagination -->
-
-
     </div>
+
     <!-- Begin, Send notification -->
     <div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel"
-      aria-hidden="true">
+      aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-dark text-light">
@@ -109,6 +108,7 @@
       </div>
     </div>
     <!-- End, Send notification -->
+
   </div>
 </template>
 
@@ -133,15 +133,21 @@ table {
 
 }
 </style>
-<script>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
+
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
+
 import { getApiConnectionString } from '@/assets/js/utils'
 
-import axios from 'axios'
+import { PaginationData } from '@/interfaces/PaginationData'
+import { Notification } from '@/interfaces/Notification'
 
-export default {
+export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
@@ -149,55 +155,51 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      pageSize: 10,
-      notifications: [],
-      paginationData: {},
+      page: 1 as number,
+      pageSize: 10 as number,
+      notifications: [] as Notification[],
+      paginationData: {} as PaginationData,
 
-      successMessage: "",
-      errorMessage: "",
+      successMessage: "" as string,
+      errorMessage: "" as string,
 
-      title: "",
-      text: "",
+      title: "" as string,
+      text: "" as string,
 
-      selectedBook: {},
-
-      isLoading: false,
-
-      categories: [],
+      isLoading: false as boolean
     }
   },
   mounted() {
     this.getRecentNotifications()
   },
   methods: {
-    toggleTruncation(id) {
-      const el = document.getElementById(id);
+    toggleTruncation(id: string): void {
+      const el: any = document.getElementById(id);
       if (el.classList.contains('text-truncate')) {
         el.classList.remove('text-truncate');
       } else {
         el.classList.add('text-truncate');
       }
     },
-    clearInputs() {
+    clearInputs(): void {
       this.title = "";
       this.text = "";
     },
-    setPageSize(size) {
+    setPageSize(size: number): void {
       this.pageSize = size;
       this.getRecentNotifications();
     },
-    selectPage(page) {
+    selectPage(page: number): void {
       this.page = page;
       this.getRecentNotifications();
     },
 
-    canSubmit() {
+    canSubmit(): boolean {
       return (!this.title || !this.text) === false;
     },
 
     // CRUD
-    getRecentNotifications() {
+    getRecentNotifications(): void {
       const params = {
         page: this.page,
         pageSize: this.pageSize
@@ -216,14 +218,13 @@ export default {
       });
     },
 
-    formatDate(timestamp) {
+    formatDate(timestamp: number) {
       var d = new Date(timestamp);
       const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
       return formattedDate;
     },
 
-
-    addNotification() {
+    addNotification(): void {
       const body = {
         title: this.title,
         text: this.text
@@ -243,5 +244,5 @@ export default {
       });
     }
   }
-}
+});
 </script>

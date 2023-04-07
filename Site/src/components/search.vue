@@ -9,8 +9,8 @@
                             data-bs-toggle="dropdown" aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em" />
                         <div class="dropdown-menu" aria-labelledby="categoryDropdown">
                             <a v-for="(option, index) in options" :key="index" class="dropdown-item"
-                                :class="{ active: selectedOption === option.value }" href="#"
-                                @click="selectedOption = option.value">{{ option.label }}</a>
+                                :class="{ active: selectedOption === option.Value }" href="#"
+                                @click="selectedOption = option.Value">{{ option.Label }}</a>
                         </div>
                         <input type="hidden" v-model="selectedOption" id="category" />
                     </div>
@@ -30,17 +30,13 @@
 
 <script lang="ts">
 import { defineComponent,PropType } from 'vue';
-
-interface SearchOption {
-    Label : String,
-    Value : String
-}
+import {SearchOptions} from '@/interfaces/SearchOptions'
 
 export default defineComponent({
     name: 'SearchBox',
     props: {
         options: {
-            type:  Array as PropType<Array<SearchOption>>,
+            type:  Array as PropType<Array<SearchOptions>>,
             required: true
         },
         cleared: {
