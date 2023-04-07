@@ -46,6 +46,11 @@ function UpdateBook(req : Request) : Promise<void>
                 storedBook.resourceMeta.dateUpdated = Date.now();
                 storedBook.resourceMeta.updatedBy = req.session.user._id.toString();
                 storedBook.resourceMeta.amount = resource.amount;
+
+                if(storedBook.resourceMeta.amountLeft > resource.amount)
+                {
+                    storedBook.resourceMeta.amountLeft = resource.amount;
+                }
             }
 
             if (storedBook.digital && storedBook.digitalResouce) {
@@ -70,8 +75,6 @@ function UpdateBook(req : Request) : Promise<void>
                     storedBook.digitalResouce.coverURL = coverURL;
                 }
             }
-
-            console.log('tas')
 
             await BookSchema.findOneAndUpdate({_id : req.body._id}, storedBook);
             resolve();

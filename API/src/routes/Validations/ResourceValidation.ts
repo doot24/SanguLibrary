@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { body, check, validationResult } from 'express-validator';
 
-export const validateUpdateResource = [
-  body('_id').notEmpty().isUUID(),
+export const validateAddResource = [
   body('resource').notEmpty().isJSON(),
+  body('type').notEmpty().isNumeric(),
   (req : Request, res : Response, next : any) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -13,7 +13,9 @@ export const validateUpdateResource = [
   }
 ];
 
-export const validateAddResource = [
+export const validateUpdateResource = [
+  body('_id').notEmpty().isUUID(),
+  body('type').notEmpty().isNumeric(),
   body('resource').notEmpty().isJSON(),
   (req : Request, res : Response, next : any) => {
     const errors = validationResult(req);

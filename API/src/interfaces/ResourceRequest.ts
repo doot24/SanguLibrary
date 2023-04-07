@@ -1,11 +1,5 @@
-interface IResourseInfo
-{
-  kind : Number
-}
-
-class BookAddResource implements IResourseInfo {
+class BookAddResource {
   title : string = "";
-  kind: Number = 0;
   digital : boolean = false;
   subTitle: string = "";
   authors: string[] = [];
@@ -22,9 +16,8 @@ class BookAddResource implements IResourseInfo {
   amount : number = 0;
 }
 
-class BookUpdateResource implements IResourseInfo {
+class BookUpdateResource {
   title : string = "";
-  kind: Number = 0;
   subTitle: string = "";
   authors: string[] = [];
   editors: string[] = [];
@@ -40,4 +33,43 @@ class BookUpdateResource implements IResourseInfo {
   amount : number = 0;
 }
 
-export {IResourseInfo, BookAddResource, BookUpdateResource }
+class JournalAddResource {
+  title : string = "";
+  digital : boolean = false;
+  subTitle: string = "";
+  authors: string[] = [];
+  editors: string[] = [];
+  collegues : string[] = [];
+  description: string = "";
+  category: string = "";
+  number : number = 0;
+  issn: string = "";
+  publication: string = "";
+  publicationLocation: string = "";
+  publicationYear: string = "";
+  resume: string = "";
+  remark: string = "";
+  saveCipher: string = "";
+  amount : number = 0;
+}
+
+class JournalUpdateResource {
+  title : string = "";
+  subTitle: string = "";
+  authors: string[] = [];
+  editors: string[] = [];
+  collegues : string[] = [];
+  description: string = "";
+  category: string = "";
+  number : number = 0;
+  issn: string = "";
+  publication: string = "";
+  publicationLocation: string = "";
+  publicationYear: string = "";
+  resume: string = "";
+  remark: string = "";
+  saveCipher: string = "";
+  amount : number = 0;
+}
+
+export { BookAddResource, BookUpdateResource, JournalAddResource, JournalUpdateResource }
