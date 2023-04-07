@@ -1,6 +1,6 @@
 class BookAddResource {
-  title : string = "";
-  digital : boolean = false;
+  title: string = "";
+  digital: boolean = false;
   subTitle: string = "";
   authors: string[] = [];
   editors: string[] = [];
@@ -13,11 +13,11 @@ class BookAddResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount : number = 0;
+  amount: number = 0;
 }
 
 class BookUpdateResource {
-  title : string = "";
+  title: string = "";
   subTitle: string = "";
   authors: string[] = [];
   editors: string[] = [];
@@ -30,19 +30,19 @@ class BookUpdateResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount : number = 0;
+  amount: number = 0;
 }
 
 class JournalAddResource {
-  title : string = "";
-  digital : boolean = false;
+  title: string = "";
+  digital: boolean = false;
   subTitle: string = "";
   authors: string[] = [];
   editors: string[] = [];
-  collegues : string[] = [];
+  collegues: string[] = [];
   description: string = "";
   category: string = "";
-  number : number = 0;
+  number: number = 0;
   issn: string = "";
   publication: string = "";
   publicationLocation: string = "";
@@ -50,18 +50,18 @@ class JournalAddResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount : number = 0;
+  amount: number = 0;
 }
 
 class JournalUpdateResource {
-  title : string = "";
+  title: string = "";
   subTitle: string = "";
   authors: string[] = [];
   editors: string[] = [];
-  collegues : string[] = [];
+  collegues: string[] = [];
   description: string = "";
   category: string = "";
-  number : number = 0;
+  number: number = 0;
   issn: string = "";
   publication: string = "";
   publicationLocation: string = "";
@@ -69,7 +69,15 @@ class JournalUpdateResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount : number = 0;
+  amount: number = 0;
 }
 
-export { BookAddResource, BookUpdateResource, JournalAddResource, JournalUpdateResource }
+class DissertationAddUpdateResource {
+  saveCipher: string = "";
+  title: string = "";
+  subTitle: string = "";
+  professor: string = "";
+  publicationYear: number = 0;
+}
+
+export { BookAddResource, BookUpdateResource, JournalAddResource, JournalUpdateResource, DissertationAddUpdateResource }
