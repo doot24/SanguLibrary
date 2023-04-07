@@ -47,7 +47,7 @@ function UpdateDissertation(req: Request): Promise<void> {
 
                 if (dissertationUpload) {
                     await deleteFile(String(storedDissertation.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                    let fileURL: string = await uploadFile("books", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
+                    let fileURL: string = await uploadFile("dissertations", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
                     storedDissertation.digitalResouce.fileURL = fileURL;
                 }
 
@@ -126,7 +126,7 @@ function SaveDissertation(req: Request): Promise<void> {
             const FileExtension: string | undefined = dissertationFile?.originalname ? dissertationFile.originalname.split('.').pop()?.toLowerCase() : undefined;
             const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
 
-            let fileURL: string = await uploadFile("dissertation", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
+            let fileURL: string = await uploadFile("dissertations", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
             let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
 
             digitalResouce.fileURL = fileURL;

@@ -39,7 +39,6 @@ function UpdateJournal(req : Request) : Promise<void>
             storedJournal.publication = resource.publication;
             storedJournal.publicationLocation = resource.publicationLocation;
             storedJournal.publicationYear = resource.publicationYear;
-            storedJournal.resume = resource.resume;
             storedJournal.remark = resource.remark;
             storedJournal.saveCipher = resource.saveCipher;
 
@@ -64,7 +63,7 @@ function UpdateJournal(req : Request) : Promise<void>
                     const journalfile = journalUpload[0];
                     const journalFileExtension: string | undefined = journalfile?.originalname ? journalfile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     await deleteFile(String(storedJournal.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                    let fileURL: string = await uploadFile("books", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalfile.buffer);
+                    let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalfile.buffer);
                     storedJournal.digitalResouce.fileURL = fileURL;
                 }
                 
@@ -134,7 +133,6 @@ function SaveJournal(req: Request): Promise<void> {
             journal.publication = resource.publication;
             journal.publicationLocation = resource.publicationLocation;
             journal.publicationYear = resource.publicationYear;
-            journal.resume = resource.resume;
             journal.remark = resource.remark;
             journal.saveCipher = resource.saveCipher;
 

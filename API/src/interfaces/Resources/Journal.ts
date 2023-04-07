@@ -18,7 +18,6 @@ class Journal implements ILibraryResource {
     publication: string = "";
     publicationLocation: string = "";
     publicationYear: string = "";
-    resume: string = "";
     remark: string = "";
     saveCipher: string = "";
     resourceMeta?: ResourceMeta;

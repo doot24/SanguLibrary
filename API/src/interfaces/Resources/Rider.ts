@@ -1,17 +1,17 @@
 import { ResourceMeta, DigitalResource, ILibraryResource, ResourceType  } from "../Resources";
 
-export { Dissertation }
+export { Rider }
 
-class Dissertation implements ILibraryResource {
+class Rider implements ILibraryResource {
     _id: string = "";
     digital: boolean = true;
-    resourceType: ResourceType = ResourceType.Dissertation;
+    resourceType: ResourceType = ResourceType.Rider;
     resourceMeta?: ResourceMeta | undefined;
     digitalResouce?: DigitalResource | undefined;
     
     saveCipher : string = "";
     title : string = "";
     subTitle : string = "";
-    professor : string = "";
-    publicationYear : number = 0;
+    author : string = "";
+    remark : string = "";
 }

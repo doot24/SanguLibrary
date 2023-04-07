@@ -13,8 +13,10 @@ import { SaveBook, DeleteBook, UpdateBook } from "./ResourceHandlers/BookHandler
 import { body, validationResult } from "express-validator";
 
 import { validateAddResource, validateUpdateResource } from "../Validations/ResourceValidation";
+
 import { DeleteJournal, SaveJournal, UpdateJournal } from "./ResourceHandlers/JournalHandlers";
 import { SaveDissertation, DeleteDissertation, UpdateDissertation } from "./ResourceHandlers/DissertationHandlers";
+import { SaveRider, DeleteRider, UpdateRider } from "./ResourceHandlers/RiderHandler";
 
 router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'cover', maxCount: 1 }]), validateAddResource, async (req: Request, res: Response) => {
   let resource: ResourceType = req.body.type as ResourceType;
@@ -29,6 +31,9 @@ router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.field
         break;
       case ResourceType.Dissertation:
         await SaveDissertation(req);
+        break;
+      case ResourceType.Rider:
+        await SaveRider(req);
         break;
     }
 
@@ -51,7 +56,10 @@ router.post('/update', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fi
         await UpdateJournal(req);
         break;
       case ResourceType.Dissertation:
-        await DeleteDissertation(req);
+        await UpdateDissertation(req);
+        break;
+      case ResourceType.Rider:
+        await UpdateRider(req);
         break;
     }
 
@@ -78,6 +86,9 @@ router.post('/delete', IsAuthenticated, HasRoles(["admin", "editor"]), body("_id
         break;
       case ResourceType.Dissertation:
         await DeleteDissertation(req);
+        break;
+      case ResourceType.Rider:
+        await DeleteRider(req);
         break;
     }
 

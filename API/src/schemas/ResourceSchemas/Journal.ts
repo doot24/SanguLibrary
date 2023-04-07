@@ -20,7 +20,6 @@ const journalSchema: Schema = new Schema<Journal>({
     publication: { type: String },
     publicationLocation: { type: String },
     publicationYear: { type: String },
-    resume: { type: String },
     remark: { type: String },
     saveCipher: { type: String },
     resourceMeta : {type : resourceMetaSchema},

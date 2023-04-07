@@ -80,4 +80,12 @@ class DissertationAddUpdateResource {
   publicationYear: number = 0;
 }
 
-export { BookAddResource, BookUpdateResource, JournalAddResource, JournalUpdateResource, DissertationAddUpdateResource }
+class RiderAddUpdateResource {
+  saveCipher: string = "";
+  title: string = "";
+  subTitle: string = "";
+  author: string = "";
+  remark: string = "";
+}
+
+export { BookAddResource, BookUpdateResource, JournalAddResource, JournalUpdateResource, DissertationAddUpdateResource, RiderAddUpdateResource }
