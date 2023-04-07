@@ -127,11 +127,11 @@
         <span class="bi bi-journal-bookmark me-3 ms-3" style="font-size: 2em;"></span>
         <span class="mr-auto">განცხადებების მენეჯმენტი</span>
       </button>
-      <button @click="LogOut()" class="w-100 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
-        <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
-        <span class="mr-auto">გასვლა</span>
-      </button>
-      </div>
+    </div>
+    <button @click="LogOut()" class="w-100 hamburgetButton hamburgetButtonHover menuButton d-flex align-items-center">
+      <span class="bi bi-door-open-fill me-3 ms-3" style="font-size: 2em;"></span>
+      <span class="mr-auto">გასვლა</span>
+    </button>
       
     </div>
   </div>

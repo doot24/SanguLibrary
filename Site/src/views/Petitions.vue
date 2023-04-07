@@ -49,7 +49,7 @@
     <!-- Begin, send statement modal -->
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
       data-bs-backdrop="static">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
           <div class="modal-header">
             <h5 class="modal-title text-white" id="exampleModalLabel">ახალი განცხადება</h5>

@@ -2,7 +2,7 @@
   <hamburger @click="hamburgerActive = !hamburgerActive" />
   <headerBar />
   <div class="container-fluid d-flex flex-column d-none d-lg-block d-xl-block d-sm-none min-vh-100 py-5 Bodybackground">
-
+<!-- Begin for pc screen -->
     <div class="row" style="margin-bottom: 10px; margin-left: 60px;">
       <h3 class="text-light mb-5">შეტყობინებები</h3>
       <div class="row">
@@ -15,9 +15,10 @@
         <div class="col-md-4 col-xl-3 mt-3 mt-md-0" style="margin-left: 400px;">
           <span class="bi bi-clock headerText" style="position: absolute; top: 100px;"> დროის მიხედვით</span>
           <select id="time-dropdown" class="d-flex justify-content-between smallButton p-3 text-center">
-            <option value="week">ბოლო კვირა</option>
-            <option value="month">ბოლო თვე</option>
-            <option value="year">ბოლო წელი</option>
+            <option value="all_time" selected>ყველა</option>
+            <option value="last_week">ბოლო კვირა</option>
+            <option value="last_month">ბოლო თვე</option>
+            <option value="last_year">ბოლო წელი</option>
           </select>
         </div>
       </div>
@@ -73,10 +74,10 @@
               <label for="time-dropdown" class="bi bi-clock headerText mb-3 d-block text-center"> დროის მიხედვით</label>
               <select id="time-dropdown" v-model="selectedTime" class="d-flex smallButton p-3 w-100 text-center"
                 @change="setByTime(selectedTime)">
-                <option value="week">ყველა</option>
-                <option value="week">ბოლო კვირა</option>
-                <option value="month">ბოლო თვე</option>
-                <option value="year">ბოლო წელი</option>
+                <option value="all_time">ყველა</option>
+                <option value="last_week">ბოლო კვირა</option>
+                <option value="last_month">ბოლო თვე</option>
+                <option value="last_year">ბოლო წელი</option>
               </select>
             </div>
           </div>
@@ -147,7 +148,7 @@ export default defineComponent({
       read: 1 as number,
       time: 604800000 as number,
 
-      selectedTime : '' as string,
+      selectedTime : 'all_time' as string,
       selectedSection: "read" as string,
 
       userData: {} as User,
