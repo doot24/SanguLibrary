@@ -16,7 +16,7 @@ const riderSchema: Schema = new Schema<Rider>({
     resourceMeta : {type : resourceMetaSchema},
     digitalResouce : {type : digitalResourceSchema}
   });
-  riderSchema.index({ title: "text", author: "text" });
+  riderSchema.index({ title: "text", author: "text", saveCipher : "text" });
   
   export const RiderSchema = mongoose.model<Rider>('Rider', riderSchema);
   

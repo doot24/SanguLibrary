@@ -19,93 +19,53 @@ router.get('/', IsAuthenticated, async (req: Request, res: Response) => {
       throw new Error("no params provided");
     }
 
-    const { text, isbn, issn } = req.query;
+    const { text } = req.query;
 
     const queryText = text?.toString() ?? '';
-    const queryIsbn = isbn?.toString() ?? '';
-    const queryIssn = issn?.toString() ?? '';
-
+    
     let page = Number(req.query.page) || 1;
     let pageSize = Number(req.query.pageSize) || 10;
     let startIndex = (page - 1) * pageSize;
 
     const results: SearchResults = new SearchResults();
  
-    if (queryText) {
+    const agg: any = [
+      { $match: { $text: { $search: String(queryText) } } },
+      {
+        '$skip': startIndex
+      },
+      {
+        '$limit': pageSize
+      }
+    ]
 
-      const agg: any = [
-        { $match: { $text: { $search: queryText } } },
-        {
-          '$skip': startIndex
-        },
-        {
-          '$limit': pageSize
-        }
-      ]
+    const bookPromise = BookSchema.aggregate(agg);
+    const journalPromise = JournalSchema.aggregate(agg);
+    const riderPromise = RiderSchema.aggregate(agg);
+    const dissertationPromise = DissertationSchema.aggregate(agg);
 
-      const bookPromise = BookSchema.aggregate(agg);
-      const journalPromise = JournalSchema.aggregate(agg);
-      const riderPromise = RiderSchema.aggregate(agg);
-      const dissertationPromise = DissertationSchema.aggregate(agg);
+    const countPromise = Promise.all([
+      BookSchema.countDocuments({ $text: { $search: queryText }}),
+      JournalSchema.countDocuments({ $text: { $search: queryText }}),
+      RiderSchema.countDocuments({ $text: { $search: queryText }}),
+      DissertationSchema.countDocuments({ $text: { $search: queryText }}),
+    ]);
 
-      const countPromise = Promise.all([
-        BookSchema.countDocuments({ $text: { $search: queryText }}),
-        JournalSchema.countDocuments({ $text: { $search: queryText }}),
-        RiderSchema.countDocuments({ $text: { $search: queryText }}),
-        DissertationSchema.countDocuments({ $text: { $search: queryText }}),
-      ]);
+    const [books, journals, riders, dissertations] = await Promise.all([bookPromise, journalPromise, riderPromise, dissertationPromise]);
+    const [bookCount, journalCount, riderCount, dissertationCount] = await countPromise;
+    
+    results.books.data = books;
+    results.books.amount = bookCount;
 
-      const [books, journals, riders, dissertations] = await Promise.all([bookPromise, journalPromise, riderPromise, dissertationPromise]);
-      const [bookCount, journalCount, riderCount, dissertationCount] = await countPromise;
-      
-      results.books.data = books;
-      results.books.amount = bookCount;
+    results.journals.data = journals;
+    results.journals.amount = journalCount;
 
-      results.journals.data = journals;
-      results.journals.amount = journalCount;
+    results.riders.data = riders;
+    results.riders.amount = riderCount;
 
-      results.riders.data = riders;
-      results.riders.amount = riderCount;
-
-      results.dissertations.data = dissertations;
-      results.dissertations.amount = dissertationCount;
-    }
-    if (queryIsbn) {
-      const isbnPipeline: any = [
-        { $match: { isbn: queryIsbn } },
-        {
-          '$skip': startIndex
-        },
-        {
-          '$limit': pageSize
-        }
-      ]
-      const isbnResult = await BookSchema.aggregate(isbnPipeline);
-      const count = await BookSchema.countDocuments({ isbn: queryIsbn });
-
-      if (isbnResult.length > 0)
-        results.books.amount = count;
-        results.books.data.push(isbnResult);
-    }
-
-    if (queryIssn) {
-      const issnPipeline: any = [
-        { $match: { issn: queryIssn } },
-        {
-          '$skip': startIndex
-        },
-        {
-          '$limit': pageSize
-        }
-      ]
-      const issnResult = await JournalSchema.aggregate(issnPipeline);
-      const count = await JournalSchema.countDocuments({ issn: queryIssn });
-
-      if (issnResult.length > 0)
-        results.journals.amount = count;
-        results.journals.data.push(issnResult);
-    }
-
+    results.dissertations.data = dissertations;
+    results.dissertations.amount = dissertationCount;
+  
     // paginate results.
     let totalAmount: number = (results.books.amount + results.journals.amount + results.riders.amount + results.dissertations.amount);
     

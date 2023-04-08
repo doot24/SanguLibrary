@@ -24,6 +24,6 @@ const bookSchema: Schema = new Schema<Book>({
   resourceMeta: { type: resourceMetaSchema },
   digitalResouce: { type: digitalResourceSchema }
 });
-bookSchema.index({ title: "text", authors: "text" });
+bookSchema.index({ title: "text", authors: "text", editors : "text", isbn : "text", saveCipher : "text" });
 
 export const BookSchema = mongoose.model<Book>('Book', bookSchema);
