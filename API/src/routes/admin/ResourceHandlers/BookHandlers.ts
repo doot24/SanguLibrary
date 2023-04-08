@@ -10,7 +10,7 @@ import { Book } from "../../../interfaces/Resources/Book";
 
 import { BookSchema } from "../../../schemas/ResourceSchemas/book";
 
-export { SaveBook, DeleteBook, UpdateBook }
+export { SaveBook, DeleteBook, UpdateBook, DuplicateBook }
 
 function UpdateBook(req : Request) : Promise<void>
 {
@@ -101,6 +101,31 @@ function DeleteBook(req : Request) : Promise<void>
                 await deleteFile(String(bookResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                 await deleteFile(String(bookResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
             }
+
+            resolve();
+        }
+        catch(err)
+        {
+            reject(err);
+        }
+    })
+}
+
+function DuplicateBook(req : Request) : Promise<void>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let bookResult : Book | null = await BookSchema.findOne({_id : req.body._id});
+
+            if(!bookResult)
+            {
+                reject("book not found!");
+                return;
+            }
+
+            let newBook : Book = new Book(bookResult);
+            newBook._id = randomUUID();
+            await new BookSchema(newBook).save();
 
             resolve();
         }

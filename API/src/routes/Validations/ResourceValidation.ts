@@ -25,3 +25,8 @@ export const validateUpdateResource = [
     next();
   }
 ];
+
+export const validateDuplicateResource = [
+  body('_id').notEmpty().isUUID(),
+  body('type').notEmpty().isNumeric()
+];

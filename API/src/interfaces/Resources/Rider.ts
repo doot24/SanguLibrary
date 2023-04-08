@@ -14,4 +14,19 @@ class Rider implements ILibraryResource {
     subTitle : string = "";
     author : string = "";
     remark : string = "";
+
+    constructor(rider?: Rider) {
+        if (rider) {
+            this._id = rider._id;
+            this.digital = rider.digital;
+            this.resourceType = rider.resourceType;
+            this.resourceMeta = rider.resourceMeta;
+            this.digitalResouce = rider.digitalResouce;
+            this.saveCipher = rider.saveCipher;
+            this.title = rider.title;
+            this.subTitle = rider.subTitle;
+            this.author = rider.author;
+            this.remark = rider.remark;
+        }
+    }
 }

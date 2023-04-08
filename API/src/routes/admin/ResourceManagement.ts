@@ -9,14 +9,14 @@ import { IsAuthenticated, HasRoles } from "../../utils/AuthGuards";
 
 import { ResourceType } from "../../interfaces/Resources";
 
-import { SaveBook, DeleteBook, UpdateBook } from "./ResourceHandlers/BookHandlers";
+import { SaveBook, DeleteBook, UpdateBook, DuplicateBook } from "./ResourceHandlers/BookHandlers";
 import { body, validationResult } from "express-validator";
 
-import { validateAddResource, validateUpdateResource } from "../Validations/ResourceValidation";
+import { validateAddResource, validateUpdateResource, validateDuplicateResource } from "../Validations/ResourceValidation";
 
-import { DeleteJournal, SaveJournal, UpdateJournal } from "./ResourceHandlers/JournalHandlers";
-import { SaveDissertation, DeleteDissertation, UpdateDissertation } from "./ResourceHandlers/DissertationHandlers";
-import { SaveRider, DeleteRider, UpdateRider } from "./ResourceHandlers/RiderHandler";
+import { DeleteJournal, DuplicateJournal, SaveJournal, UpdateJournal } from "./ResourceHandlers/JournalHandlers";
+import { SaveDissertation, DeleteDissertation, UpdateDissertation, DuplicateDissertation } from "./ResourceHandlers/DissertationHandlers";
+import { SaveRider, DeleteRider, UpdateRider, DuplicateRider } from "./ResourceHandlers/RiderHandler";
 
 router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'cover', maxCount: 1 }]), validateAddResource, async (req: Request, res: Response) => {
   let resource: ResourceType = req.body.type as ResourceType;
@@ -69,6 +69,34 @@ router.post('/update', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fi
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
   }
 });
+
+router.post('/duplicate', IsAuthenticated, HasRoles(["admin", "editor"]), validateDuplicateResource, async (req: Request, res: Response) => {
+  let resource: ResourceType = req.body.type as ResourceType;
+
+  try {
+    switch (Number(resource)) {
+      case ResourceType.Book:
+        await DuplicateBook(req);
+        break;
+      case ResourceType.Journal:
+        await DuplicateJournal(req);
+        break;
+      case ResourceType.Dissertation:
+        await DuplicateDissertation(req);
+        break;
+      case ResourceType.Rider:
+        await DuplicateRider(req);
+        break;
+    }
+
+    res.status(200).json({ status: "success" });
+
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
+  }
+});
+
 
 router.post('/delete', IsAuthenticated, HasRoles(["admin", "editor"]), body("_id").notEmpty().isUUID(), body("type").notEmpty().isNumeric(), async (req: Request, res: Response) => {
   const errors = validationResult(req);

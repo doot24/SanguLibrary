@@ -6,12 +6,11 @@ import { uploadFile, deleteFile } from "../../../utils/UploadFiles";
 
 import { JournalAddResource, JournalUpdateResource } from "../../../interfaces/ResourceRequest";
 import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces/Resources";
-import { Book } from "../../../interfaces/Resources/Book";
 
 import { JournalSchema } from "../../../schemas/ResourceSchemas/Journal";
 import { Journal } from "../../../interfaces/Resources/Journal";
 
-export { SaveJournal, DeleteJournal, UpdateJournal }
+export { SaveJournal, DeleteJournal, UpdateJournal,DuplicateJournal }
 
 function UpdateJournal(req : Request) : Promise<void>
 {
@@ -111,6 +110,30 @@ function DeleteJournal(req : Request) : Promise<void>
         }
     })
 }
+
+function DuplicateJournal(req : Request) : Promise<void>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let journal : Journal | null = await JournalSchema.findOne({_id : req.body._id});
+            if(!journal)
+            {
+                reject("journal not found!");
+                return;
+            }
+            
+            let newJournal : Journal = new Journal(journal);
+            newJournal._id = randomUUID();
+            await new JournalSchema(newJournal).save();
+            resolve();
+        }
+        catch(err)
+        {
+            reject(err);
+        }
+    })
+}
+
 
 function SaveJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {

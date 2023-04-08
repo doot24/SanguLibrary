@@ -10,7 +10,7 @@ import { Dissertation } from "../../../interfaces/Resources/Dissertation";
 
 import { DissertationSchema } from "../../../schemas/ResourceSchemas/Dissertation";
 
-export { SaveDissertation, DeleteDissertation, UpdateDissertation }
+export { SaveDissertation, DeleteDissertation, UpdateDissertation, DuplicateDissertation }
 
 function UpdateDissertation(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -82,6 +82,31 @@ function DeleteDissertation(req: Request): Promise<void> {
             resolve();
         }
         catch (err) {
+            reject(err);
+        }
+    })
+}
+
+function DuplicateDissertation(req : Request) : Promise<void>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let dissertation : Dissertation | null = await DissertationSchema.findOne({_id : req.body._id});
+
+            if(!dissertation)
+            {
+                reject("dissertation not found!");
+                return;
+            }
+
+            let newDissertation : Dissertation = new Dissertation(dissertation);
+            newDissertation._id = randomUUID();
+            await new DissertationSchema(newDissertation).save();
+
+            resolve();
+        }
+        catch(err)
+        {
             reject(err);
         }
     })

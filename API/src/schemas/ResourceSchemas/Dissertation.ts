@@ -16,6 +16,7 @@ const dissertationSchema: Schema = new Schema<Dissertation>({
   resourceMeta : {type : resourceMetaSchema},
   digitalResouce : {type : digitalResourceSchema}
 });
+dissertationSchema.index({ title: "text", professor: "text"});
   
 export const DissertationSchema = mongoose.model<Dissertation>('Dissertation', dissertationSchema);
   

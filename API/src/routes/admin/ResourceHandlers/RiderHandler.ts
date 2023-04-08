@@ -10,7 +10,7 @@ import { Rider } from "../../../interfaces/Resources/Rider";
 
 import { RiderSchema } from "../../../schemas/ResourceSchemas/Rider";
 
-export { SaveRider, DeleteRider, UpdateRider }
+export { SaveRider, DeleteRider, UpdateRider,DuplicateRider }
 
 function UpdateRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -86,6 +86,32 @@ function DeleteRider(req: Request): Promise<void> {
         }
     })
 }
+
+function DuplicateRider(req : Request) : Promise<void>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let rider : Rider | null = await RiderSchema.findOne({_id : req.body._id});
+
+            if(!rider)
+            {
+                reject("rider not found!");
+                return;
+            }
+
+            let newRider : Rider = new Rider(rider);
+            newRider._id = randomUUID();
+            await new RiderSchema(newRider).save();
+
+            resolve();
+        }
+        catch(err)
+        {
+            reject(err);
+        }
+    })
+}
+
 
 function SaveRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {

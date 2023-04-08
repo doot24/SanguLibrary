@@ -25,6 +25,7 @@ const journalSchema: Schema = new Schema<Journal>({
     resourceMeta : {type : resourceMetaSchema},
     digitalResouce : {type : digitalResourceSchema}
   });
+  journalSchema.index({ title: "text", authors: "text"});
   
   export const JournalSchema = mongoose.model<Journal>('Journal', journalSchema);
   
