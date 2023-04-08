@@ -81,9 +81,10 @@ router.get('/', IsAuthenticated, async (req: Request, res: Response) => {
         }
       ]
       const isbnResult = await BookSchema.aggregate(isbnPipeline);
+      const count = await BookSchema.countDocuments({ isbn: queryIsbn });
 
       if (isbnResult.length > 0)
-        results.books.amount += isbnResult.length;
+        results.books.amount = count;
         results.books.data.push(isbnResult);
     }
 
@@ -98,14 +99,15 @@ router.get('/', IsAuthenticated, async (req: Request, res: Response) => {
         }
       ]
       const issnResult = await JournalSchema.aggregate(issnPipeline);
+      const count = await JournalSchema.countDocuments({ issn: queryIssn });
 
       if (issnResult.length > 0)
-        results.journals.amount += issnResult.length;
+        results.journals.amount = count;
         results.journals.data.push(issnResult);
     }
 
     // paginate results.
-    let totalAmount: number = (results.books.amount + results.journals.amount + results.riders.amount + results.dissertations.amount)
+    let totalAmount: number = (results.books.amount + results.journals.amount + results.riders.amount + results.dissertations.amount);
     
     let paginationData: Pagination = new Pagination();
     paginationData.currentPage = page;
