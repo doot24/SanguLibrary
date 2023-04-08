@@ -47,7 +47,59 @@
     </div>
 
     <!-- Begin, send statement modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    <div class="d-flex justify-content-center align-content-center gap-2">
+      <div>
+        <div
+          class="modal"
+          id="myModal"
+          tabindex="-1"
+          role="dialog"
+          style="display: block"
+          v-show="showEditor"
+          daba-bs-backdrop="static"
+        >
+          <div class="modal-dialog" role="document" style="max-width: 60%">
+            <div class="modal-content" style="border: none">
+              <div class="modal-header" style="border: none">
+                <h5 class="modal-title" style="color: black">
+                  ახალი განცხადება
+                </h5>
+              </div>
+              <div class="modal-body" style="border: none">
+                <div class="dropdown" v-cloak>
+              <input class="form-control text-light p-2" :placeholder="placeholderText"
+                @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
+                style="background: #D9D9D9; font-size:1em">
+              <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
+                <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
+                  class="dropdown-item text-dark"
+                  @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
+                  href="#">{{ template.title }}</a>
+              </div>
+            </div>
+            <texteditor ref="editorComponent"/>
+            <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
+              :placeholder="userData.email.toString()">
+            
+          </div>
+              
+              <div
+                class="modal-footer d-flex justify-content-between"
+                style="border: none"
+              >
+              <button class="btn btn-outline-danger" v-on:click="clearInputs();"
+              data-bs-dismiss="modal">გაუქმება</button>
+            <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
+              v-on:click="sendPetition();" class="btn btn-danger"
+              data-bs-dismiss="modal">გაგზავნა</button>
+            </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
       data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
@@ -81,7 +133,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- End, send statement modal -->
 
@@ -108,7 +160,7 @@
       </div>
     </div>
     <!-- End, statement modal -->
-  </div>
+  <!-- </div> -->
 </template>
 
 <style src="@/assets/css/pages/petitionspage.css" scoped/>
@@ -117,6 +169,7 @@
 import hamburger from '@/components/hamburger.vue'
 import loadingSpinner from '@/components/loadingSpinner.vue'
 import headerBar from '@/components/headerBar.vue'
+import texteditor from "@/components/texteditor.vue";
 
 import { defineComponent } from 'vue'
 import axios from 'axios'
@@ -130,7 +183,8 @@ export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
-    headerBar
+    headerBar,
+    texteditor
   },
   data() {
     return {
@@ -149,7 +203,8 @@ export default defineComponent({
 
       text: '' as string,
       errorMessage: '' as string,
-      successMessage: '' as string
+      successMessage: '' as string,
+      showEditor: false,
     }
   },
   mounted() {

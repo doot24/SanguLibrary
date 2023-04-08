@@ -3,54 +3,92 @@
   <loadingSpinner v-if="isLoading" />
   <headerBar />
 
-  <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
+  <div
+    class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground"
+  >
     <div id="tableContainer" class="mt-5 d-flex flex-column">
-      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+      <div
+        v-if="successMessage"
+        class="alert alert-success alert-dismissible fade show mt-3"
+        role="alert"
+      >
         <i class="bi bi-info-circle-fill"></i>
         {{ successMessage }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="successMessage = ''"
-          aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          @click="successMessage = ''"
+          aria-label="Close"
+        ></button>
       </div>
 
-      <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+      <div
+        v-if="errorMessage"
+        class="alert alert-danger alert-dismissible fade show mt-3"
+        role="alert"
+      >
         <i class="bi bi-info-circle-fill"></i>
         {{ errorMessage }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
-          aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          @click="errorMessage = ''"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="align-self-end mt-2 mb-4">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">ახალი
-          შეტყობინება</button>
+        <button
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#sendNotificationModal"
+        >
+          ახალი შეტყობინება
+        </button>
       </div>
-      <div class="rounded table-responsive mt-1 ">
+      <div class="rounded table-responsive mt-1">
         <table class="table table-borderless table-default">
           <thead>
             <tr>
-              <th scope="col" class="text-center" style="width: 10%;">სათაური</th>
-              <th scope="col" class="text-center" style="width: 10%;">ტექსტი</th>
-              <th scope="col" class="text-center" style="width: 10%;">ავტორი</th>
-              <th scope="col" class="text-center" style="width: 10%;">თარიღი</th>
+              <th scope="col" class="text-center" style="width: 10%">
+                სათაური
+              </th>
+              <th scope="col" class="text-center" style="width: 10%">ტექსტი</th>
+              <th scope="col" class="text-center" style="width: 10%">ავტორი</th>
+              <th scope="col" class="text-center" style="width: 10%">თარიღი</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(meta) in notifications">
+            <tr v-for="meta in notifications">
               <td>{{ meta.title }}</td>
-              <td :id="meta._id" class="text-truncate" @click="toggleTruncation(meta._id)"
-                style="max-width: 300px; cursor: pointer;">{{ meta.text }}</td>
+              <td
+                :id="meta._id"
+                class="text-truncate"
+                @click="toggleTruncation(meta._id)"
+                style="max-width: 300px; cursor: pointer"
+              >
+                {{ meta.text }}
+              </td>
               <td class="text-center">{{ meta.author }}</td>
               <td class="text-center">{{ formatDate(meta.created) }}</td>
             </tr>
           </tbody>
         </table>
-        <div>
-        </div>
+        <div></div>
       </div>
 
       <!-- Begin, Pagination -->
-      <div class="d-flex  flex-row align-content-center gap-3">
+      <div class="d-flex flex-row align-content-center gap-3">
         <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="pageSizeDropdown" data-bs-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="pageSizeDropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             {{ pageSize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="pageSizeDropdown">
@@ -64,7 +102,11 @@
 
         <nav v-if="paginationData.totalPages">
           <ul class="pagination pagination-sm gap-1">
-            <li class="page-item" v-for="index in paginationData.totalPages" :key="index">
+            <li
+              class="page-item"
+              v-for="index in paginationData.totalPages"
+              :key="index"
+            >
               <a class="page-link" href="#" v-on:click="selectPage(index)">
                 {{ index }}
               </a>
@@ -76,7 +118,47 @@
     </div>
 
     <!-- Begin, Send notification -->
-    <div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel"
+    <div class="d-flex justify-content-center align-content-center gap-2">
+      <div>
+        <div
+          class="modal"
+          id="sendNotificationModal"
+          tabindex="-1"
+          role="dialog"
+          style="display: block"
+          v-show="showEditor"
+        >
+          <div class="modal-dialog" role="document" style="max-width: 60%">
+            <div class="modal-content" style="border: none">
+              <div class="modal-header" style="border: none">
+                <h5 class="modal-title" style="color: black">
+                  შეტყობინების დამატება
+                </h5>
+              </div>
+              <div class="modal-body" style="border: none">
+                <div class="form-group">
+                  <!-- <label class="form-label" for="title">სათაური</label> -->
+                  <input type="text" placeholder="სათაური" v-model="title" class="form-control" id="title" required>
+              </div>
+                <texteditor />
+              </div>
+              <div
+                class="modal-footer d-flex justify-content-between"
+                style="border: none"
+              >
+                <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
+              v-on:click="!canSubmit();" class="btn btn-danger"
+              data-bs-dismiss="modal">დამატება</button>
+                <button class="btn btn-outline-danger" v-on:click="clearInputs();"
+              data-bs-dismiss="modal">გაუქმება</button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- </div> -->
+    <!-- <div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel"
       aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -106,9 +188,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- End, Send notification -->
-
   </div>
 </template>
 
@@ -118,7 +199,7 @@
 }
 
 .bodyClass {
-  background: #1A181E;
+  background: #1a181e;
 }
 
 table {
@@ -130,28 +211,29 @@ table {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-
 }
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import axios from 'axios'
+import { defineComponent } from "vue";
+import axios from "axios";
 
-import hamburger from '@/components/hamburger.vue'
-import loadingSpinner from '@/components/loadingSpinner.vue'
-import headerBar from '@/components/headerBar.vue'
+import hamburger from "@/components/hamburger.vue";
+import loadingSpinner from "@/components/loadingSpinner.vue";
+import headerBar from "@/components/headerBar.vue";
+import texteditor from "@/components/texteditor.vue";
 
-import { getApiConnectionString } from '@/assets/js/utils'
+import { getApiConnectionString } from "@/assets/js/utils";
 
-import { PaginationData } from '@/interfaces/PaginationData'
-import { Notification } from '@/interfaces/Notification'
+import { PaginationData } from "@/interfaces/PaginationData";
+import { Notification } from "@/interfaces/Notification";
 
 export default defineComponent({
   components: {
     hamburger,
     loadingSpinner,
-    headerBar
+    headerBar,
+    texteditor,
   },
   data() {
     return {
@@ -166,19 +248,20 @@ export default defineComponent({
       title: "" as string,
       text: "" as string,
 
-      isLoading: false as boolean
-    }
+      isLoading: false as boolean,
+      showEditor: false,
+    };
   },
   mounted() {
-    this.getRecentNotifications()
+    this.getRecentNotifications();
   },
   methods: {
     toggleTruncation(id: string): void {
       const el: any = document.getElementById(id);
-      if (el.classList.contains('text-truncate')) {
-        el.classList.remove('text-truncate');
+      if (el.classList.contains("text-truncate")) {
+        el.classList.remove("text-truncate");
       } else {
-        el.classList.add('text-truncate');
+        el.classList.add("text-truncate");
       }
     },
     clearInputs(): void {
@@ -202,47 +285,60 @@ export default defineComponent({
     getRecentNotifications(): void {
       const params = {
         page: this.page,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
       };
       this.isLoading = true;
-      axios.get(getApiConnectionString() + '/admin/notificationmanagement/', {
-        params,
-        withCredentials: true,
-      }).then((results) => {
-        this.notifications = results.data.notifications;
-        this.paginationData = results.data;
-        this.isLoading = false;
-      }).catch((error) => {
-        this.errorMessage = error.response.data.message;
-        this.isLoading = false;
-      });
+      axios
+        .get(getApiConnectionString() + "/admin/notificationmanagement/", {
+          params,
+          withCredentials: true,
+        })
+        .then((results) => {
+          this.notifications = results.data.notifications;
+          this.paginationData = results.data;
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          this.errorMessage = error.response.data.message;
+          this.isLoading = false;
+        });
     },
 
     formatDate(timestamp: number) {
       var d = new Date(timestamp);
-      const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
+      const formattedDate = `${d.toLocaleTimeString("ka", {
+        hour12: false,
+      })} ${d.toLocaleDateString()}`; // concatenate time and date string
       return formattedDate;
     },
 
     addNotification(): void {
       const body = {
         title: this.title,
-        text: this.text
+        text: this.text,
       };
       this.isLoading = true;
-      axios.post(getApiConnectionString() + '/admin/notificationmanagement/createglobal', body, {
-        withCredentials: true,
-      }).then((results) => {
-        this.notifications = results.data.notifications;
-        this.paginationData = results.data;
-        this.successMessage = "შეტყობინება წარმატებით გაიგზავნა!";
-        this.isLoading = false;
-        this.getRecentNotifications();
-      }).catch((error) => {
-        this.errorMessage = error.response.data.message;
-        this.isLoading = false;
-      });
-    }
-  }
+      axios
+        .post(
+          getApiConnectionString() +
+            "/admin/notificationmanagement/createglobal",
+          body,
+          {
+            withCredentials: true,
+          }
+        )
+        .then((results) => {
+          this.notifications = results.data.notifications;
+          this.paginationData = results.data;
+          this.successMessage = "შეტყობინება წარმატებით გაიგზავნა!";
+          this.isLoading = false;
+          this.getRecentNotifications();
+        })
+        .catch((error) => {
+          this.errorMessage = error.response.data.message;
+          this.isLoading = false;
+        });
+    },
+  },
 });
 </script>

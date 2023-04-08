@@ -85,12 +85,51 @@
                 <span>{{ petition.user[0].email }}</span>
               </td>
               <td>
+                <!-- Begin editor -->
                 <div class="d-flex justify-content-center align-content-center gap-2">
-                  <!-- <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-light bi bi-pencil-square"
-                    v-on:click="selectPetition(petition)"></button> -->
-                    <!-- <button @click="showEditor = !showEditor" class="btn btn-light bi bi-pencil-square" ></button> -->
-                    <texteditor />
-                </div>
+                  <div>
+                  <button @click="showEditor = true" class="btn btn-light bi bi-pencil-square"></button>
+                  <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-show="showEditor">
+        <div class="modal-dialog" role="document" style="max-width: 60%;">
+          <div class="modal-content" style="border:none;">
+            <div class="modal-header" style="border:none;">
+              <h5 class="modal-title" style="color:black;">დაწერეთ კომენტარი</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="showEditor = false">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="border:none;">
+              <texteditor />
+            </div>
+            <div class="modal-footer d-flex justify-content-between" style="border:none;">
+              <div class="changeStatus d-flex flex-column align-items-start ml-2">
+                <h5 class="status_title d-flex">სტატუსის რედაქტირება</h5>
+                <div class="form-check mt-5">
+            <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
+              class="form-check-input d-flex " type="radio" name="status">
+            <label class="form-check-label">
+              დადასტურება
+            </label>
+          </div>
+          <div class="form-check mt-5">
+            <input class="form-check-input" type="radio" @click="status = 'rejected'"
+              :checked="status === 'rejected'" name="status">
+            <label class="form-check-label">
+              უარყოფა
+            </label>
+          </div>
+              </div>
+              
+              <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary addBtn1"
+              style="background: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00;
+                    border-radius: 20.7321px; color: #322E3D;margin-top: 6rem;">შენახვა</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End editor -->
               </td>
             </tr>
           </tbody>
@@ -124,49 +163,6 @@
       </div>
       <!-- End, Pagination -->
     </div>
-
-    <!-- Begin, Edit modal -->
-    <!-- <div style="height:300px" class="modal fade h-100" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-      aria-hidden="true" data-bs-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">განცხადების რედაქტირება</h5>
-        <button type="button" @click="deselectPetition()" class="btn-close" data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mt-2 d-flex flex-column">
-          <textarea v-model="comment" class="align-self-center" cols="45" rows="12" style="resize:none"></textarea>
-          <h5 class="modal-title mt-2 mb-2" id="exampleModalLabel">სტატუსის რედაქტირება</h5>
-
-          <div class="form-check">
-            <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
-              class="form-check-input" type="radio">
-            <label class="form-check-label">
-              დადასტურება
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" @click="status = 'rejected'"
-              :checked="status === 'rejected'">
-            <label class="form-check-label">
-              უარყოფა
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" @click=deselectPetition() class="btn btn-secondary"
-          data-bs-dismiss="modal">დახურვა</button>
-        <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary">შენახვა</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-    <!-- End, Edit modal -->
-
 
     <!-- Begin, add template modal -->
     <div style="height:300px" class="modal fade h-100" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -210,6 +206,32 @@
 table {
   color: white;
   background-color: rgba(35, 33, 40, 1);
+}
+.addBtn1 {
+  width: 138px;
+  height: 49px;
+}
+.changeStatus {
+  width: 360px;
+  height: 150px;
+  background-color: #322e3d;
+  border: 1px solid #322e3d;
+  border-radius: 15px;
+}
+.status_title {
+  position: absolute; /* set position relative to enable absolute positioning of the line */
+  padding-bottom: 10px; /* add some padding to create space for the line */
+  left: 8%;
+}
+
+.status_title::after {
+  content: ""; /* create the line with a pseudo-element */
+  position: absolute; /* position it absolutely within the container */
+  left: 0;
+  bottom: 0;
+  width: 100%; /* make it span the entire width of the container */
+  height: 1px; /* set the height to 1 pixel */
+  background-color: #e0d9f1; /* set the color to #E0D9F1 */
 }
 </style>
 
@@ -264,7 +286,8 @@ export default defineComponent({
 
       options: [{ Label: 'პირადი ნომერი', Value: 'publicNumber' }, { Label: 'მობილური ნომერი', Value: 'phoneNumber' }] as SearchOptions[],
       searchInput: '' as string,
-      selectedOption: "publicNumber" as string
+      selectedOption: "publicNumber" as string,
+      showEditor: false,
     }
   },
   mounted() {

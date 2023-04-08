@@ -28,8 +28,8 @@
 .sentPetitionsText {
     color: #222027;
 }
-@media screen and (max-width: 480px) {
-    /* modify the table style for screens with a width of 480px or less */
+@media screen and (max-width: 500px) {
+    /* modify the table style for screens with a width of 500px or less */
     .table-responsive {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -46,7 +46,7 @@
       font-size: .8rem;
     }
     .modal-dialog {
-      max-width: 70%;
+      max-width: 80%;
       margin: auto;
     }
   }
