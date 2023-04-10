@@ -67,21 +67,21 @@
               </div>
               <div class="modal-body" style="border: none">
                 <div class="dropdown" v-cloak>
-              <input class="form-control text-light p-2" :placeholder="placeholderText"
-                @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
-                style="background: #D9D9D9; font-size:1em">
-              <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
-                <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
-                  class="dropdown-item text-dark"
-                  @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
-                  href="#">{{ template.title }}</a>
+                  <input class="form-control text-light p-2" :placeholder="placeholderText"
+                  @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
+                  style="background: #D9D9D9; font-size:1em">
+                  <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
+                    <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
+                    class="dropdown-item text-dark"
+                    @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
+                    href="#">{{ template.title }}</a>
+                  </div>
+                </div>
+                
+                <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
+                :placeholder="userData.email.toString()">
               </div>
-            </div>
-            <texteditor ref="editorComponent"/>
-            <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
-              :placeholder="userData.email.toString()">
-            
-          </div>
+              <texteditor ref="editorComponent" />
               
               <div
                 class="modal-footer d-flex justify-content-between"

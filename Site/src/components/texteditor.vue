@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-body" style="border: none">
+  <!-- <div class="modal-body" style="border: none"> -->
     <QuillEditor
       class="editor-background"
       :style="{ height: `${Height}px`, border: 'none' }"
@@ -11,7 +11,7 @@
       ref="editor"
       :placeholder="'დაწერეთ აქ...'"
     />
-  </div>
+  <!-- </div> -->
 </template>
 <style>
 .dark .editor-background {
