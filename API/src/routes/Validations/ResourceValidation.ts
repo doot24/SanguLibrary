@@ -30,3 +30,8 @@ export const validateDuplicateResource = [
   body('_id').notEmpty().isUUID(),
   body('type').notEmpty().isNumeric()
 ];
+
+export const validateDownloadResource = [
+  body('_id').notEmpty().isUUID(),
+  body('type').notEmpty().isNumeric()
+];

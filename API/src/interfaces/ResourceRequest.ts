@@ -76,6 +76,7 @@ class DissertationAddUpdateResource {
   saveCipher: string = "";
   title: string = "";
   subTitle: string = "";
+  author: string = "";
   professor: string = "";
   publicationYear: number = 0;
 }

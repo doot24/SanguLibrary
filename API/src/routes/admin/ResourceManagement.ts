@@ -9,14 +9,14 @@ import { IsAuthenticated, HasRoles } from "../../utils/AuthGuards";
 
 import { ResourceType } from "../../interfaces/Resources";
 
-import { SaveBook, DeleteBook, UpdateBook, DuplicateBook } from "./ResourceHandlers/BookHandlers";
 import { body, validationResult } from "express-validator";
 
-import { validateAddResource, validateUpdateResource, validateDuplicateResource } from "../Validations/ResourceValidation";
+import { validateAddResource, validateUpdateResource, validateDownloadResource, validateDuplicateResource } from "../Validations/ResourceValidation";
 
-import { DeleteJournal, DuplicateJournal, SaveJournal, UpdateJournal } from "./ResourceHandlers/JournalHandlers";
-import { SaveDissertation, DeleteDissertation, UpdateDissertation, DuplicateDissertation } from "./ResourceHandlers/DissertationHandlers";
-import { SaveRider, DeleteRider, UpdateRider, DuplicateRider } from "./ResourceHandlers/RiderHandler";
+import { SaveBook, DeleteBook, DownloadBook, UpdateBook, DuplicateBook } from "./ResourceHandlers/BookHandlers";
+import { DeleteJournal, DuplicateJournal, DownloadJournal, SaveJournal, UpdateJournal } from "./ResourceHandlers/JournalHandlers";
+import { SaveDissertation, DeleteDissertation, DownloadDissertation, UpdateDissertation, DuplicateDissertation } from "./ResourceHandlers/DissertationHandlers";
+import { SaveRider, DeleteRider, UpdateRider, DownloadRider, DuplicateRider } from "./ResourceHandlers/RiderHandler";
 
 router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'cover', maxCount: 1 }]), validateAddResource, async (req: Request, res: Response) => {
   let resource: ResourceType = req.body.type as ResourceType;
@@ -69,6 +69,34 @@ router.post('/update', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fi
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
   }
 });
+
+router.post('/download', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'cover', maxCount: 1 }]), validateDownloadResource, async (req: Request, res: Response) => {
+  let resource: ResourceType = req.body.type as ResourceType;
+  let url : String = '';
+
+  try {
+    switch (Number(resource)) {
+      case ResourceType.Book:
+        url = await DownloadBook(req,res);
+        break;
+      case ResourceType.Journal:
+        url = await DownloadJournal(req,res);
+        break;
+      case ResourceType.Dissertation:
+        url = await DownloadDissertation(req,res);
+        break;
+      case ResourceType.Rider:
+        url = await DownloadRider(req,res);
+        break;
+    }
+
+    res.status(200).json({ status: "success", url });
+
+  } catch (error) {
+    res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
+  }
+});
+
 
 router.post('/duplicate', IsAuthenticated, HasRoles(["admin", "editor"]), validateDuplicateResource, async (req: Request, res: Response) => {
   let resource: ResourceType = req.body.type as ResourceType;

@@ -12,6 +12,7 @@ class Dissertation implements ILibraryResource {
     saveCipher : string = "";
     title : string = "";
     subTitle : string = "";
+    author : string = "";
     professor : string = "";
     publicationYear : number = 0;
 
@@ -25,6 +26,7 @@ class Dissertation implements ILibraryResource {
             this.saveCipher = dissertation.saveCipher;
             this.title = dissertation.title;
             this.subTitle = dissertation.subTitle;
+            this.author = dissertation.author;
             this.professor = dissertation.professor;
             this.publicationYear = dissertation.publicationYear;
         }

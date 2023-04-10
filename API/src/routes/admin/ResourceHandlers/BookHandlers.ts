@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { randomUUID } from "crypto";
 
-import { uploadFile, deleteFile } from "../../../utils/UploadFiles";
+import { uploadFile, getPublicURL, deleteFile } from "../../../utils/UploadFiles";
 
 import { BookAddResource, BookUpdateResource } from "../../../interfaces/ResourceRequest";
 import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces/Resources";
@@ -10,7 +10,7 @@ import { Book } from "../../../interfaces/Resources/Book";
 
 import { BookSchema } from "../../../schemas/ResourceSchemas/book";
 
-export { SaveBook, DeleteBook, UpdateBook, DuplicateBook }
+export { SaveBook, DeleteBook, UpdateBook, DownloadBook, DuplicateBook }
 
 function UpdateBook(req : Request) : Promise<void>
 {
@@ -45,12 +45,6 @@ function UpdateBook(req : Request) : Promise<void>
             {
                 storedBook.resourceMeta.dateUpdated = Date.now();
                 storedBook.resourceMeta.updatedBy = req.session.user._id.toString();
-                storedBook.resourceMeta.amount = resource.amount;
-
-                if(storedBook.resourceMeta.amountLeft > resource.amount)
-                {
-                    storedBook.resourceMeta.amountLeft = resource.amount;
-                }
             }
 
             if (storedBook.digital && storedBook.digitalResouce) {
@@ -136,10 +130,47 @@ function DuplicateBook(req : Request) : Promise<void>
     })
 }
 
+function DownloadBook(req : Request, res : Response) : Promise<String>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let bookResult : Book | null = await BookSchema.findOne({_id : req.body._id});
+
+            if(!bookResult)
+            {
+                reject("book not found!");
+                return;
+            }
+
+            if(bookResult.digitalResouce)
+            {
+                let url : string = await getPublicURL(bookResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+                resolve(url);
+            }
+            else {
+                reject();
+            }
+
+        }
+        catch(err)
+        {
+            reject(err);
+        }
+    })
+}
+
 function SaveBook(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             let resource: BookAddResource = JSON.parse(req.body.resource) as BookAddResource;
+            
+            let dbResource : Book | null = await BookSchema.findOne({saveCipher : resource.saveCipher});
+
+            if(dbResource)
+            {
+                reject();
+                return;
+            }
 
             let book: Book = new Book();
             book._id = randomUUID();
@@ -164,8 +195,6 @@ function SaveBook(req: Request): Promise<void> {
             resourcemeta.dateUpdated = Date.now();
             resourcemeta.addedBy = req.session.user._id.toString();
             resourcemeta.updatedBy = req.session.user._id.toString();
-            resourcemeta.amount = resource.amount;
-            resourcemeta.amountLeft = resourcemeta.amount;
 
             book.resourceMeta = resourcemeta;
 
@@ -191,9 +220,6 @@ function SaveBook(req: Request): Promise<void> {
 
                 digitalResouce.fileURL = fileURL;
                 digitalResouce.coverURL = coverURL;
-
-                book.resourceMeta.amount = 1;
-                book.resourceMeta.amountLeft = 1;
 
                 book.digitalResouce = digitalResouce;
             }

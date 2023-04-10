@@ -1,8 +1,8 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 
 import { randomUUID } from "crypto";
 
-import { uploadFile, deleteFile } from "../../../utils/UploadFiles";
+import { uploadFile, getPublicURL, deleteFile } from "../../../utils/UploadFiles";
 
 import { RiderAddUpdateResource } from "../../../interfaces/ResourceRequest";
 import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces/Resources";
@@ -10,7 +10,7 @@ import { Rider } from "../../../interfaces/Resources/Rider";
 
 import { RiderSchema } from "../../../schemas/ResourceSchemas/Rider";
 
-export { SaveRider, DeleteRider, UpdateRider,DuplicateRider }
+export { SaveRider, DeleteRider, UpdateRider, DownloadRider, DuplicateRider }
 
 function UpdateRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -87,23 +87,47 @@ function DeleteRider(req: Request): Promise<void> {
     })
 }
 
-function DuplicateRider(req : Request) : Promise<void>
-{
+function DuplicateRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let rider : Rider | null = await RiderSchema.findOne({_id : req.body._id});
+            let rider: Rider | null = await RiderSchema.findOne({ _id: req.body._id });
 
-            if(!rider)
-            {
+            if (!rider) {
                 reject("rider not found!");
                 return;
             }
 
-            let newRider : Rider = new Rider(rider);
+            let newRider: Rider = new Rider(rider);
             newRider._id = randomUUID();
             await new RiderSchema(newRider).save();
 
             resolve();
+        }
+        catch (err) {
+            reject(err);
+        }
+    })
+}
+
+function DownloadRider(req : Request, res : Response) : Promise<String>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let riderResult : Rider | null = await RiderSchema.findOne({_id : req.body._id});
+            if(!riderResult)
+            {
+                reject("rider not found!");
+                return;
+            }
+            if(riderResult.digitalResouce)
+            {
+                let url : string = await getPublicURL(riderResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+                resolve(url);
+            }
+            else {
+                reject();
+            }
+
         }
         catch(err)
         {
@@ -112,11 +136,19 @@ function DuplicateRider(req : Request) : Promise<void>
     })
 }
 
-
 function SaveRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             let resource: RiderAddUpdateResource = JSON.parse(req.body.resource) as RiderAddUpdateResource;
+
+            let dbResource : Rider | null = await RiderSchema.findOne({saveCipher : resource.saveCipher});
+
+            if(dbResource)
+            {
+                reject();
+                return;
+            }
+
 
             let rider: Rider = new Rider();
             rider._id = randomUUID();
@@ -126,7 +158,7 @@ function SaveRider(req: Request): Promise<void> {
             rider.author = resource.author;
             rider.saveCipher = resource.saveCipher;
             rider.remark = resource.remark;
-            
+
             let resourcemeta: ResourceMeta = new ResourceMeta();
             resourcemeta.dateAdded = Date.now();
             resourcemeta.dateUpdated = Date.now();
@@ -136,29 +168,31 @@ function SaveRider(req: Request): Promise<void> {
             rider.resourceMeta = resourcemeta;
 
             // create digital resource
-            let digitalResouce: DigitalResource = new DigitalResource();
+            if (rider.digital) {
+                let digitalResouce: DigitalResource = new DigitalResource();
 
-            let riderUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
-            let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
+                let riderUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+                let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
-            if (!riderUpload && !coverUpload) {
-                return reject("მოთხოვნის ფორმატი არასწორია!");
+                if (!riderUpload && !coverUpload) {
+                    return reject("მოთხოვნის ფორმატი არასწორია!");
+                }
+
+                const riderFile = riderUpload[0];
+                const coverFile = coverUpload[0];
+
+                const FileExtension: string | undefined = riderFile?.originalname ? riderFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+
+                let fileURL: string = await uploadFile("riders", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", riderFile.buffer);
+                let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
+
+                digitalResouce.fileURL = fileURL;
+                digitalResouce.coverURL = coverURL;
+
+                rider.digitalResouce = digitalResouce;
+
             }
-
-            const riderFile = riderUpload[0];
-            const coverFile = coverUpload[0];
-
-            const FileExtension: string | undefined = riderFile?.originalname ? riderFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-            const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-
-            let fileURL: string = await uploadFile("riders", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", riderFile.buffer);
-            let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-
-            digitalResouce.fileURL = fileURL;
-            digitalResouce.coverURL = coverURL;
-
-            rider.digitalResouce = digitalResouce;
-
             await new RiderSchema(rider).save();
 
             resolve();

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { randomUUID } from "crypto";
 
-import { uploadFile, deleteFile } from "../../../utils/UploadFiles";
+import { uploadFile, getPublicURL, deleteFile } from "../../../utils/UploadFiles";
 
 import { JournalAddResource, JournalUpdateResource } from "../../../interfaces/ResourceRequest";
 import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces/Resources";
@@ -10,7 +10,7 @@ import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces
 import { JournalSchema } from "../../../schemas/ResourceSchemas/Journal";
 import { Journal } from "../../../interfaces/Resources/Journal";
 
-export { SaveJournal, DeleteJournal, UpdateJournal,DuplicateJournal }
+export { SaveJournal, DeleteJournal, UpdateJournal, DownloadJournal ,DuplicateJournal }
 
 function UpdateJournal(req : Request) : Promise<void>
 {
@@ -45,12 +45,6 @@ function UpdateJournal(req : Request) : Promise<void>
             {
                 storedJournal.resourceMeta.dateUpdated = Date.now();
                 storedJournal.resourceMeta.updatedBy = req.session.user._id.toString();
-                storedJournal.resourceMeta.amount = resource.amount;
-
-                if(storedJournal.resourceMeta.amountLeft > resource.amount)
-                {
-                    storedJournal.resourceMeta.amountLeft = resource.amount;
-                }
             }
 
             if (storedJournal.digital && storedJournal.digitalResouce) {
@@ -134,11 +128,48 @@ function DuplicateJournal(req : Request) : Promise<void>
     })
 }
 
+function DownloadJournal(req : Request, res : Response) : Promise<String>
+{
+    return new Promise(async (resolve, reject) => {
+        try {
+            let journalResult : Journal | null = await JournalSchema.findOne({_id : req.body._id});
+
+            if(!journalResult)
+            {
+                reject("journal not found!");
+                return;
+            }
+
+            if(journalResult.digitalResouce)
+            {
+                let url : string = await getPublicURL(journalResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+                resolve(url);
+            }
+            else {
+                reject();
+            }
+
+        }
+        catch(err)
+        {
+            reject(err);
+        }
+    })
+}
+
 
 function SaveJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             let resource: JournalAddResource = JSON.parse(req.body.resource) as JournalAddResource;
+
+            let dbResource : Journal | null = await JournalSchema.findOne({saveCipher : resource.saveCipher});
+
+            if(dbResource)
+            {
+                reject();
+                return;
+            }
 
             let journal: Journal = new Journal();
             journal._id = randomUUID();
@@ -164,8 +195,6 @@ function SaveJournal(req: Request): Promise<void> {
             resourcemeta.dateUpdated = Date.now();
             resourcemeta.addedBy = req.session.user._id.toString();
             resourcemeta.updatedBy = req.session.user._id.toString();
-            resourcemeta.amount = resource.amount;
-            resourcemeta.amountLeft = resourcemeta.amount;
 
             journal.resourceMeta = resourcemeta;
 
@@ -191,9 +220,6 @@ function SaveJournal(req: Request): Promise<void> {
 
                 digitalResouce.fileURL = fileURL;
                 digitalResouce.coverURL = coverURL;
-
-                journal.resourceMeta.amount = 1;
-                journal.resourceMeta.amountLeft = 1;
 
                 journal.digitalResouce = digitalResouce;
             }

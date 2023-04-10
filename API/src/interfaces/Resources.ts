@@ -13,8 +13,6 @@ class ResourceMeta {
     dateUpdated: number = 0;
     updatedBy: string = "";
     addedBy: string = "";
-    amount: number = 0;
-    amountLeft: number = 0;
 }
 
 class DigitalResource {

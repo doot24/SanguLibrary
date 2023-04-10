@@ -12,7 +12,7 @@ import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 
-router.get('/', IsAuthenticated, async (req: Request, res: Response) => {
+router.get('/resource/', IsAuthenticated, async (req: Request, res: Response) => {
 
   try {
     if (!req.query) {

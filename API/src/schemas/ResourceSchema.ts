@@ -7,8 +7,6 @@ const resourceMetaSchema: Schema<ResourceMeta> = new Schema<ResourceMeta>({
   dateUpdated: { type: Number, required: true },
   updatedBy: { type: String, required: true },
   addedBy: { type: String, required: true },
-  amount: { type: Number, required: true },
-  amountLeft: { type: Number, required: true },
 }, {_id : false});
 
 const digitalResourceSchema: Schema<DigitalResource> = new Schema<DigitalResource>({
