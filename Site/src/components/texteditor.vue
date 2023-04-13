@@ -25,10 +25,6 @@
   color: black;
 }
 
-.ql-editor {
-  max-height: 250px;
-}
-
 </style>
 <script lang="ts">
 import { defineComponent } from "vue";
@@ -39,7 +35,8 @@ export default defineComponent({
   components: { QuillEditor },
   props: {
     Height: {
-      type: String,
+      type: Number,
+      default: 200
     },
   },
   data() {

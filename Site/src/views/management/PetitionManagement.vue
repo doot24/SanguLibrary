@@ -20,10 +20,11 @@
       </div>
 
       <div class="d-flex justify-content-center align-items-center mb-3">
-        <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch" />
+        <search class="w-75" :Height="500" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
       <div class="d-flex justify-content-end mb-2 mt-2">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> ახალი განცხადების სახე </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> ახალი განცხადების სახე
+        </button>
       </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
@@ -88,48 +89,49 @@
                 <!-- Begin editor -->
                 <div class="d-flex justify-content-center align-content-center gap-2">
                   <div>
-                  <button @click="showEditor = true" class="btn btn-light bi bi-pencil-square"></button>
-                  <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-show="showEditor">
-        <div class="modal-dialog" role="document" style="max-width: 60%;">
-          <div class="modal-content" style="border:none;">
-            <div class="modal-header" style="border:none;">
-              <h5 class="modal-title" style="color:black;">დაწერეთ კომენტარი</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="showEditor = false">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" style="border:none;">
-              <texteditor />
-            </div>
-            <div class="modal-footer d-flex justify-content-between" style="border:none;">
-              <div class="changeStatus d-flex flex-column align-items-start ml-2">
-                <h5 class="status_title d-flex">სტატუსის რედაქტირება</h5>
-                <div class="form-check mt-5">
-            <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
-              class="form-check-input d-flex " type="radio" name="status">
-            <label class="form-check-label">
-              დადასტურება
-            </label>
-          </div>
-          <div class="form-check mt-5">
-            <input class="form-check-input" type="radio" @click="status = 'rejected'"
-              :checked="status === 'rejected'" name="status">
-            <label class="form-check-label">
-              უარყოფა
-            </label>
-          </div>
-              </div>
-              
-              <button type="button" @click="updatePetition();" data-bs-dismiss="modal" class="btn btn-primary addBtn1"
-              style="background: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00;
-                    border-radius: 20.7321px; color: #322E3D;margin-top: 6rem;">შენახვა</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End editor -->
+                    <button @click="showEditor = true; selectPetition(petition)"
+                      class="btn btn-light bi bi-pencil-square"></button>
+                    <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-show="showEditor">
+                      <div class="modal-dialog" role="document" style="max-width: 60%;">
+                        <div class="modal-content" style="border:none;">
+                          <div class="modal-header" style="border:none;">
+                            <h5 class="modal-title" style="color:black;">დაწერეთ კომენტარი</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                              @click="showEditor = false">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" style="border:none;">
+                            <texteditor v-model:content="comment" />
+                          </div>
+                          <div class="modal-footer d-flex justify-content-between" style="border:none;">
+                            <div class="changeStatus d-flex flex-column align-items-start ml-2">
+                              <h5 class="status_title d-flex">სტატუსის რედაქტირება</h5>
+                              <div class="form-check mt-5">
+                                <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
+                                  class="form-check-input d-flex " type="radio" name="status">
+                                <label class="form-check-label">
+                                  დადასტურება
+                                </label>
+                              </div>
+                              <div class="form-check mt-5">
+                                <input class="form-check-input" type="radio" @click="status = 'rejected'"
+                                  :checked="status === 'rejected'" name="status">
+                                <label class="form-check-label">
+                                  უარყოფა
+                                </label>
+                              </div>
+                            </div>
+                            <button type="button" @click="updatePetition();" data-bs-dismiss="modal"
+                              class="btn btn-primary addBtn1" style="background: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00;
+                      border-radius: 20.7321px; color: #322E3D;margin-top: 6rem;">შენახვა</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End editor -->
               </td>
             </tr>
           </tbody>
@@ -177,11 +179,12 @@
           <div class="modal-body">
             <div class="mt-2 d-flex flex-column">
               <h5>სათაური</h5>
-              <input v-model="templateTitle" type="text" class="form-control"/>
-</div>
+              <input v-model="templateTitle" type="text" class="form-control" />
+            </div>
             <div class="mt-2 d-flex flex-column">
               <h5>ტექსტი</h5>
-              <textarea v-model="templateText" class="align-self-center form-control" cols="45" rows="12" style="resize:none" />
+              <textarea v-model="templateText" class="align-self-center form-control" cols="45" rows="12"
+                style="resize:none" />
             </div>
           </div>
           <div class="modal-footer">
@@ -207,10 +210,12 @@ table {
   color: white;
   background-color: rgba(35, 33, 40, 1);
 }
+
 .addBtn1 {
   width: 138px;
   height: 49px;
 }
+
 .changeStatus {
   width: 360px;
   height: 150px;
@@ -218,20 +223,28 @@ table {
   border: 1px solid #322e3d;
   border-radius: 15px;
 }
+
 .status_title {
-  position: absolute; /* set position relative to enable absolute positioning of the line */
-  padding-bottom: 10px; /* add some padding to create space for the line */
+  position: absolute;
+  /* set position relative to enable absolute positioning of the line */
+  padding-bottom: 10px;
+  /* add some padding to create space for the line */
   left: 8%;
 }
 
 .status_title::after {
-  content: ""; /* create the line with a pseudo-element */
-  position: absolute; /* position it absolutely within the container */
+  content: "";
+  /* create the line with a pseudo-element */
+  position: absolute;
+  /* position it absolutely within the container */
   left: 0;
   bottom: 0;
-  width: 100%; /* make it span the entire width of the container */
-  height: 1px; /* set the height to 1 pixel */
-  background-color: #e0d9f1; /* set the color to #E0D9F1 */
+  width: 100%;
+  /* make it span the entire width of the container */
+  height: 1px;
+  /* set the height to 1 pixel */
+  background-color: #e0d9f1;
+  /* set the color to #E0D9F1 */
 }
 </style>
 
@@ -294,7 +307,7 @@ export default defineComponent({
     this.getRecentPetitions()
   },
   watch: {
-    searchInput(newValue) : void {
+    searchInput(newValue): void {
       if (!newValue.trim()) {
         this.getRecentPetitions()
       }
@@ -302,35 +315,35 @@ export default defineComponent({
   },
 
   methods: {
-    handleSearch(event : any) : void {
+    handleSearch(event: any): void {
       this.searchInput = event.searchInput;
       this.selectedOption = event.selectedOption;
       this.searchFilthered();
     },
-    onInputCleared(event : any) : void {
+    onInputCleared(event: any): void {
       this.searchInput = '';
       this.getRecentPetitions();
     },
 
-    selectPetition(petition : Petition) : void{
+    selectPetition(petition: Petition): void {
       this.selectedPetition = petition;
       this.comment = petition.comment;
       this.status = petition.status;
     },
 
-    deselectPetition() : void {
+    deselectPetition(): void {
       this.selectedPetition = null;
       this.comment = '';
       this.status = '';
     },
 
-    clearTemplateInputs() : void {
+    clearTemplateInputs(): void {
       this.templateTitle = '';
       this.templateText = '';
     },
 
     // CRUD
-    getRecentPetitions() : void{
+    getRecentPetitions(): void {
       const params = {
         page: this.page,
         pageSize: this.pageSize
@@ -349,7 +362,7 @@ export default defineComponent({
         this.isLoading = false;
       });
     },
-    addPetitionTempate() : void {
+    addPetitionTempate(): void {
       this.isLoading = true;
 
       this.successMessage = '';
@@ -369,7 +382,7 @@ export default defineComponent({
         this.isLoading = false;
       })
     },
-    updatePetition() : void{
+    updatePetition(): void {
       this.isLoading = true;
 
       this.successMessage = '';
@@ -391,15 +404,15 @@ export default defineComponent({
         this.isLoading = false;
       })
     },
-    setPageSize(size : number) : void {
+    setPageSize(size: number): void {
       this.pageSize = size;
       this.getRecentPetitions();
     },
-    selectPage(page : number) : void {
+    selectPage(page: number): void {
       this.page = page;
       this.getRecentPetitions();
     },
-    searchFilthered() : void{
+    searchFilthered(): void {
       if (!this.searchInput) {
         return;
       }
@@ -412,7 +425,7 @@ export default defineComponent({
           break;
       }
     },
-    searchByPublicNumber() : void {
+    searchByPublicNumber(): void {
       this.isLoading = true;
 
       const params = {
@@ -435,7 +448,7 @@ export default defineComponent({
         this.isLoading = false;
       });
     },
-    searchByPhoneNumber() : void {
+    searchByPhoneNumber(): void {
       this.isLoading = true;
 
       const params = {
@@ -458,13 +471,13 @@ export default defineComponent({
         this.isLoading = false;
       });
     },
-    formatDate(timestamp : number) {
+    formatDate(timestamp: number) {
       var d = new Date(timestamp);
       const formattedDate = d.toLocaleDateString().split(',')[0];
       return formattedDate;
     },
-    toggleTruncation(_id : string) {
-      const el : any = document.getElementById(_id);
+    toggleTruncation(_id: string) {
+      const el: any = document.getElementById(_id);
       if (el.classList.contains('text-truncate')) {
         el.classList.remove('text-truncate');
       } else {

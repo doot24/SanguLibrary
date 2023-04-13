@@ -49,15 +49,8 @@
     <!-- Begin, send statement modal -->
     <div class="d-flex justify-content-center align-content-center gap-2">
       <div>
-        <div
-          class="modal"
-          id="myModal"
-          tabindex="-1"
-          role="dialog"
-          style="display: block"
-          v-show="showEditor"
-          daba-bs-backdrop="static"
-        >
+        <div class="modal" id="myModal" tabindex="-1" role="dialog" style="display: block" v-show="showEditor"
+          daba-bs-backdrop="static">
           <div class="modal-dialog" role="document" style="max-width: 60%">
             <div class="modal-content" style="border: none">
               <div class="modal-header" style="border: none">
@@ -68,38 +61,34 @@
               <div class="modal-body" style="border: none">
                 <div class="dropdown" v-cloak>
                   <input class="form-control text-light p-2" :placeholder="placeholderText"
-                  @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
-                  style="background: #D9D9D9; font-size:1em">
+                    @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
+                    style="background: #D9D9D9; font-size:1em">
                   <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
                     <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
-                    class="dropdown-item text-dark"
-                    @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
-                    href="#">{{ template.title }}</a>
+                      class="dropdown-item text-dark"
+                      @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
+                      href="#">{{ template.title }}</a>
                   </div>
                 </div>
-                
+
                 <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
-                :placeholder="userData.email.toString()">
+                  :placeholder="userData.email.toString()">
               </div>
-              <texteditor ref="editorComponent" />
-              
-              <div
-                class="modal-footer d-flex justify-content-between"
-                style="border: none"
-              >
-              <button class="btn btn-outline-danger" v-on:click="clearInputs();"
-              data-bs-dismiss="modal">გაუქმება</button>
-            <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
-              v-on:click="sendPetition();" class="btn btn-danger"
-              data-bs-dismiss="modal">გაგზავნა</button>
-            </div>
-              </div>
+              <texteditor  v-model:content="text" :Height="500" ref="editorComponent" />
+
+              <div class="modal-footer d-flex justify-content-between" style="border: none">
+                <button class="btn btn-outline-danger" v-on:click="clearInputs()"
+                  data-bs-dismiss="modal">გაუქმება</button>
+                <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
+                  v-on:click="sendPetition();" class="btn btn-danger" data-bs-dismiss="modal">გაგზავნა</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    </div>
+  </div>
+  <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
       data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
@@ -135,31 +124,31 @@
       </div>
     </div> -->
 
-    <!-- End, send statement modal -->
+  <!-- End, send statement modal -->
 
-    <!-- Begin, comment modal -->
-    <div class="modal fade" id="largeModal" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg bg-light rounded">
-        <div class="modal-content" style="background-color: #322E3D;">
-          <div class="p-3 text-light" style="min-height: 200px;">
-            {{ selectedPetition?.comment }}
-          </div>
+  <!-- Begin, comment modal -->
+  <div class="modal fade" id="largeModal" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg bg-light rounded">
+      <div class="modal-content" style="background-color: #322E3D;">
+        <div class="p-3 text-light" style="min-height: 200px;">
+          <div v-html="selectedPetition?.comment"></div>
         </div>
       </div>
     </div>
-    <!-- End, comment modal -->
+  </div>
+  <!-- End, comment modal -->
 
-    <!-- Begin, statement modal -->
-    <div class="modal fade" id="statementModal" tabindex="-1" aria-labelledby="statementModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg bg-light rounded">
-        <div class="modal-content" style="background-color: #322E3D;">
-          <div class="p-3 text-light text-break" style="min-height: 200px;">
-            <span class="text-break">{{ selectedPetition?.text }}</span>
-          </div>
+  <!-- Begin, statement modal -->
+  <div class="modal fade" id="statementModal" tabindex="-1" aria-labelledby="statementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg bg-light rounded">
+      <div class="modal-content" style="background-color: #322E3D;">
+        <div class="p-3 text-light text-break" style="min-height: 200px;">
+          <span v-html="selectedPetition?.text" class="text-break"></span>
         </div>
       </div>
     </div>
-    <!-- End, statement modal -->
+  </div>
+  <!-- End, statement modal -->
   <!-- </div> -->
 </template>
 
@@ -222,7 +211,7 @@ export default defineComponent({
       const formattedDate = d.toLocaleDateString().split(',')[0];
       return formattedDate;
     },
-    clearInputs () : void {
+    clearInputs(): void {
       this.selectedTemplate = null;
       this.selectedPetition = null;
 
