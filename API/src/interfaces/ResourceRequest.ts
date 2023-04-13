@@ -13,7 +13,6 @@ class BookAddResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount: number = 0;
 }
 
 class BookUpdateResource {
@@ -30,7 +29,6 @@ class BookUpdateResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount: number = 0;
 }
 
 class JournalAddResource {
@@ -50,7 +48,6 @@ class JournalAddResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount: number = 0;
 }
 
 class JournalUpdateResource {
@@ -69,7 +66,6 @@ class JournalUpdateResource {
   resume: string = "";
   remark: string = "";
   saveCipher: string = "";
-  amount: number = 0;
 }
 
 class DissertationAddUpdateResource {

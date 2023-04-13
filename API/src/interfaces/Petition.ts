@@ -1,3 +1,8 @@
+interface ISystemPetition
+{
+    system : boolean
+}
+
 export class PetitionTemplate {
     _id : String = ""
     title : String = ""
@@ -12,4 +17,10 @@ export class Petition {
     owner: String = "";
     text: String = "";
     comment: String = "";
+}
+export class CheckoutPetition extends Petition implements ISystemPetition
+{
+    system : boolean = true;
+    resource_type : number = 0;
+    resource_id : string = "";
 }
