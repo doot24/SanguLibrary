@@ -6,7 +6,7 @@ import MongoStore from "connect-mongo";
 
 declare module "express-session" {
   interface Session {
-    user?: User;
+    user: User;
   }
 }
 

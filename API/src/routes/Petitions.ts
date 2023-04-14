@@ -32,7 +32,7 @@ router.post("/send", IsAuthenticated, body("template").notEmpty().isUUID(), body
 });
 
 router.get('/templates', IsAuthenticated, (req: Request, res: Response) => {
-  PetitionTemplateSchema.find({ system: { $ne: true } })
+  PetitionTemplateSchema.find()
   .then((results) => {
     res.status(200).json({ status: "success", templates: results });
   })

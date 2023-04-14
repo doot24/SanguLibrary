@@ -229,7 +229,7 @@ export default defineComponent({
         withCredentials: true,
       }).then((results) => {
         this.isLoading = false;
-        this.templates = results.data.templates;
+        this.templates = results.data.templates.filter((template: {system: boolean}) => !template.system);
       }).catch(() => {
         this.isLoading = false;
       })
