@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 import { body, query, validationResult } from 'express-validator';
-import { validateUpdateUser } from "../validations/UserManagementValidation";
+import { validateUpdateUser } from "../Validations/UserManagementValidation";
 import { IsAuthenticated, HasRole, HasRoles } from "../../utils/AuthGuards";
 
 import { UserSchema } from "../../schemas/UserSchema";

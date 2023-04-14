@@ -32,9 +32,11 @@ router.post("/send", IsAuthenticated, body("template").notEmpty().isUUID(), body
 });
 
 router.get('/templates', IsAuthenticated, (req: Request, res: Response) => {
-  PetitionTemplateSchema.find().then((results) => {
+  PetitionTemplateSchema.find({ system: { $ne: true } })
+  .then((results) => {
     res.status(200).json({ status: "success", templates: results });
-  }).catch(() => {
+  })
+  .catch(() => {
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
   });
 })
