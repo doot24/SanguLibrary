@@ -65,7 +65,7 @@
                 <div v-bind:class="petition.status" class="bi-circle-fill" style="font-size: 1.3em;"></div>
               </td>
               <td class="statementText text-center">
-                <span>{{ petition.usedtemplate[0].title }}</span>
+                <span>{{ petition.usedtemplate[0]?.title }}</span>
               </td>
               <td class="dateText text-center">
                 <span>{{ formatDate(petition.timestamp) }}</span>

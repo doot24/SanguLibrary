@@ -12,6 +12,7 @@ import { BookSchema } from "../../schemas/ResourceSchemas/book";
 import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
+import { SendToUser } from "../../utils/Notification";
 
 const router = Router();
 
@@ -47,6 +48,9 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("stu
 
       await new CheckoutSchema(newCheckout).save();
       await new CheckoutPetitionSchema(checkoutPetition).save();
+
+      let userName : string = req.session.user.firstName + " " + req.session.user.lastName; 
+      SendToUser(req.body.student, userName, "გატანის განცხადება", "მასალის გატანის განცხადება დადასტურდა!");
 
       res.status(200).json({ status: "success" });
    }

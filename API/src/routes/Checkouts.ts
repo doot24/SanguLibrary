@@ -7,15 +7,16 @@ import { CheckoutPetitionSchema } from "../schemas/PetitionSchema";
 
 import { body, validationResult } from "express-validator";
 import { randomUUID } from "crypto";
+import { SendToSystem } from "../utils/Notification";
 
 const router = Router();
 
 router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("type").notEmpty(), async (req: Request, res: Response) => {
     try {
         const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({status:"error", message : "მოთხოვნის ფორმატი არასწორია!"});
-    }
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+        }
         let checkouts: number = await CheckoutSchema.countDocuments({ student: req.session.user._id });
         if (checkouts > 3) {
             throw new Error("limit reached");
@@ -34,9 +35,11 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
         checkoutPetition.status = "pending";
         checkoutPetition.text = "";
         checkoutPetition.comment = "";
-        checkoutPetition.template = "";
+        checkoutPetition.template = "sys_checkout";
         checkoutPetition.resource_id = String(req.body.resource_id);
         checkoutPetition.resource_type = Number(req.body.type);
+
+        SendToSystem("ახალი განცხადება",["admin", "editor", "employee"],`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
 
         await new CheckoutPetitionSchema(checkoutPetition).save();
 

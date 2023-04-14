@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-import { Petition, PetitionTemplate, CheckoutPetition } from '../interfaces/Petition';
+import { Petition, PetitionTemplate, CheckoutPetition, SystemPetitionTemplate } from '../interfaces/Petition';
 
 const petitionSchema: Schema = new Schema<Petition>({
   _id : {type : String},
@@ -18,6 +18,13 @@ const petitionTemplateSchema: Schema = new Schema<PetitionTemplate>({
   text : {type : String}
 });
 
+const systemPetitionTemplateSchema: Schema = new Schema<SystemPetitionTemplate>({
+  _id : {type : String},
+  title : {type : String},
+  text : {type : String},
+  system : {type : Boolean}
+});
+
 const checkoutPetitionSchema: Schema = new Schema<CheckoutPetition>({
   _id : {type : String},
   status : {type : String},
@@ -33,6 +40,8 @@ const checkoutPetitionSchema: Schema = new Schema<CheckoutPetition>({
 });
 
 export const PetitionTemplateSchema = mongoose.model<PetitionTemplate>('PetitionTemplate', petitionTemplateSchema, "petitiontemplates");
+export const SystemPetitionTemplateSchema = mongoose.model<PetitionTemplate>('SystemPetitionTemplate', systemPetitionTemplateSchema, "petitiontemplates");
+
 export const PetitionSchema = mongoose.model<Petition>('Petition', petitionSchema, "petitions");
 export const CheckoutPetitionSchema = mongoose.model<CheckoutPetition>('CheckoutPetition', checkoutPetitionSchema,"petitions");
 

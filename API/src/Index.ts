@@ -36,13 +36,5 @@ import { initializeFirebase } from "./inits/InitializeFirebase";
 initializeFirebase();
 
 // Initialize app & db connection
-import { GetConnectionString, GetServerPort } from "./utils/Env"
-import mongoose from "mongoose";
-
-mongoose.set('strictQuery', false);
-
-mongoose.connect(GetConnectionString()).then(() => {
-  app.listen(GetServerPort());
-}).catch((error) => {
-  console.error(`An error occurred while starting the server: ${error}`);
-});
+import { InitializeMongo } from "./inits/InitializeMongo";
+InitializeMongo(app);

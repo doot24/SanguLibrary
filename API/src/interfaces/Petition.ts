@@ -9,6 +9,13 @@ export class PetitionTemplate {
     text : String = ""
 }
 
+export class SystemPetitionTemplate implements ISystemPetition {
+    system: boolean = true;
+    _id : String = ""
+    title : String = ""
+    text : String = ""
+}
+
 export class Petition {
     _id: String = "";
     status: String = "";
