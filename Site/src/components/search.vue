@@ -4,10 +4,10 @@
             <div
                 class="w-100 searchBox shadow-sm rounded-pill d-flex align-self-center justify-content-center rounded gap-3 mt-3 p-2">
                 <div class="form-group">
-                    <div class="dropdown">
+                    <div v-if="options.length > 0" class="dropdown">
                         <button class="bi-sliders btn searchButton" type="button" id="categoryDropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" :aria-expanded="false" style="font-size:1.5em" />
-                        <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                        <div  class="dropdown-menu" aria-labelledby="categoryDropdown">
                             <a v-for="(option, index) in options" :key="index" class="dropdown-item"
                                 :class="{ active: selectedOption === option.Value }" href="#"
                                 @click="selectedOption = option.Value">{{ option.Label }}</a>
@@ -37,7 +37,7 @@ export default defineComponent({
     props: {
         options: {
             type:  Array as PropType<Array<SearchOptions>>,
-            required: true
+            default : []
         },
         cleared: {
             type: Function,
@@ -46,7 +46,7 @@ export default defineComponent({
     },
     data() {
         return {
-            selectedOption: this.options[0].Value,
+            selectedOption: this.options[0]?.Value,
             searchInput: '',
             clearedInput: false
         };
