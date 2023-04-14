@@ -16,7 +16,7 @@ class ResourceMeta {
 }
 
 class DigitalResource {
-    coverURL: string = "";
+    coverURL: string = "https://firebasestorage.googleapis.com/v0/b/sangulibrary-d9533.appspot.com/o/public%2Fdefaultcover.png?alt=media&token=6071f8fe-e273-467f-81b4-ff98932fec47";
     fileURL: string = "";
 }
 

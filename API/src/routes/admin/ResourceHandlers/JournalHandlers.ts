@@ -10,22 +10,20 @@ import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces
 import { JournalSchema } from "../../../schemas/ResourceSchemas/Journal";
 import { Journal } from "../../../interfaces/Resources/Journal";
 
-export { SaveJournal, DeleteJournal, UpdateJournal, DownloadJournal ,DuplicateJournal }
+export { SaveJournal, DeleteJournal, UpdateJournal, DownloadJournal, DuplicateJournal }
 
-function UpdateJournal(req : Request) : Promise<void>
-{
+function UpdateJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let storedJournal : Journal | null = await JournalSchema.findOne({_id : req.body._id});
-            
-            if(!storedJournal)
-            {
+            let storedJournal: Journal | null = await JournalSchema.findOne({ _id: req.body._id });
+
+            if (!storedJournal) {
                 reject("journal not found!");
                 return;
             }
 
             let resource: JournalUpdateResource = JSON.parse(req.body.resource) as JournalUpdateResource;
-            
+
             storedJournal.title = resource.title;
             storedJournal.subTitle = resource.subTitle;
             storedJournal.authors = resource.authors;
@@ -41,8 +39,7 @@ function UpdateJournal(req : Request) : Promise<void>
             storedJournal.remark = resource.remark;
             storedJournal.saveCipher = resource.saveCipher;
 
-            if(storedJournal.resourceMeta)
-            {
+            if (storedJournal.resourceMeta) {
                 storedJournal.resourceMeta.dateUpdated = Date.now();
                 storedJournal.resourceMeta.updatedBy = req.session.user._id.toString();
             }
@@ -50,18 +47,16 @@ function UpdateJournal(req : Request) : Promise<void>
             if (storedJournal.digital && storedJournal.digitalResouce) {
                 let journalUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-                
-                if(journalUpload)
-                {
+
+                if (journalUpload) {
                     const journalfile = journalUpload[0];
                     const journalFileExtension: string | undefined = journalfile?.originalname ? journalfile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     await deleteFile(String(storedJournal.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalfile.buffer);
                     storedJournal.digitalResouce.fileURL = fileURL;
                 }
-                
-                if(coverUpload)
-                {
+
+                if (coverUpload) {
                     const coverFile = coverUpload[0];
                     const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     await deleteFile(String(storedJournal.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
@@ -70,7 +65,7 @@ function UpdateJournal(req : Request) : Promise<void>
                 }
             }
 
-            await JournalSchema.findOneAndUpdate({_id : req.body._id}, storedJournal);
+            await JournalSchema.findOneAndUpdate({ _id: req.body._id }, storedJournal);
             resolve();
         } catch (err) {
             reject(err);
@@ -78,71 +73,61 @@ function UpdateJournal(req : Request) : Promise<void>
     });
 }
 
-function DeleteJournal(req : Request) : Promise<void>
-{
+function DeleteJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let journalResult : Journal | null = await JournalSchema.findOneAndDelete({_id : req.body._id});
-            
-            if(!journalResult)
-            {
-                reject("journal not found!");  
+            let journalResult: Journal | null = await JournalSchema.findOneAndDelete({ _id: req.body._id });
+
+            if (!journalResult) {
+                reject("journal not found!");
                 return;
             }
 
-            if(journalResult.digital)
-            {
+            if (journalResult.digital) {
                 await deleteFile(String(journalResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                 await deleteFile(String(journalResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
             }
 
             resolve();
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
 }
 
-function DuplicateJournal(req : Request) : Promise<void>
-{
+function DuplicateJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let journal : Journal | null = await JournalSchema.findOne({_id : req.body._id});
-            if(!journal)
-            {
+            let journal: Journal | null = await JournalSchema.findOne({ _id: req.body._id });
+            if (!journal) {
                 reject("journal not found!");
                 return;
             }
-            
-            let newJournal : Journal = new Journal(journal);
+
+            let newJournal: Journal = new Journal(journal);
             newJournal._id = randomUUID();
             await new JournalSchema(newJournal).save();
             resolve();
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
 }
 
-function DownloadJournal(req : Request, res : Response) : Promise<String>
-{
+function DownloadJournal(req: Request, res: Response): Promise<String> {
     return new Promise(async (resolve, reject) => {
         try {
-            let journalResult : Journal | null = await JournalSchema.findOne({_id : req.body._id});
+            let journalResult: Journal | null = await JournalSchema.findOne({ _id: req.body._id });
 
-            if(!journalResult)
-            {
+            if (!journalResult) {
                 reject("journal not found!");
                 return;
             }
 
-            if(journalResult.digitalResouce)
-            {
-                let url : string = await getPublicURL(journalResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+            if (journalResult.digitalResouce) {
+                let url: string = await getPublicURL(journalResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -150,8 +135,7 @@ function DownloadJournal(req : Request, res : Response) : Promise<String>
             }
 
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
@@ -163,10 +147,9 @@ function SaveJournal(req: Request): Promise<void> {
         try {
             let resource: JournalAddResource = JSON.parse(req.body.resource) as JournalAddResource;
 
-            let dbResource : Journal | null = await JournalSchema.findOne({saveCipher : resource.saveCipher});
+            let dbResource: Journal | null = await JournalSchema.findOne({ saveCipher: resource.saveCipher });
 
-            if(dbResource)
-            {
+            if (dbResource) {
                 reject();
                 return;
             }
@@ -198,33 +181,29 @@ function SaveJournal(req: Request): Promise<void> {
 
             journal.resourceMeta = resourcemeta;
 
-            if (journal.digital) {
-                let digitalResouce: DigitalResource = new DigitalResource();
+            // create digital resource
+            let digitalResouce: DigitalResource = new DigitalResource();
 
-                let journalUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+            if (req.files) {
+
+                let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
-                if (!journalUpload || !coverUpload) {
-                    return reject({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+                if (bookUpload) {
+                    const bookFile = bookUpload[0];
+                    const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
+                    digitalResouce.fileURL = fileURL;
                 }
 
-                const journalFile = journalUpload[0];
-                const coverFile = coverUpload[0];
-
-                const journalFileExtension: string | undefined = journalFile?.originalname ? journalFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-
-
-                let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalFile.buffer);
-                let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-
-                digitalResouce.fileURL = fileURL;
-                digitalResouce.coverURL = coverURL;
-
-                journal.digitalResouce = digitalResouce;
+                if (coverUpload) {
+                    const coverFile = coverUpload[0];
+                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
+                    digitalResouce.coverURL = coverURL;
+                }
             }
-
-
+            journal.digitalResouce = digitalResouce;
             await new JournalSchema(journal).save();
 
             resolve();

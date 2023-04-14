@@ -20,7 +20,7 @@ import { SaveRider, DeleteRider, UpdateRider, DownloadRider, DuplicateRider } fr
 
 router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'cover', maxCount: 1 }]), validateAddResource, async (req: Request, res: Response) => {
   let resource: ResourceType = req.body.type as ResourceType;
-
+  
   try {
     switch (Number(resource)) {
       case ResourceType.Book:
@@ -40,6 +40,7 @@ router.post('/add', IsAuthenticated, HasRoles(["admin", "editor"]), upload.field
     res.status(200).json({ status: "success" });
 
   } catch (error) {
+    console.error(error)
     res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
   }
 });

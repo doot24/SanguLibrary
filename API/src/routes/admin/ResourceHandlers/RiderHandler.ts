@@ -168,31 +168,30 @@ function SaveRider(req: Request): Promise<void> {
             rider.resourceMeta = resourcemeta;
 
             // create digital resource
-            if (rider.digital) {
-                let digitalResouce: DigitalResource = new DigitalResource();
+            let digitalResouce: DigitalResource = new DigitalResource();
 
-                let riderUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+            if(req.files)
+            {
+                let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-
-                if (!riderUpload && !coverUpload) {
-                    return reject("მოთხოვნის ფორმატი არასწორია!");
+    
+                if(bookUpload)
+                {
+                    const bookFile = bookUpload[0];
+                    const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let fileURL: string = await uploadFile("riders", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
+                    digitalResouce.fileURL = fileURL;
                 }
-
-                const riderFile = riderUpload[0];
-                const coverFile = coverUpload[0];
-
-                const FileExtension: string | undefined = riderFile?.originalname ? riderFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-
-                let fileURL: string = await uploadFile("riders", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", riderFile.buffer);
-                let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-
-                digitalResouce.fileURL = fileURL;
-                digitalResouce.coverURL = coverURL;
-
-                rider.digitalResouce = digitalResouce;
-
+    
+                if(coverUpload)
+                {
+                    const coverFile = coverUpload[0];
+                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
+                    digitalResouce.coverURL = coverURL;
+                }
             }
+            rider.digitalResouce = digitalResouce;
             await new RiderSchema(rider).save();
 
             resolve();

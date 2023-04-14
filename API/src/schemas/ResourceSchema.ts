@@ -11,7 +11,7 @@ const resourceMetaSchema: Schema<ResourceMeta> = new Schema<ResourceMeta>({
 
 const digitalResourceSchema: Schema<DigitalResource> = new Schema<DigitalResource>({
   coverURL: { type: String, required: true },
-  fileURL: { type: String, required: true },
+  fileURL: { type: String },
 },{_id : false});
 
 export {resourceMetaSchema, digitalResourceSchema}

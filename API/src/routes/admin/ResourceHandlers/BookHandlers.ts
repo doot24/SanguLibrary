@@ -165,7 +165,7 @@ function SaveBook(req: Request): Promise<void> {
             let resource: BookAddResource = JSON.parse(req.body.resource) as BookAddResource;
             
             let dbResource : Book | null = await BookSchema.findOne({saveCipher : resource.saveCipher});
-
+            
             if(dbResource)
             {
                 reject();
@@ -198,32 +198,31 @@ function SaveBook(req: Request): Promise<void> {
 
             book.resourceMeta = resourcemeta;
 
-            if (book.digital) {
-                let digitalResouce: DigitalResource = new DigitalResource();
-
-                let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
-                let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-
-                if (!bookUpload || !coverUpload) {
-                    return reject({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+            let digitalResouce: DigitalResource = new DigitalResource();
+            
+            if(req.files)
+            {
+                let bookUpload : any = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+                let coverUpload : any = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
+                
+                if(bookUpload)
+                {
+                    const bookFile = bookUpload[0];
+                    const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let fileURL: string = await uploadFile("books", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
+                    digitalResouce.fileURL = fileURL;
                 }
-
-                const bookFile = bookUpload[0];
-                const coverFile = coverUpload[0];
-
-                const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-
-
-                let fileURL: string = await uploadFile("books", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
-                let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-
-                digitalResouce.fileURL = fileURL;
-                digitalResouce.coverURL = coverURL;
-
-                book.digitalResouce = digitalResouce;
+    
+                if(coverUpload)
+                {
+                    const coverFile = coverUpload[0];
+                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
+                    digitalResouce.coverURL = coverURL;
+                }
             }
-
+            
+            book.digitalResouce = digitalResouce;
 
             await new BookSchema(book).save();
 

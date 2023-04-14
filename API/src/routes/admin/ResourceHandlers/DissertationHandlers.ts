@@ -30,7 +30,7 @@ function UpdateDissertation(req: Request): Promise<void> {
             storedDissertation.professor = resource.professor;
             storedDissertation.publicationYear = resource.publicationYear;
             storedDissertation.saveCipher = resource.saveCipher;
-            
+
             if (storedDissertation.resourceMeta) {
                 storedDissertation.resourceMeta.dateUpdated = Date.now();
                 storedDissertation.resourceMeta.updatedBy = req.session.user._id.toString();
@@ -110,21 +110,18 @@ function DuplicateDissertation(req: Request): Promise<void> {
     })
 }
 
-function DownloadDissertation(req : Request, res : Response) : Promise<String>
-{
+function DownloadDissertation(req: Request, res: Response): Promise<String> {
     return new Promise(async (resolve, reject) => {
         try {
-            let dissertationResult : Dissertation | null = await DissertationSchema.findOne({_id : req.body._id});
+            let dissertationResult: Dissertation | null = await DissertationSchema.findOne({ _id: req.body._id });
 
-            if(!dissertationResult)
-            {
+            if (!dissertationResult) {
                 reject("dissertation not found!");
                 return;
             }
 
-            if(dissertationResult.digitalResouce)
-            {
-                let url : string = await getPublicURL(dissertationResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+            if (dissertationResult.digitalResouce) {
+                let url: string = await getPublicURL(dissertationResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -132,8 +129,7 @@ function DownloadDissertation(req : Request, res : Response) : Promise<String>
             }
 
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
@@ -145,10 +141,9 @@ function SaveDissertation(req: Request): Promise<void> {
         try {
             let resource: DissertationAddUpdateResource = JSON.parse(req.body.resource) as DissertationAddUpdateResource;
 
-            let dbResource : Dissertation | null = await DissertationSchema.findOne({saveCipher : resource.saveCipher});
+            let dbResource: Dissertation | null = await DissertationSchema.findOne({ saveCipher: resource.saveCipher });
 
-            if(dbResource)
-            {
+            if (dbResource) {
                 reject();
                 return;
             }
@@ -173,31 +168,28 @@ function SaveDissertation(req: Request): Promise<void> {
             dissertation.resourceMeta = resourcemeta;
 
             // create digital resource
-            if (dissertation.digital) {
+            let digitalResouce: DigitalResource = new DigitalResource();
 
-                let digitalResouce: DigitalResource = new DigitalResource();
+            if (req.files) {
 
-                let dissertationUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+                let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
-                if (!dissertationUpload && !coverUpload) {
-                    return reject("მოთხოვნის ფორმატი არასწორია!");
+                if (bookUpload) {
+                    const bookFile = bookUpload[0];
+                    const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let fileURL: string = await uploadFile("dissertations", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
+                    digitalResouce.fileURL = fileURL;
                 }
 
-                const dissertationFile = dissertationUpload[0];
-                const coverFile = coverUpload[0];
-
-                const FileExtension: string | undefined = dissertationFile?.originalname ? dissertationFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-
-                let fileURL: string = await uploadFile("dissertations", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
-                let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-
-                digitalResouce.fileURL = fileURL;
-                digitalResouce.coverURL = coverURL;
-
-                dissertation.digitalResouce = digitalResouce;
+                if (coverUpload) {
+                    const coverFile = coverUpload[0];
+                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
+                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
+                    digitalResouce.coverURL = coverURL;
+                }
             }
+            dissertation.digitalResouce = digitalResouce;
             await new DissertationSchema(dissertation).save();
 
             resolve();
