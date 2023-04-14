@@ -11,12 +11,13 @@
       <search class="w-75 align-self-center" @cleared="onInputCleared" @search="handleSearch" />
       <!--Begin, Search Results-->
       <div v-if="showSearchResults" class="mt-4 booksSection container-fluid  p-3 rounded d-flex flex-column">
+        <div v-if="showSearchResults && petitionSent" class="alert alert-success" role="alert">
+          განცხადება გაიგზავნა!
+        </div>
         <div>
-
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
-              <img width="130" height="180"
-                src="https://firebasestorage.googleapis.com/v0/b/sangulibrary-d9533.appspot.com/o/public%2Fdefaultcover.png?alt=media&token=6071f8fe-e273-467f-81b4-ff98932fec47" />
+              <img width="130" height="180" :src="book.digitalResouce.coverURL" />
               <div class="d-flex flex-column gap-2">
                 <span class="text-light"> {{ book.title }} </span>
                 <span class="text-light"> {{ "ავტორი:" + " " + book.authors }} </span>
@@ -27,8 +28,11 @@
               <button class="btn btn-primary" v-on:click="checkoutResource(book)">გატანა</button>
             </div>
           </div>
+          <div v-if="books.length <= 0" class="alert alert-danger" role="alert">
+            მოცემული რესურსი არ არსებობს!
+          </div>
           <!-- Begin, Pagination -->
-          <div v-if="paginationData.totalPages" class="d-flex mt-5 flex-row align-content-center gap-3">
+          <div v-if="paginationData.totalPages > 1" class="d-flex mt-5 flex-row align-content-center gap-3">
             <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="pageSizeDropdown"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,7 +126,7 @@ export default defineComponent({
       showSearchResults: false as boolean,
       hamburgerVisible: true as boolean,
       showDropdown: false as boolean,
-      selectedOption: 'free' as string,
+      petitionSent : false as boolean,
 
       books: [] as any[],
       paginationData: {} as PaginationData
@@ -146,13 +150,13 @@ export default defineComponent({
       this.searchResources();
     },
     handleSearch(event: any): void {
-      this.selectedOption = event.selectedOption;
       this.searchInput = event.searchInput;
       this.searchResources();
     },
     onInputCleared(event: any): void {
       this.books = [];
       this.showSearchResults = false;
+      this.petitionSent = false;
     },
     searchResources(): void {
       if (this.searchInput) {
@@ -168,11 +172,9 @@ export default defineComponent({
           withCredentials: true,
         }).then((results) => {
           this.books = [];
-
           this.books = results.data.results;
           this.paginationData = results.data.paginationData;
           this.showSearchResults = true;
-          console.log(results.data)
           this.isLoading = false;
 
         }).catch((error) => {
@@ -191,6 +193,7 @@ export default defineComponent({
         axios.post(getApiConnectionString() + '/checkouts/create', body, {
           withCredentials: true,
         }).then((results) => {
+          this.petitionSent = true;
           this.isLoading = false;
         }).catch((error) => {
           this.isLoading = false;
