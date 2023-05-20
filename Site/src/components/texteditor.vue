@@ -22,7 +22,7 @@
   background-color: white;
 }
 .dark .ql-editor {
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 </style>
@@ -54,8 +54,7 @@ export default defineComponent({
             ["clean"],
           ],
         },
-      },
-      showeditor: false
+      }
     };
   },
   methods: {

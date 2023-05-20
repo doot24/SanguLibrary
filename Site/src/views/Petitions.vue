@@ -47,83 +47,43 @@
     </div>
 
     <!-- Begin, send statement modal -->
-    <div class="d-flex justify-content-center align-content-center gap-2">
-      <div>
-        <div class="modal" id="myModal" tabindex="-1" role="dialog" style="display: block" v-show="showEditor"
-          daba-bs-backdrop="static">
-          <div class="modal-dialog" role="document" style="max-width: 60%">
-            <div class="modal-content" style="border: none">
-              <div class="modal-header" style="border: none">
-                <h5 class="modal-title" style="color: black">
-                  ახალი განცხადება
-                </h5>
-              </div>
-              <div class="modal-body" style="border: none">
-                <div class="dropdown" v-cloak>
-                  <input class="form-control text-light p-2" :placeholder="placeholderText"
-                    @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
-                    style="background: #D9D9D9; font-size:1em">
-                  <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
-                    <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
-                      class="dropdown-item text-dark"
-                      @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
+    <div class="d-flex justify-content-center align-items-center gap-2">
+      <div class="modal" id="myModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+        <div class="modal-dialog" role="document" style="max-width: 60%">
+          <div class="modal-content" style="border: none">
+            <div class="modal-header" style="border: none">
+              <h5 class="modal-title" style="color: black">ახალი განცხადება</h5>
+            </div>
+            <div class="modal-body" style="border: none">
+              <div class="dropdown">
+                <input class="form-control text-light p-2" :placeholder="placeholderText"
+                  @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
+                  style="background: #D9D9D9; font-size:1em">
+                <ul class="dropdown-menu w-100" :class=" { show: showDropdown } " aria-labelledby="dropdownMenuButton">
+                  <li v-for="  template   in   templates  " :class=" { active: selectedOption === template.title } "
+                    class="dropdown-item text-dark">
+                    <a @click=" selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString() "
                       href="#">{{ template.title }}</a>
-                  </div>
-                </div>
-
-                <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
-                  :placeholder="userData.email.toString()">
+                  </li>
+                </ul>
               </div>
-              <texteditor  v-model:content="text" :Height="500" ref="editorComponent" />
 
-              <div class="modal-footer d-flex justify-content-between" style="border: none">
-                <button class="btn btn-outline-danger" v-on:click="clearInputs()"
-                  data-bs-dismiss="modal">გაუქმება</button>
-                <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
-                  v-on:click="sendPetition();" class="btn btn-danger" data-bs-dismiss="modal">გაგზავნა</button>
-              </div>
+              <input type="email" disabled class="form-control mt-4 p-3" style="background: #D9D9D9"
+                :placeholder=" userData.email.toString() ">
+            </div>
+            <texteditor v-model:content=" text " :height=" 500 " ref="editorComponent"></texteditor>
+
+            <div class="modal-footer d-flex justify-content-between" style="border: none">
+              <button class="btn btn-outline-danger" v-on:click=" clearInputs() "
+                data-bs-dismiss="modal">გაუქმება</button>
+              <button :disabled=" selectedOption === '' " style="color: #FFFFFF; font-weight: 600;"
+                v-on:click=" sendPetition(); " class="btn btn-danger" data-bs-dismiss="modal">გაგზავნა</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-      data-bs-backdrop="static">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content" style="background: #232128; border-radius: 20.8076px;">
-          <div class="modal-header">
-            <h5 class="modal-title text-white" id="exampleModalLabel">ახალი განცხადება</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="dropdown" v-cloak>
-              <input class="form-control text-light p-2" :placeholder="placeholderText"
-                @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
-                style="background: #D9D9D9; font-size:1em">
-              <div class="dropdown-menu w-100" :class="{ show: showDropdown }" aria-labelledby="dropdownMenuButton">
-                <a v-for="template in templates" :class="{ active: selectedOption === template.title }"
-                  class="dropdown-item text-dark"
-                  @click="selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString()"
-                  href="#">{{ template.title }}</a>
-              </div>
-            </div>
-            <input type="email" disabled class="form-control mt-4 p-3 " style="background: #D9D9D9"
-              :placeholder="userData.email.toString()">
-            <textarea v-model="text" cols="20" rows="20" class="form-control mt-5 rounded"
-              style="background: #D9D9D9"></textarea>
-          </div>
-          <div class="modal-footer d-flex justify-content-between">
-            <button class="btn btn-outline-danger" v-on:click="clearInputs();"
-              data-bs-dismiss="modal">გაუქმება</button>
-            <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
-              v-on:click="sendPetition();" class="btn btn-danger"
-              data-bs-dismiss="modal">გაგზავნა</button>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
   <!-- End, send statement modal -->
 
   <!-- Begin, comment modal -->
@@ -131,7 +91,7 @@
     <div class="modal-dialog modal-lg bg-light rounded">
       <div class="modal-content" style="background-color: #322E3D;">
         <div class="p-3 text-light" style="min-height: 200px;">
-          <div v-html="selectedPetition?.comment"></div>
+          <div v-html=" selectedPetition?.comment "></div>
         </div>
       </div>
     </div>
@@ -143,7 +103,7 @@
     <div class="modal-dialog modal-lg bg-light rounded">
       <div class="modal-content" style="background-color: #322E3D;">
         <div class="p-3 text-light text-break" style="min-height: 200px;">
-          <span v-html="selectedPetition?.text" class="text-break"></span>
+          <span v-html=" selectedPetition?.text " class="text-break"></span>
         </div>
       </div>
     </div>
@@ -190,7 +150,7 @@ export default defineComponent({
       selectedOption: '' as string,
       placeholderText: 'აირჩიეთ ტიპი' as string,
 
-      text: '' as string,
+      text: '' as any,
       errorMessage: '' as string,
       successMessage: '' as string,
       showEditor: false,
@@ -214,11 +174,12 @@ export default defineComponent({
     clearInputs(): void {
       this.selectedTemplate = null;
       this.selectedPetition = null;
+      console.log(this.text)
 
-      this.text = '';
+      this.text = '<p> </p>';
+
       this.selectedOption = '';
       this.placeholderText = 'აირჩიეთ ტიპი';
-
       this.showDropdown = false;
     },
 
@@ -229,7 +190,7 @@ export default defineComponent({
         withCredentials: true,
       }).then((results) => {
         this.isLoading = false;
-        this.templates = results.data.templates.filter((template: {system: boolean}) => !template.system);
+        this.templates = results.data.templates.filter((template: { system: boolean }) => !template.system);
       }).catch(() => {
         this.isLoading = false;
       })
