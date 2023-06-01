@@ -30,7 +30,7 @@ router.get('/resource/', IsAuthenticated, async (req, res) => {
 
     const pagination: Pagination = {
       totalPages: Math.ceil(totalResults / pageSize),
-      currentPage : page,
+      currentPage: page,
     };
 
     res.status(200).json({ searchResults: paginatedResults, pagination });
