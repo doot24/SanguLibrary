@@ -13,7 +13,6 @@ import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
 import { SendToUser } from "../../utils/Notification";
-import { ResourceType } from "../../interfaces/Resources";
 
 const router = Router();
 
@@ -65,7 +64,7 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("cip
       checkoutPetition.comment = "";
       checkoutPetition.template = "";
       checkoutPetition.resource_id = String(req.body.resource_id);
-      checkoutPetition.resource_type = Number(req.body.type);
+      checkoutPetition.resource_type = Number(resource.resourceType);
       
       await new CheckoutSchema(newCheckout).save();
       await new CheckoutPetitionSchema(checkoutPetition).save();
@@ -76,6 +75,7 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("cip
       res.status(200).json({ status: "success" });
    }
    catch (error) {
+      console.error(error)
       res.status(400).json({ status: "fail", message: errorMSG });
    }
 });
