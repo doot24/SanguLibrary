@@ -12,5 +12,9 @@ const userSchema: Schema = new Schema<User>({
   phoneNumber : {type : String}
 });
 
+userSchema.index({ publicNumber: 'text' });
+userSchema.index({ phoneNumber: 'text' });
+userSchema.index({ email: 'text' });
+
 export const UserSchema = mongoose.model<User>('User', userSchema);
 

@@ -11,8 +11,15 @@ import { JournalSchema } from "../schemas/ResourceSchemas/Journal";
 import { DissertationSchema } from "../schemas/ResourceSchemas/Dissertation";
 import { RiderSchema } from "../schemas/ResourceSchemas/Rider";
 
-router.get('/resource/', IsAuthenticated, async (req, res) => {
-  const { text, page, pageSize }: any = req.query; // Get search term, page, and pageSize from query parameters
+import { body, validationResult } from "express-validator";
+
+router.get('/resource/', IsAuthenticated, body("text").notEmpty().isString(), body("page").notEmpty().isNumeric(),body("pageSize").notEmpty().isNumeric(), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+  }
+
+  const { text, page, pageSize }: any = req.query; 
 
   try {
     const collections: any[] = [BookSchema, JournalSchema, DissertationSchema, RiderSchema];

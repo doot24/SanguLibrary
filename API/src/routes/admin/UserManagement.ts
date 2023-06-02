@@ -10,15 +10,14 @@ import { UserSchema } from "../../schemas/UserSchema";
 
 router.post('/setroles', IsAuthenticated, HasRole("admin"), validateUpdateUser, (req: Request, res: Response) => {
     const roles: Array<string> = JSON.parse(req.body.roles);
-    const _id: string = String(req.body._id);
-    
+    const _id: string = String(req.body.id);
+
     UserSchema.findOneAndUpdate(
         { _id: _id },
         { $set: { roles: roles } },
         { new: true }
     ).then((user) => {
-        if(!user)
-        {
+        if (!user) {
             throw new Error("user not found");
         }
         res.status(200).json({ status: "success" });
@@ -27,12 +26,12 @@ router.post('/setroles', IsAuthenticated, HasRole("admin"), validateUpdateUser, 
     });
 });
 
-router.post("/delete", IsAuthenticated, HasRole("admin"), body("_id").notEmpty().isUUID(), (req: Request, res: Response) => {
+router.post("/delete", IsAuthenticated, HasRole("admin"), body("id").notEmpty().isUUID(), (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
     }
-    UserSchema.deleteOne({ _id: req.body._id }).then(() => {
+    UserSchema.deleteOne({ _id: req.body.id }).then(() => {
         res.status(200).json({ status: "success" });
 
     }).catch(() => {
@@ -40,13 +39,15 @@ router.post("/delete", IsAuthenticated, HasRole("admin"), body("_id").notEmpty()
     })
 });
 
-router.get("/search/publicnum", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("publicNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
-    }
+router.get("/search", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), (req: Request, res: Response) => {
+    let publicNumber: string = String(req.query.publicNumber);
+    let phoneNumber: string = String(req.query.phoneNumber);
 
-    UserSchema.findOne({ publicNumber: req.query.publicNum }).then((userResult) => {
+    UserSchema.aggregate([{
+        $match: {
+            $or: [{ 'phoneNumber': phoneNumber }, { 'publicNumber': publicNumber }]
+        }
+    }]).then((userResult) => {
         if (!userResult) {
             return res.status(400).json({
                 status: "fail",
@@ -59,39 +60,12 @@ router.get("/search/publicnum", IsAuthenticated, HasRoles(["admin", "editor", "e
             user: userResult
         });
     })
-        .catch(() => {
-            res.status(400).json({
-                status: "fail",
-                message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
-            });
+    .catch(() => {
+        res.status(400).json({
+            status: "fail",
+            message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
         });
-});
-
-router.get("/search/phonenum", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("phoneNum").notEmpty().isNumeric(), (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
-    }
-
-    UserSchema.findOne({ phoneNumber: req.query.phoneNum }).then((userResult) => {
-        if (!userResult) {
-            return res.status(400).json({
-                status: "fail",
-                message: "მომხმარებელი არ არსებობს!"
-            });
-        }
-
-        res.status(200).json({
-            status: "success",
-            user: userResult
-        });
-    })
-        .catch(() => {
-            res.status(400).json({
-                status: "fail",
-                message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
-            });
-        });
+    });
 });
 
 router.get("/users", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {

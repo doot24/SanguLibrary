@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 
 export const validateUpdateUser = [
-  body("_id").notEmpty().isUUID(),
+  body("id").notEmpty().isUUID(),
   body("roles").notEmpty().custom((value: any) => {
     let parsedValue : Array<String> = JSON.parse(value);
     
