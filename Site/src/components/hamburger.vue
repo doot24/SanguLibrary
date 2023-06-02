@@ -37,7 +37,7 @@
 
         <!-- Begin, Editor panel -->
         <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')">
-          <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
+          <button @click="loadRoute('/resourcemanagement')" :class="{ 'selectedButton': $route.path === '/resourcemanagement' }"
             class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
             <span class="bi bi-box-seam me-3 ms-1" style="font-size: 2em;"></span>
             <span class="mr-auto text-nowrap">რესურსების მენეჯმენტი</span>
@@ -100,7 +100,7 @@
 
       
       <div class="d-flex align-items-center flex-column" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')">
-        <button @click="loadRoute('/bookmanagement')" :class="{ 'selectedButton': $route.path === '/bookmanagement' }"
+        <button @click="loadRoute('/resourcemanagement')" :class="{ 'selectedButton': $route.path === '/resourcemanagement' }"
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
           <span class="bi bi-box-seam me-3 ms-3" style="font-size: 2em;"></span>
           <span class="mr-auto">რესურსების მენეჯმენტი</span>

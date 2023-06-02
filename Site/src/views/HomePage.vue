@@ -172,11 +172,11 @@ export default defineComponent({
           withCredentials: true,
         }).then((results) => {
           this.books = [];
-          this.books = results.data.results;
-          this.paginationData = results.data.paginationData;
+          this.books = results.data.searchResults;
+          this.paginationData = results.data.pagination;
           this.showSearchResults = true;
           this.isLoading = false;
-
+                  
         }).catch((error) => {
           this.isLoading = false;
         });

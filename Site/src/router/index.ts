@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import HomePage from '../views/HomePage.vue';
 import UserPage from '../views/UserPage.vue';
-import BookManagement from '../views/management/BookManagement.vue';
+import ResourceManagement from '../views/management/ResourceManagement.vue';
 import UserManagement from '../views/management/UserManagement.vue';
 import NotificationManagement from '../views/management/NotificationManagement.vue';
 import Petitions from '../views/Petitions.vue';
@@ -35,8 +35,8 @@ const routes: Array<RouteRecordRaw> = [
     beforeEnter: requireAuth,
   },
   {
-    path: '/bookmanagement',
-    component: BookManagement,
+    path: '/resourcemanagement',
+    component: ResourceManagement,
     beforeEnter: requireRoles(['editor', 'admin']),
   },
   {
