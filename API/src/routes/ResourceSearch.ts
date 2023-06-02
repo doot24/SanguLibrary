@@ -19,7 +19,27 @@ router.get('/resource/', IsAuthenticated, async (req, res) => {
     const searchResults: SearchResults[] = [];
 
     for (const schema of collections) {
-      const results = await schema.find({ $text: { $search: text } }).lean();
+      const results = await schema.aggregate([
+        {
+          $match: {
+            $text: { $search: text }
+          }
+        },
+        {
+          $lookup: {
+            from: "checkouts",
+            localField: "_id",
+            foreignField: "_id",
+            as: "checkout_info"
+          }
+        },
+        {
+          $match: {
+            "checkout_info": { $size: 0 } 
+          }
+        }
+      ]).allowDiskUse(true).exec();
+
       searchResults.push(...results);
     }
 
