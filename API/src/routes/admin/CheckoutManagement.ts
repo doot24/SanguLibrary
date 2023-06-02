@@ -13,28 +13,49 @@ import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
 import { SendToUser } from "../../utils/Notification";
+import { ResourceType } from "../../interfaces/Resources";
 
 const router = Router();
 
 // used by editor to quckly create and confirm a checkout
-router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("student").notEmpty().isUUID(), body("type").notEmpty().isNumeric(), body("resource_id").notEmpty().isUUID(), body("return").notEmpty().isString(), async (req: Request, res: Response) => {
+router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("cipher").notEmpty(), body("student").notEmpty().isUUID(), body("returnDate").notEmpty(), async (req: Request, res: Response) => {
+   var errorMSG : string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
+
    try {
-
-      let result: any = await CheckoutSchema.findOne({ resource_id: req.body.resource_id });
-
-      if (result) {
-         throw new Error("resource is already reserved!")
+      
+      const bookPromise : any = await BookSchema.findOne({saveCipher : req.body.cipher});
+      const journalPromise : any = await JournalSchema.findOne({saveCipher : req.body.cipher});
+      const riderPromise : any = await RiderSchema.findOne({saveCipher : req.body.cipher});
+      const dissertationPromise : any = await DissertationSchema.findOne({saveCipher : req.body.cipher});
+      
+      let resource : any = null;
+      
+      if (bookPromise) {
+         resource = bookPromise;
+      } else if (journalPromise) {
+         resource = journalPromise;
+      } else if (riderPromise) {
+         resource = riderPromise;
+      } else if (dissertationPromise) {
+         resource = dissertationPromise;
       }
-
+      
+      let result: any = await CheckoutSchema.findOne({ resource_id: resource._id });
+      
+      if (result) {
+         errorMSG = "მასალა გატანილია!";
+         throw new Error(errorMSG)
+      }
+      
       let newCheckout: Checkout = new Checkout();
       newCheckout._id = randomUUID();
       newCheckout.student = req.body.student;
       newCheckout.employee = String(req.session.user._id);
-      newCheckout.dateIssued = String(Date.now());
-      newCheckout.returnDate = String(req.body.return);
-      newCheckout.resource = Number(req.body.type);
-      newCheckout.resource_id = String(req.body.resource_id);
-
+      newCheckout.dateIssued = Date.now();
+      newCheckout.returnDate = req.body.returnDate;
+      newCheckout.resource = Number(resource.resourceType);
+      newCheckout.resource_id = String(resource._id);
+      
       let checkoutPetition = new CheckoutPetition();
       checkoutPetition._id = randomUUID();
       checkoutPetition.timestamp = Date.now()
@@ -45,7 +66,7 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("stu
       checkoutPetition.template = "";
       checkoutPetition.resource_id = String(req.body.resource_id);
       checkoutPetition.resource_type = Number(req.body.type);
-
+      
       await new CheckoutSchema(newCheckout).save();
       await new CheckoutPetitionSchema(checkoutPetition).save();
 
@@ -55,7 +76,7 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("stu
       res.status(200).json({ status: "success" });
    }
    catch (error) {
-      res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
+      res.status(400).json({ status: "fail", message: errorMSG });
    }
 });
 
