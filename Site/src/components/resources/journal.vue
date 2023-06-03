@@ -10,16 +10,18 @@
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ formattedAuthors }}</span></div>
         <div class="p-2" style="background-color: #3B3748;"><span>{{ formattedEditors }}</span></div>
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.description }}</span></div>
+        <div class="p-2" style="background-color: #3B3748;"><span>{{ resource?.collegues }}</span></div>
         <div class="p-2" style="background-color: #3B3748;"><span>{{ resource?.category }}</span></div>
       </div>
       <div>
+        <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.number }}</span></div>
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.resume }}</span></div>
         <div class="p-2" style="background-color: #3B3748;"><span>{{ resource?.remark }}</span></div>
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.publication }}</span></div>
         <div class="p-2" style="background-color: #3B3748"><span>{{ resource?.publicationLocation }}</span></div>
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.publicationYear }}</span></div>
         <div class="p-2" style="background-color: #3B3748;"><span>შიფრი : {{ resource?.saveCipher }}</span></div>
-        <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.isbn }}</span></div>
+        <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>{{ resource?.issn }}</span></div>
       </div>
     </div>
     <div class="d-flex gap-2 flex-column text-light">
@@ -35,7 +37,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Book',
+  name: 'Journal',
   props: {
     resource : Object,
    
