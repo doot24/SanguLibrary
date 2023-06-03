@@ -11,10 +11,11 @@ import { JournalSchema } from "../schemas/ResourceSchemas/Journal";
 import { DissertationSchema } from "../schemas/ResourceSchemas/Dissertation";
 import { RiderSchema } from "../schemas/ResourceSchemas/Rider";
 
-import { body, validationResult } from "express-validator";
+import {query, validationResult } from "express-validator";
 
-router.get('/resource/', IsAuthenticated, body("text").notEmpty().isString(), body("page").notEmpty().isNumeric(),body("pageSize").notEmpty().isNumeric(), async (req, res) => {
+router.get('/resource/', IsAuthenticated, query("text").notEmpty().isString(), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), async (req, res) => {
   const errors = validationResult(req);
+ 
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
   }
@@ -62,7 +63,7 @@ router.get('/resource/', IsAuthenticated, body("text").notEmpty().isString(), bo
 
     res.status(200).json({ searchResults: paginatedResults, pagination });
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ message: 'An error occurred while searching.' });
   }
 });
