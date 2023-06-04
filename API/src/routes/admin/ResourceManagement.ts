@@ -157,4 +157,58 @@ router.post('/delete', IsAuthenticated, HasRoles(["admin", "editor"]), body("_id
 
 });
 
+import { query } from "express-validator";
+
+import { BookSchema } from "../../schemas/ResourceSchemas/book";
+import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
+import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
+import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
+import { Pagination } from "../../interfaces/Pagination";
+
+router.get('/', IsAuthenticated, HasRoles(["admin", "editor"]), query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  const { page, pageSize } = req.query;
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+  }
+
+  let startIndex = (Number(page) - 1) * Number(pageSize);
+  let endIndex = Number(page) * Number(pageSize);
+
+  const agg : any = [
+    {
+      '$match': {}
+    },
+    {
+      '$unset': '__v'
+    },
+    {
+      '$sort': { _id: 1 } // Add sorting condition to ensure consistent order across pages
+    }
+  ];
+
+  // Retrieve all documents from all collections
+  const collections = [BookSchema, JournalSchema, RiderSchema, DissertationSchema];
+  const allDocs: any[] = [];
+  let finalCount = 0;
+
+  for (const CollectionSchema of collections) {
+    const collectionDocs = await CollectionSchema.aggregate(agg).exec();
+    finalCount += collectionDocs.length;
+    allDocs.push(...collectionDocs);
+  }
+
+  // Calculate pagination based on the combined results
+  let paginatedDocs = allDocs.slice(startIndex, endIndex);
+  let pagination : Pagination = new Pagination();
+  pagination.currentPage = Number(page);
+  pagination.totalPages = Math.ceil(finalCount / Number(pageSize));
+
+  return res.status(200).json({
+    status: "success",
+    documents: paginatedDocs,
+    pagination: pagination
+  });
+});
 export default router;
