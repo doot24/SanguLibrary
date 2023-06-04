@@ -44,24 +44,24 @@ function UpdateJournal(req: Request): Promise<void> {
                 storedJournal.resourceMeta.updatedBy = req.session.user._id.toString();
             }
 
-            if (storedJournal.digital && storedJournal.digitalResouce) {
+            if (storedJournal.digital && storedJournal.digitalResource) {
                 let journalUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
                 if (journalUpload) {
                     const journalfile = journalUpload[0];
                     const journalFileExtension: string | undefined = journalfile?.originalname ? journalfile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedJournal.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedJournal.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalfile.buffer);
-                    storedJournal.digitalResouce.fileURL = fileURL;
+                    storedJournal.digitalResource.fileURL = fileURL;
                 }
 
                 if (coverUpload) {
                     const coverFile = coverUpload[0];
                     const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedJournal.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedJournal.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
                     let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    storedJournal.digitalResouce.coverURL = coverURL;
+                    storedJournal.digitalResource.coverURL = coverURL;
                 }
             }
 
@@ -84,8 +84,8 @@ function DeleteJournal(req: Request): Promise<void> {
             }
 
             if (journalResult.digital) {
-                await deleteFile(String(journalResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                await deleteFile(String(journalResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                await deleteFile(String(journalResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                await deleteFile(String(journalResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
             }
 
             resolve();
@@ -126,8 +126,8 @@ function DownloadJournal(req: Request, res: Response): Promise<String> {
                 return;
             }
 
-            if (journalResult.digitalResouce) {
-                let url: string = await getPublicURL(journalResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+            if (journalResult.digitalResource) {
+                let url: string = await getPublicURL(journalResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -203,7 +203,7 @@ function SaveJournal(req: Request): Promise<void> {
                     digitalResouce.coverURL = coverURL;
                 }
             }
-            journal.digitalResouce = digitalResouce;
+            journal.digitalResource = digitalResouce;
             await new JournalSchema(journal).save();
 
             resolve();

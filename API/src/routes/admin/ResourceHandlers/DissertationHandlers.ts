@@ -36,7 +36,7 @@ function UpdateDissertation(req: Request): Promise<void> {
                 storedDissertation.resourceMeta.updatedBy = req.session.user._id.toString();
             }
 
-            if (storedDissertation.digitalResouce) {
+            if (storedDissertation.digitalResource) {
                 let dissertationUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
@@ -47,15 +47,15 @@ function UpdateDissertation(req: Request): Promise<void> {
                 const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
 
                 if (dissertationUpload) {
-                    await deleteFile(String(storedDissertation.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedDissertation.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("dissertations", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", dissertationFile.buffer);
-                    storedDissertation.digitalResouce.fileURL = fileURL;
+                    storedDissertation.digitalResource.fileURL = fileURL;
                 }
 
                 if (coverUpload) {
-                    await deleteFile(String(storedDissertation.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedDissertation.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
                     let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    storedDissertation.digitalResouce.coverURL = coverURL;
+                    storedDissertation.digitalResource.coverURL = coverURL;
                 }
             }
 
@@ -77,8 +77,8 @@ function DeleteDissertation(req: Request): Promise<void> {
                 return;
             }
 
-            await deleteFile(String(dissertationResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-            await deleteFile(String(dissertationResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+            await deleteFile(String(dissertationResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+            await deleteFile(String(dissertationResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
 
             resolve();
         }
@@ -120,8 +120,8 @@ function DownloadDissertation(req: Request, res: Response): Promise<String> {
                 return;
             }
 
-            if (dissertationResult.digitalResouce) {
-                let url: string = await getPublicURL(dissertationResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+            if (dissertationResult.digitalResource) {
+                let url: string = await getPublicURL(dissertationResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -189,7 +189,7 @@ function SaveDissertation(req: Request): Promise<void> {
                     digitalResouce.coverURL = coverURL;
                 }
             }
-            dissertation.digitalResouce = digitalResouce;
+            dissertation.digitalResource = digitalResouce;
             await new DissertationSchema(dissertation).save();
 
             resolve();

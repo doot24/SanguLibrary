@@ -47,7 +47,7 @@ function UpdateBook(req : Request) : Promise<void>
                 storedBook.resourceMeta.updatedBy = req.session.user._id.toString();
             }
 
-            if (storedBook.digital && storedBook.digitalResouce) {
+            if (storedBook.digital && storedBook.digitalResource) {
                 let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
                 
@@ -55,18 +55,18 @@ function UpdateBook(req : Request) : Promise<void>
                 {
                     const bookFile = bookUpload[0];
                     const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedBook.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedBook.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("books", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
-                    storedBook.digitalResouce.fileURL = fileURL;
+                    storedBook.digitalResource.fileURL = fileURL;
                 }
                 
                 if(coverUpload)
                 {
                     const coverFile = coverUpload[0];
                     const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedBook.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedBook.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
                     let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    storedBook.digitalResouce.coverURL = coverURL;
+                    storedBook.digitalResource.coverURL = coverURL;
                 }
             }
 
@@ -92,8 +92,8 @@ function DeleteBook(req : Request) : Promise<void>
 
             if(bookResult.digital)
             {
-                await deleteFile(String(bookResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                await deleteFile(String(bookResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                await deleteFile(String(bookResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                await deleteFile(String(bookResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
             }
 
             resolve();
@@ -142,9 +142,9 @@ function DownloadBook(req : Request, res : Response) : Promise<String>
                 return;
             }
 
-            if(bookResult.digitalResouce)
+            if(bookResult.digitalResource)
             {
-                let url : string = await getPublicURL(bookResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+                let url : string = await getPublicURL(bookResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -222,7 +222,7 @@ function SaveBook(req: Request): Promise<void> {
                 }
             }
             
-            book.digitalResouce = digitalResouce;
+            book.digitalResource = digitalResouce;
 
             await new BookSchema(book).save();
 

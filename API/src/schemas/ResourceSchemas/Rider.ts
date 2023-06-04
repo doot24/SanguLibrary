@@ -14,7 +14,7 @@ const riderSchema: Schema = new Schema<Rider>({
     remark: { type: String },
     saveCipher: { type: String },
     resourceMeta : {type : resourceMetaSchema},
-    digitalResouce : {type : digitalResourceSchema}
+    digitalResource : {type : digitalResourceSchema}
   });
   riderSchema.index({ title: "text", author: "text", saveCipher : "text" });
   

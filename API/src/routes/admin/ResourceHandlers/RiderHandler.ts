@@ -35,7 +35,7 @@ function UpdateRider(req: Request): Promise<void> {
                 storedRider.resourceMeta.updatedBy = req.session.user._id.toString();
             }
 
-            if (storedRider.digitalResouce) {
+            if (storedRider.digitalResource) {
                 let riderUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
 
@@ -46,15 +46,15 @@ function UpdateRider(req: Request): Promise<void> {
                 const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
 
                 if (riderUpload) {
-                    await deleteFile(String(storedRider.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedRider.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("riders", randomUUID().toString(), String(FileExtension), "gs://sangulibrary-d9533.appspot.com/", riderFile.buffer);
-                    storedRider.digitalResouce.fileURL = fileURL;
+                    storedRider.digitalResource.fileURL = fileURL;
                 }
 
                 if (coverUpload) {
-                    await deleteFile(String(storedRider.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
+                    await deleteFile(String(storedRider.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
                     let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    storedRider.digitalResouce.coverURL = coverURL;
+                    storedRider.digitalResource.coverURL = coverURL;
                 }
             }
 
@@ -76,8 +76,8 @@ function DeleteRider(req: Request): Promise<void> {
                 return;
             }
 
-            await deleteFile(String(dissertationResult?.digitalResouce?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-            await deleteFile(String(dissertationResult?.digitalResouce?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+            await deleteFile(String(dissertationResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+            await deleteFile(String(dissertationResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
 
             resolve();
         }
@@ -119,9 +119,9 @@ function DownloadRider(req : Request, res : Response) : Promise<String>
                 reject("rider not found!");
                 return;
             }
-            if(riderResult.digitalResouce)
+            if(riderResult.digitalResource)
             {
-                let url : string = await getPublicURL(riderResult.digitalResouce?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+                let url : string = await getPublicURL(riderResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -191,7 +191,7 @@ function SaveRider(req: Request): Promise<void> {
                     digitalResouce.coverURL = coverURL;
                 }
             }
-            rider.digitalResouce = digitalResouce;
+            rider.digitalResource = digitalResouce;
             await new RiderSchema(rider).save();
 
             resolve();

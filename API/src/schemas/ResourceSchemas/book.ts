@@ -22,7 +22,7 @@ const bookSchema: Schema = new Schema<Book>({
   remark: { type: String },
   saveCipher: { type: String },
   resourceMeta: { type: resourceMetaSchema },
-  digitalResouce: { type: digitalResourceSchema }
+  digitalResource: { type: digitalResourceSchema }
 });
 bookSchema.index({ title: "text", authors: "text", editors : "text", isbn : "text", saveCipher : "text" });
 

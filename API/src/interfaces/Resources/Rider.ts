@@ -7,7 +7,7 @@ class Rider implements ILibraryResource {
     digital: boolean = true;
     resourceType: ResourceType = ResourceType.Rider;
     resourceMeta?: ResourceMeta | undefined;
-    digitalResouce?: DigitalResource | undefined;
+    digitalResource?: DigitalResource | undefined;
     
     saveCipher : string = "";
     title : string = "";
@@ -21,7 +21,7 @@ class Rider implements ILibraryResource {
             this.digital = rider.digital;
             this.resourceType = rider.resourceType;
             this.resourceMeta = rider.resourceMeta;
-            this.digitalResouce = rider.digitalResouce;
+            this.digitalResource = rider.digitalResource;
             this.saveCipher = rider.saveCipher;
             this.title = rider.title;
             this.subTitle = rider.subTitle;

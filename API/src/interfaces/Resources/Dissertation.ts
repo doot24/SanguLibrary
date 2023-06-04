@@ -7,7 +7,7 @@ class Dissertation implements ILibraryResource {
     digital: boolean = true;
     resourceType: ResourceType = ResourceType.Dissertation;
     resourceMeta?: ResourceMeta | undefined;
-    digitalResouce?: DigitalResource | undefined;
+    digitalResource?: DigitalResource | undefined;
     
     saveCipher : string = "";
     title : string = "";
@@ -22,7 +22,7 @@ class Dissertation implements ILibraryResource {
             this.digital = dissertation.digital;
             this.resourceType = dissertation.resourceType;
             this.resourceMeta = dissertation.resourceMeta;
-            this.digitalResouce = dissertation.digitalResouce;
+            this.digitalResource = dissertation.digitalResource;
             this.saveCipher = dissertation.saveCipher;
             this.title = dissertation.title;
             this.subTitle = dissertation.subTitle;

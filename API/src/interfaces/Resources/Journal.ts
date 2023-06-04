@@ -21,7 +21,7 @@ class Journal implements ILibraryResource {
     remark: string = "";
     saveCipher: string = "";
     resourceMeta?: ResourceMeta;
-    digitalResouce?: DigitalResource;
+    digitalResource?: DigitalResource;
 
     constructor(journal?: Journal) {
         if (journal) {
@@ -43,7 +43,7 @@ class Journal implements ILibraryResource {
             this.remark = journal.remark;
             this.saveCipher = journal.saveCipher;
             this.resourceMeta = journal.resourceMeta;
-            this.digitalResouce = journal.digitalResouce;
+            this.digitalResource = journal.digitalResource;
         }
     }
 

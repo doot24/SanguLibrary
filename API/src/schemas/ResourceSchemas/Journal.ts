@@ -23,7 +23,7 @@ const journalSchema: Schema = new Schema<Journal>({
   remark: { type: String },
   saveCipher: { type: String },
   resourceMeta: { type: resourceMetaSchema },
-  digitalResouce: { type: digitalResourceSchema }
+  digitalResource: { type: digitalResourceSchema }
 });
 journalSchema.index({ title: "text", authors: "text", editors : 'text', collegues : 'text', issn: "text", saveCipher: 'text' });
 

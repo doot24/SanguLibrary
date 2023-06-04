@@ -14,7 +14,7 @@ const dissertationSchema: Schema = new Schema<Dissertation>({
   publicationYear: {type : Number},
   saveCipher: {type : String},
   resourceMeta : {type : resourceMetaSchema},
-  digitalResouce : {type : digitalResourceSchema}
+  digitalResource : {type : digitalResourceSchema}
 });
 dissertationSchema.index({ title: "text", professor: "text", saveCipher : "text"});
   

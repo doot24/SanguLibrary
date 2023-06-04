@@ -20,7 +20,7 @@ class Book implements ILibraryResource {
     remark: string = "";
     saveCipher: string = "";
     resourceMeta?: ResourceMeta;
-    digitalResouce?: DigitalResource;
+    digitalResource?: DigitalResource;
 
     constructor(book?: Book) {
         if (book) {
@@ -41,7 +41,7 @@ class Book implements ILibraryResource {
             this.remark = book.remark;
             this.saveCipher = book.saveCipher;
             this.resourceMeta = book.resourceMeta;
-            this.digitalResouce = book.digitalResouce;
+            this.digitalResource = book.digitalResource;
         }
     }
 }
