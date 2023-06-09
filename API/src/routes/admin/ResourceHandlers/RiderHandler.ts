@@ -69,15 +69,22 @@ function UpdateRider(req: Request): Promise<void> {
 function DeleteRider(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let dissertationResult: Rider | null = await RiderSchema.findOneAndDelete({ _id: req.body._id });
+            let riderResult: Rider | null = await RiderSchema.findOneAndDelete({ _id: req.body._id });
 
-            if (!dissertationResult) {
+            if (!riderResult) {
                 reject("rider not found!");
                 return;
             }
 
-            await deleteFile(String(dissertationResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-            await deleteFile(String(dissertationResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+            if (riderResult.digital) {
+                if (riderResult.digitalResource?.fileURL) {
+                    await deleteFile(String(riderResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                }
+
+                if (riderResult.digitalResource?.coverURL) {
+                    await deleteFile(String(riderResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                }
+            }
 
             resolve();
         }

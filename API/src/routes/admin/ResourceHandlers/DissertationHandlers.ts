@@ -80,6 +80,15 @@ function DeleteDissertation(req: Request): Promise<void> {
             await deleteFile(String(dissertationResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
             await deleteFile(String(dissertationResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
 
+            if (dissertationResult.digital) {
+                if (dissertationResult.digitalResource?.fileURL) {
+                    await deleteFile(String(dissertationResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                }
+
+                if (dissertationResult.digitalResource?.coverURL) {
+                    await deleteFile(String(dissertationResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                }
+            }
             resolve();
         }
         catch (err) {

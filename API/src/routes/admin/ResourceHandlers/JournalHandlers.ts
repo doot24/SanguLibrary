@@ -84,8 +84,13 @@ function DeleteJournal(req: Request): Promise<void> {
             }
 
             if (journalResult.digital) {
-                await deleteFile(String(journalResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                await deleteFile(String(journalResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                if (journalResult.digitalResource?.fileURL) {
+                    await deleteFile(String(journalResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                }
+
+                if (journalResult.digitalResource?.coverURL) {
+                    await deleteFile(String(journalResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                }
             }
 
             resolve();

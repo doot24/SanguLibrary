@@ -12,20 +12,18 @@ import { BookSchema } from "../../../schemas/ResourceSchemas/book";
 
 export { SaveBook, DeleteBook, UpdateBook, DownloadBook, DuplicateBook }
 
-function UpdateBook(req : Request) : Promise<void>
-{
+function UpdateBook(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let storedBook : Book | null = await BookSchema.findOne({_id : req.body._id});
-            
-            if(!storedBook)
-            {
+            let storedBook: Book | null = await BookSchema.findOne({ _id: req.body._id });
+
+            if (!storedBook) {
                 reject("book not found!");
                 return;
             }
 
             let resource: BookUpdateResource = JSON.parse(req.body.resource) as BookUpdateResource;
-            
+
             storedBook.resourceType = (ResourceType.Book);
             storedBook.title = resource.title;
             storedBook.subTitle = resource.subTitle;
@@ -41,8 +39,7 @@ function UpdateBook(req : Request) : Promise<void>
             storedBook.remark = resource.remark;
             storedBook.saveCipher = resource.saveCipher;
 
-            if(storedBook.resourceMeta)
-            {
+            if (storedBook.resourceMeta) {
                 storedBook.resourceMeta.dateUpdated = Date.now();
                 storedBook.resourceMeta.updatedBy = req.session.user._id.toString();
             }
@@ -50,18 +47,16 @@ function UpdateBook(req : Request) : Promise<void>
             if (storedBook.digital && storedBook.digitalResource) {
                 let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
                 let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-                
-                if(bookUpload)
-                {
+
+                if (bookUpload) {
                     const bookFile = bookUpload[0];
                     const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     await deleteFile(String(storedBook.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
                     let fileURL: string = await uploadFile("books", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
                     storedBook.digitalResource.fileURL = fileURL;
                 }
-                
-                if(coverUpload)
-                {
+
+                if (coverUpload) {
                     const coverFile = coverUpload[0];
                     const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     await deleteFile(String(storedBook.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
@@ -70,7 +65,7 @@ function UpdateBook(req : Request) : Promise<void>
                 }
             }
 
-            await BookSchema.findOneAndUpdate({_id : req.body._id}, storedBook);
+            await BookSchema.findOneAndUpdate({ _id: req.body._id }, storedBook);
             resolve();
         } catch (err) {
             reject(err);
@@ -78,73 +73,67 @@ function UpdateBook(req : Request) : Promise<void>
     });
 }
 
-function DeleteBook(req : Request) : Promise<void>
-{
+function DeleteBook(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let bookResult : Book | null = await BookSchema.findOneAndDelete({_id : req.body._id});
+            let bookResult: Book | null = await BookSchema.findOneAndDelete({ _id: req.body._id });
 
-            if(!bookResult)
-            {
+            if (!bookResult) {
                 reject("book not found!");
                 return;
             }
 
-            if(bookResult.digital)
-            {
-                await deleteFile(String(bookResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                await deleteFile(String(bookResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
-            }
+            if (bookResult.digital) {
+                if (bookResult.digitalResource?.fileURL !== "") {
+                    await deleteFile(String(bookResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
+                }
 
+                if (bookResult.digitalResource?.coverURL !== "") {
+                    await deleteFile(String(bookResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
+                }
+            }
             resolve();
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
 }
 
-function DuplicateBook(req : Request) : Promise<void>
-{
+function DuplicateBook(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
-            let bookResult : Book | null = await BookSchema.findOne({_id : req.body._id});
+            let bookResult: Book | null = await BookSchema.findOne({ _id: req.body._id });
 
-            if(!bookResult)
-            {
+            if (!bookResult) {
                 reject("book not found!");
                 return;
             }
 
-            let newBook : Book = new Book(bookResult);
+            let newBook: Book = new Book(bookResult);
             newBook._id = randomUUID();
             await new BookSchema(newBook).save();
 
             resolve();
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
 }
 
-function DownloadBook(req : Request, res : Response) : Promise<String>
-{
+function DownloadBook(req: Request, res: Response): Promise<String> {
     return new Promise(async (resolve, reject) => {
         try {
-            let bookResult : Book | null = await BookSchema.findOne({_id : req.body._id});
+            let bookResult: Book | null = await BookSchema.findOne({ _id: req.body._id });
 
-            if(!bookResult)
-            {
+            if (!bookResult) {
                 reject("book not found!");
                 return;
             }
 
-            if(bookResult.digitalResource)
-            {
-                let url : string = await getPublicURL(bookResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
+            if (bookResult.digitalResource) {
+                let url: string = await getPublicURL(bookResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
                 resolve(url);
             }
             else {
@@ -152,8 +141,7 @@ function DownloadBook(req : Request, res : Response) : Promise<String>
             }
 
         }
-        catch(err)
-        {
+        catch (err) {
             reject(err);
         }
     })
@@ -163,11 +151,10 @@ function SaveBook(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             let resource: BookAddResource = JSON.parse(req.body.resource) as BookAddResource;
-            
-            let dbResource : Book | null = await BookSchema.findOne({saveCipher : resource.saveCipher});
-            
-            if(dbResource)
-            {
+
+            let dbResource: Book | null = await BookSchema.findOne({ saveCipher: resource.saveCipher });
+
+            if (dbResource) {
                 reject();
                 return;
             }
@@ -199,29 +186,26 @@ function SaveBook(req: Request): Promise<void> {
             book.resourceMeta = resourcemeta;
 
             let digitalResouce: DigitalResource = new DigitalResource();
-            
-            if(req.files)
-            {
-                let bookUpload : any = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
-                let coverUpload : any = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-                
-                if(bookUpload)
-                {
+
+            if (req.files) {
+                let bookUpload: any = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
+                let coverUpload: any = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
+
+                if (bookUpload) {
                     const bookFile = bookUpload[0];
                     const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     let fileURL: string = await uploadFile("books", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
                     digitalResouce.fileURL = fileURL;
                 }
-    
-                if(coverUpload)
-                {
+
+                if (coverUpload) {
                     const coverFile = coverUpload[0];
                     const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
                     let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
                     digitalResouce.coverURL = coverURL;
                 }
             }
-            
+
             book.digitalResource = digitalResouce;
 
             await new BookSchema(book).save();
