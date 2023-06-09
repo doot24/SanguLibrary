@@ -15,12 +15,6 @@
         <div class="p-2" style="background-color: #3B3748;"><span>შიფრი : {{ resource?.saveCipher }}</span></div>
       </div>
     </div>
-    <div class="d-flex gap-2 flex-column text-light">
-      <button v-if="editMethod" @click="edit" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-pencil-square"></button>
-      <button v-if="deleteMethod" @click="remove" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-trash3"></button>
-      <button v-if="downloadMethod" @click="download" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-download"></button>
-      <button v-if="clipboardMethod" @click="copyToClipboard" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-clipboard2"></button>
-    </div>
   </div>
 </template>
 
@@ -36,29 +30,7 @@ export default defineComponent({
     deleteMethod: Function, 
     downloadMethod: Function,
     clipboardMethod: Function, 
-  },
-  methods: {
-    edit() {
-      if (this.editMethod) {
-        this.editMethod(this.resource);
-      }
-    },
-    remove() {
-      if (this.deleteMethod) {
-        this.deleteMethod(this.resource);
-      }
-    },
-    download() {
-      if (this.downloadMethod) {
-        this.downloadMethod(this.resource);
-      }
-    },
-    copyToClipboard() {
-      if (this.clipboardMethod) {
-        this.clipboardMethod(this.resource);
-      }
-    },
-  },
+  }
 });
 </script>
 
