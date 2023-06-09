@@ -9,7 +9,9 @@ export const InitializeMongo = async (app: Application): Promise<void> => {
 
     mongoose.connect(GetConnectionString()).then(() => {
     InitializeCollections()
-    app.listen(GetServerPort());
+    app.listen(GetServerPort(),() => {
+        console.log(`app running...`);
+    });
     }).catch((error) => {
         console.error(`An error occurred while starting the server: ${error}`);
     });

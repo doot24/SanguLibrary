@@ -31,10 +31,6 @@ app.use(express.static("site"));
 const compression = require("compression");
 app.use(compression());
 
-// Temporary, Initialize firebase api
-import { initializeFirebase } from "./inits/InitializeFirebase";
-initializeFirebase();
-
 // Initialize app & db connection
 import { InitializeMongo } from "./inits/InitializeMongo";
 InitializeMongo(app);
