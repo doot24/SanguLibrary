@@ -8,7 +8,6 @@ const bookSchema: Schema = new Schema<Book>({
   _id: { type: String },
   title: { type: String, index: true },
   resourceType: { type: Number },
-  digital: { type: Boolean },
   subTitle: { type: String },
   authors: { type: [String], index: true },
   editors: { type: [String] },

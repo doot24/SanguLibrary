@@ -98,7 +98,6 @@ function SaveDissertation(req: Request): Promise<void> {
             dissertation.subTitle = resource.subTitle;
             dissertation.author = resource.author;
             dissertation.professor = resource.professor;
-            dissertation.digital = true;
             dissertation.publicationYear = resource.publicationYear;
             dissertation.saveCipher = resource.saveCipher;
 

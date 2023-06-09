@@ -2,7 +2,6 @@ enum ResourceType { Book, Journal, Dissertation, Rider }
 
 interface ILibraryResource {
     _id: string,
-    digital : boolean
     resourceType: ResourceType
     resourceMeta: ResourceMeta 
 }

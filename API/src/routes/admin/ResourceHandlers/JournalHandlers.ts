@@ -101,7 +101,6 @@ function SaveJournal(req: Request): Promise<void> {
             journal._id = randomUUID();
             journal.resourceType = (ResourceType.Journal);
             journal.title = resource.title;
-            journal.digital = resource.digital;
             journal.subTitle = resource.subTitle;
             journal.authors = resource.authors;
             journal.editors = resource.editors;

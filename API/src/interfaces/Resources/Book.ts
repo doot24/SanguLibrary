@@ -6,7 +6,6 @@ class Book implements ILibraryResource {
     _id: string = "";
     resourceType: ResourceType = ResourceType.Book;
     title: string = "";
-    digital : boolean = false;
     subTitle: string = "";
     authors: string[] = [];
     editors: string[] = [];
@@ -26,7 +25,6 @@ class Book implements ILibraryResource {
             this._id = book._id;
             this.resourceType = book.resourceType;
             this.title = book.title;
-            this.digital = book.digital;
             this.subTitle = book.subTitle;
             this.authors = book.authors;
             this.editors = book.editors;

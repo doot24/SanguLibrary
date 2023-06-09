@@ -4,7 +4,6 @@ export { Dissertation }
 
 class Dissertation implements ILibraryResource {
     _id: string = "";
-    digital: boolean = true;
     resourceType: ResourceType = ResourceType.Dissertation;
     resourceMeta: ResourceMeta = new ResourceMeta();
     
@@ -18,7 +17,6 @@ class Dissertation implements ILibraryResource {
     constructor(dissertation?: Dissertation) {
         if (dissertation) {
             this._id = dissertation._id;
-            this.digital = dissertation.digital;
             this.resourceType = dissertation.resourceType;
             this.resourceMeta = dissertation.resourceMeta;
             this.saveCipher = dissertation.saveCipher;

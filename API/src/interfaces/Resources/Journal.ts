@@ -6,7 +6,6 @@ class Journal implements ILibraryResource {
     _id: string = "";
     resourceType: ResourceType = ResourceType.Journal;
     title: string = "";
-    digital : boolean = false;
     subTitle: string = "";
     authors: string[] = [];
     editors: string[] = [];
@@ -27,7 +26,6 @@ class Journal implements ILibraryResource {
             this._id = journal._id;
             this.resourceType = journal.resourceType;
             this.title = journal.title;
-            this.digital = journal.digital;
             this.subTitle = journal.subTitle;
             this.authors = journal.authors;
             this.editors = journal.editors;

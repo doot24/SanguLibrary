@@ -104,7 +104,6 @@ function SaveBook(req: Request): Promise<void> {
             book._id = randomUUID();
             book.resourceType = (ResourceType.Book);
             book.title = resource.title;
-            book.digital = resource.digital;
             book.subTitle = resource.subTitle;
             book.authors = resource.authors;
             book.editors = resource.editors;

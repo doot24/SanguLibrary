@@ -4,7 +4,6 @@ export { Rider }
 
 class Rider implements ILibraryResource {
     _id: string = "";
-    digital: boolean = true;
     resourceType: ResourceType = ResourceType.Rider;
     resourceMeta: ResourceMeta = new ResourceMeta();
     
@@ -17,7 +16,6 @@ class Rider implements ILibraryResource {
     constructor(rider?: Rider) {
         if (rider) {
             this._id = rider._id;
-            this.digital = rider.digital;
             this.resourceType = rider.resourceType;
             this.resourceMeta = rider.resourceMeta;
             this.saveCipher = rider.saveCipher;

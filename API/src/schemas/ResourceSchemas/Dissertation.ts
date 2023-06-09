@@ -6,7 +6,6 @@ import { resourceMetaSchema } from '../ResourceSchema';
 
 const dissertationSchema: Schema = new Schema<Dissertation>({
   _id : {type : String},
-  digital : {type : Boolean, default : true},
   resourceType: {type : Number},
   title: {type : String},
   subTitle: {type : String},
