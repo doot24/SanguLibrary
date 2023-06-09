@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import { Rider } from '../../interfaces/Resources/Rider';
 
-import { digitalResourceSchema, resourceMetaSchema } from '../ResourceSchema';
+import { resourceMetaSchema } from '../ResourceSchema';
 
 const riderSchema: Schema = new Schema<Rider>({
     _id: { type: String },
@@ -13,8 +13,7 @@ const riderSchema: Schema = new Schema<Rider>({
     subTitle: { type: String },
     remark: { type: String },
     saveCipher: { type: String },
-    resourceMeta : {type : resourceMetaSchema},
-    digitalResource : {type : digitalResourceSchema}
+    resourceMeta : {type : resourceMetaSchema}
   });
   riderSchema.index({ title: "text", author: "text", saveCipher : "text" });
   

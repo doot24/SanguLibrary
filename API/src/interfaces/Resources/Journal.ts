@@ -1,4 +1,4 @@
-import { ResourceMeta, DigitalResource, ILibraryResource, ResourceType  } from "../Resources";
+import { ResourceMeta, ILibraryResource, ResourceType  } from "../Resources";
 
 export { Journal }
 
@@ -20,9 +20,8 @@ class Journal implements ILibraryResource {
     publicationYear: string = "";
     remark: string = "";
     saveCipher: string = "";
-    resourceMeta?: ResourceMeta;
-    digitalResource?: DigitalResource;
-
+    resourceMeta: ResourceMeta = new ResourceMeta();
+    
     constructor(journal?: Journal) {
         if (journal) {
             this._id = journal._id;
@@ -43,7 +42,6 @@ class Journal implements ILibraryResource {
             this.remark = journal.remark;
             this.saveCipher = journal.saveCipher;
             this.resourceMeta = journal.resourceMeta;
-            this.digitalResource = journal.digitalResource;
         }
     }
 

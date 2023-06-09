@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import { Journal } from '../../interfaces/Resources/Journal';
 
-import { digitalResourceSchema, resourceMetaSchema } from '../ResourceSchema';
+import { resourceMetaSchema } from '../ResourceSchema';
 
 const journalSchema: Schema = new Schema<Journal>({
   _id: { type: String },
@@ -22,8 +22,7 @@ const journalSchema: Schema = new Schema<Journal>({
   publicationYear: { type: String },
   remark: { type: String },
   saveCipher: { type: String },
-  resourceMeta: { type: resourceMetaSchema },
-  digitalResource: { type: digitalResourceSchema }
+  resourceMeta: { type: resourceMetaSchema }
 });
 journalSchema.index({ title: "text", authors: "text", editors : 'text', collegues : 'text', issn: "text", saveCipher: 'text' });
 

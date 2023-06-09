@@ -2,15 +2,13 @@ import { Request, Response } from "express";
 
 import { randomUUID } from "crypto";
 
-import { uploadFile, getPublicURL, deleteFile } from "../../../utils/UploadFiles";
-
 import { JournalAddResource, JournalUpdateResource } from "../../../interfaces/ResourceRequest";
-import { ResourceType, ResourceMeta, DigitalResource } from "../../../interfaces/Resources";
+import { ResourceType, ResourceMeta } from "../../../interfaces/Resources";
 
 import { JournalSchema } from "../../../schemas/ResourceSchemas/Journal";
 import { Journal } from "../../../interfaces/Resources/Journal";
 
-export { SaveJournal, DeleteJournal, UpdateJournal, DownloadJournal, DuplicateJournal }
+export { SaveJournal, DeleteJournal, UpdateJournal,  DuplicateJournal }
 
 function UpdateJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -38,32 +36,8 @@ function UpdateJournal(req: Request): Promise<void> {
             storedJournal.publicationYear = resource.publicationYear;
             storedJournal.remark = resource.remark;
             storedJournal.saveCipher = resource.saveCipher;
-
-            if (storedJournal.resourceMeta) {
-                storedJournal.resourceMeta.dateUpdated = Date.now();
-                storedJournal.resourceMeta.updatedBy = req.session.user._id.toString();
-            }
-
-            if (storedJournal.digital && storedJournal.digitalResource) {
-                let journalUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
-                let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-
-                if (journalUpload) {
-                    const journalfile = journalUpload[0];
-                    const journalFileExtension: string | undefined = journalfile?.originalname ? journalfile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedJournal.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                    let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(journalFileExtension), "gs://sangulibrary-d9533.appspot.com/", journalfile.buffer);
-                    storedJournal.digitalResource.fileURL = fileURL;
-                }
-
-                if (coverUpload) {
-                    const coverFile = coverUpload[0];
-                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    await deleteFile(String(storedJournal.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/");
-                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    storedJournal.digitalResource.coverURL = coverURL;
-                }
-            }
+            storedJournal.resourceMeta.dateUpdated = Date.now();
+            storedJournal.resourceMeta.updatedBy = req.session.user._id.toString();
 
             await JournalSchema.findOneAndUpdate({ _id: req.body._id }, storedJournal);
             resolve();
@@ -81,16 +55,6 @@ function DeleteJournal(req: Request): Promise<void> {
             if (!journalResult) {
                 reject("journal not found!");
                 return;
-            }
-
-            if (journalResult.digital) {
-                if (journalResult.digitalResource?.fileURL) {
-                    await deleteFile(String(journalResult?.digitalResource?.fileURL), "gs://sangulibrary-d9533.appspot.com/");
-                }
-
-                if (journalResult.digitalResource?.coverURL) {
-                    await deleteFile(String(journalResult?.digitalResource?.coverURL), "gs://sangulibrary-d9533.appspot.com/")
-                }
             }
 
             resolve();
@@ -120,32 +84,6 @@ function DuplicateJournal(req: Request): Promise<void> {
         }
     })
 }
-
-function DownloadJournal(req: Request, res: Response): Promise<String> {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let journalResult: Journal | null = await JournalSchema.findOne({ _id: req.body._id });
-
-            if (!journalResult) {
-                reject("journal not found!");
-                return;
-            }
-
-            if (journalResult.digitalResource) {
-                let url: string = await getPublicURL(journalResult.digitalResource?.fileURL, "gs://sangulibrary-d9533.appspot.com/");
-                resolve(url);
-            }
-            else {
-                reject();
-            }
-
-        }
-        catch (err) {
-            reject(err);
-        }
-    })
-}
-
 
 function SaveJournal(req: Request): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -186,29 +124,6 @@ function SaveJournal(req: Request): Promise<void> {
 
             journal.resourceMeta = resourcemeta;
 
-            // create digital resource
-            let digitalResouce: DigitalResource = new DigitalResource();
-
-            if (req.files) {
-
-                let bookUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['file'];
-                let coverUpload = (req.files as { [fieldname: string]: Express.Multer.File[] })['cover'];
-
-                if (bookUpload) {
-                    const bookFile = bookUpload[0];
-                    const bookFileExtension: string | undefined = bookFile?.originalname ? bookFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    let fileURL: string = await uploadFile("journals", randomUUID().toString(), String(bookFileExtension), "gs://sangulibrary-d9533.appspot.com/", bookFile.buffer);
-                    digitalResouce.fileURL = fileURL;
-                }
-
-                if (coverUpload) {
-                    const coverFile = coverUpload[0];
-                    const coverFileExtension: string | undefined = coverFile?.originalname ? coverFile.originalname.split('.').pop()?.toLowerCase() : undefined;
-                    let coverURL: string = await uploadFile("covers", randomUUID().toString(), String(coverFileExtension), "gs://sangulibrary-d9533.appspot.com/", coverFile.buffer);
-                    digitalResouce.coverURL = coverURL;
-                }
-            }
-            journal.digitalResource = digitalResouce;
             await new JournalSchema(journal).save();
 
             resolve();

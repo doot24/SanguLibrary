@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-import { DigitalResource, ResourceMeta } from '../interfaces/Resources';
+import { ResourceMeta } from '../interfaces/Resources';
 
 const resourceMetaSchema: Schema<ResourceMeta> = new Schema<ResourceMeta>({
   dateAdded: { type: Number, required: true },
@@ -9,9 +9,4 @@ const resourceMetaSchema: Schema<ResourceMeta> = new Schema<ResourceMeta>({
   addedBy: { type: String, required: true },
 }, {_id : false});
 
-const digitalResourceSchema: Schema<DigitalResource> = new Schema<DigitalResource>({
-  coverURL: { type: String, required: true },
-  fileURL: { type: String },
-},{_id : false});
-
-export {resourceMetaSchema, digitalResourceSchema}
+export {resourceMetaSchema}

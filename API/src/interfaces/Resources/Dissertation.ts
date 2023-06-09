@@ -1,4 +1,4 @@
-import { ResourceMeta, DigitalResource, ILibraryResource, ResourceType  } from "../Resources";
+import { ResourceMeta, ILibraryResource, ResourceType  } from "../Resources";
 
 export { Dissertation }
 
@@ -6,8 +6,7 @@ class Dissertation implements ILibraryResource {
     _id: string = "";
     digital: boolean = true;
     resourceType: ResourceType = ResourceType.Dissertation;
-    resourceMeta?: ResourceMeta | undefined;
-    digitalResource?: DigitalResource | undefined;
+    resourceMeta: ResourceMeta = new ResourceMeta();
     
     saveCipher : string = "";
     title : string = "";
@@ -22,7 +21,6 @@ class Dissertation implements ILibraryResource {
             this.digital = dissertation.digital;
             this.resourceType = dissertation.resourceType;
             this.resourceMeta = dissertation.resourceMeta;
-            this.digitalResource = dissertation.digitalResource;
             this.saveCipher = dissertation.saveCipher;
             this.title = dissertation.title;
             this.subTitle = dissertation.subTitle;

@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import { Book } from '../../interfaces/Resources/Book';
 
-import { digitalResourceSchema, resourceMetaSchema } from '../ResourceSchema';
+import { resourceMetaSchema } from '../ResourceSchema';
 
 const bookSchema: Schema = new Schema<Book>({
   _id: { type: String },
@@ -21,8 +21,7 @@ const bookSchema: Schema = new Schema<Book>({
   resume: { type: String },
   remark: { type: String },
   saveCipher: { type: String },
-  resourceMeta: { type: resourceMetaSchema },
-  digitalResource: { type: digitalResourceSchema }
+  resourceMeta: { type: resourceMetaSchema }
 });
 bookSchema.index({ title: "text", authors: "text", editors : "text", isbn : "text", saveCipher : "text" });
 

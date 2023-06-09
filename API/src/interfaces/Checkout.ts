@@ -1,5 +1,3 @@
-import { ResourceType } from "./Resources";
-
 export class Checkout {
     _id? : string;
     employee? : string;
