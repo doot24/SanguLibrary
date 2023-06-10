@@ -17,7 +17,7 @@
         <div>
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
-              <img width="130" height="180" :src="book.digitalResouce.coverURL" />
+              <img width="130" height="180" src="@/assets/images/person.png" />
               <div class="d-flex flex-column gap-2">
                 <span class="text-light"> {{ book.title }} </span>
                 <span class="text-light"> {{ "ავტორი:" + " " + book.authors }} </span>
@@ -133,6 +133,7 @@ export default defineComponent({
     }
   },
   methods: {
+    
     setPageSize(size: number) {
       this.pageSize = size;
       if (this.searchInput) {

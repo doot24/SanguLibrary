@@ -32,7 +32,7 @@
                   <div v-bind:class="petition.status" class="bi-circle-fill" style="font-size: 1.3em;"></div>
                 </td>
                 <td class="statementText p-4 pt-5">
-                  <span>{{ petition.usedtemplate[0].title }}</span>
+                  <span>{{ petition.usedtemplate[0]?.title }}</span>
                 </td>
                 <td class="p-4 pt-5 dateText">
                   <span>{{ formatDate(petition.timestamp) }}</span>
@@ -48,7 +48,7 @@
 
     <!-- Begin, send statement modal -->
     <div class="d-flex justify-content-center align-items-center gap-2">
-      <div class="modal" id="myModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
         <div class="modal-dialog" role="document" style="max-width: 60%">
           <div class="modal-content" style="border: none">
             <div class="modal-header" style="border: none">
@@ -60,8 +60,7 @@
                   @click="showDropdown = !showDropdown;" aria-haspopup="true" aria-expanded="false"
                   style="background: #D9D9D9; font-size:1em">
                 <ul class="dropdown-menu w-100" :class=" { show: showDropdown } " aria-labelledby="dropdownMenuButton">
-                  <li v-for="  template   in   templates  " :class=" { active: selectedOption === template.title } "
-                    class="dropdown-item text-dark">
+                  <li v-for="template in templates" class="dropdown-item text-dark">
                     <a @click=" selectOption(template.title.toString()); selectedTemplate = template; text = selectedTemplate.text.toString() "
                       href="#">{{ template.title }}</a>
                   </li>
@@ -71,7 +70,7 @@
               <input type="email" disabled class="form-control mt-4 p-3" style="background: #D9D9D9"
                 :placeholder=" userData.email.toString() ">
             </div>
-            <texteditor v-model:content=" text " :height=" 500 " ref="editorComponent"></texteditor>
+            <texteditor v-model:content=" text " :height=" 500 " ref="editorComponent"/>
 
             <div class="modal-footer d-flex justify-content-between" style="border: none">
               <button class="btn btn-outline-danger" v-on:click=" clearInputs() "
@@ -103,13 +102,12 @@
     <div class="modal-dialog modal-lg bg-light rounded">
       <div class="modal-content" style="background-color: #322E3D;">
         <div class="p-3 text-light text-break" style="min-height: 200px;">
-          <span v-html=" selectedPetition?.text " class="text-break"></span>
+          <p v-html="selectedPetition?.text" class="text-break"></p>
         </div>
       </div>
     </div>
   </div>
   <!-- End, statement modal -->
-  <!-- </div> -->
 </template>
 
 <style src="@/assets/css/pages/petitionspage.css" scoped/>

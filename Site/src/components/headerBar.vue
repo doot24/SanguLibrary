@@ -51,7 +51,7 @@
             aria-label="Close"></button>
         </div>
         <div class="modal-body" style="color: #B3B3B3;">
-          <p>{{ selectedNotification.text }}</p>
+          <p v-html="selectedNotification.text"></p>
         </div>
       </div>
     </div>

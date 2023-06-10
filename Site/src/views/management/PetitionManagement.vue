@@ -5,20 +5,18 @@
 
   <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
     <div id="tableContainer" class="mt-5 d-flex flex-column">
-      <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div v-if="errorMessage" class="alert alert-danger alert-dismissible w-50 align-self-center fade show" role="alert">
         <i class="bi bi-info-circle-fill"></i>
         {{ errorMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
           aria-label="Close"></button>
       </div>
-
-      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      <div v-if="successMessage" class="alert alert-success alert-dismissible w-50 align-self-center fade show" role="alert">
         <i class="bi bi-info-circle-fill"></i>
         {{ successMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" @click="successMessage = ''"
           aria-label="Close"></button>
       </div>
-
       <div class="d-flex justify-content-center align-items-center mb-3">
         <search class="w-75" :Height="500" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
@@ -87,42 +85,49 @@
               </td>
               <td>
                 <!-- Begin editor -->
+                <button data-bs-toggle="modal" data-bs-target="#editModal" @click="selectPetition(petition)"
+                  class="btn btn-light bi bi-pencil-square"></button>
                 <div class="d-flex justify-content-center align-content-center gap-2">
                   <div>
-                    <button @click="showEditor = true; selectPetition(petition)"
-                      class="btn btn-light bi bi-pencil-square"></button>
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;" v-show="showEditor">
-                      <div class="modal-dialog" role="document" style="max-width: 60%;">
+                      <div class="modal fade" id="editModal" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                         <div class="modal-content" style="border:none;">
                           <div class="modal-header" style="border:none;">
                             <h5 class="modal-title" style="color:black;">დაწერეთ კომენტარი</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                              @click="showEditor = false">
-                              <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                              X
                             </button>
                           </div>
                           <div class="modal-body" style="border:none;">
                             <texteditor v-model:content="comment" />
                           </div>
                           <div class="modal-footer d-flex justify-content-between" style="border:none;">
-                            <div class="changeStatus d-flex flex-column align-items-start ml-2">
-                              <h5 class="status_title d-flex">სტატუსის რედაქტირება</h5>
+                            <div class="changeStatus d-flex flex-column ml-2">
+                              <span class="status_title d-flex">სტატუსის რედაქტირება</span>
                               <div class="form-check mt-5">
-                                <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
-                                  class="form-check-input d-flex " type="radio" name="status">
-                                <label class="form-check-label">
+                                <span class="form-check-label" >
                                   დადასტურება
-                                </label>
+                                </span>
+                                <input :checked="status === 'confirmed'" @click="status = 'confirmed'"
+                                  class="form-check-input d-flex " type="radio">
                               </div>
-                              <div class="form-check mt-5">
-                                <input class="form-check-input" type="radio" @click="status = 'rejected'"
-                                  :checked="status === 'rejected'" name="status">
-                                <label class="form-check-label">
+                              <div class="form-check mt-2">
+                                <span class="form-check-label">
+                                  მოლოდინში
+                                </span>
+                                <input class="form-check-input" type="radio" @click="status = 'pending'"
+                                  :checked="status === 'pending'">
+                              </div>
+                              <div class="form-check mt-2">
+                                <span class="form-check-label">
                                   უარყოფა
-                                </label>
+                                </span>
+                                <input class="form-check-input" type="radio" @click="status = 'rejected'"
+                                  :checked="status === 'rejected'">
                               </div>
                             </div>
-                            <button type="button" @click="updatePetition();" data-bs-dismiss="modal"
+                            <button type="button" @click="updatePetition();" 
                               class="btn btn-primary addBtn1" style="background: rgba(240, 238, 238, 0.31); border: 0.767857px solid #D70E00;
                       border-radius: 20.7321px; color: #322E3D;margin-top: 6rem;">შენახვა</button>
                           </div>
@@ -168,7 +173,7 @@
 
     <!-- Begin, add template modal -->
     <div style="height:300px" class="modal fade h-100" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      aria-hidden="true" data-bs-backdrop="static" data-keyboard="false">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -181,10 +186,9 @@
               <h5>სათაური</h5>
               <input v-model="templateTitle" type="text" class="form-control" />
             </div>
-            <div class="mt-2 d-flex flex-column">
+            <div class="mt-3 d-flex flex-column">
               <h5>ტექსტი</h5>
-              <textarea v-model="templateText" class="align-self-center form-control" cols="45" rows="12"
-                style="resize:none" />
+              <texteditor v-model:content="templateText" />
             </div>
           </div>
           <div class="modal-footer">
@@ -210,12 +214,10 @@ table {
   color: white;
   background-color: rgba(35, 33, 40, 1);
 }
-
 .addBtn1 {
   width: 138px;
   height: 49px;
 }
-
 .changeStatus {
   width: 360px;
   height: 150px;
@@ -223,28 +225,19 @@ table {
   border: 1px solid #322e3d;
   border-radius: 15px;
 }
-
 .status_title {
   position: absolute;
-  /* set position relative to enable absolute positioning of the line */
   padding-bottom: 10px;
-  /* add some padding to create space for the line */
   left: 8%;
 }
-
 .status_title::after {
   content: "";
-  /* create the line with a pseudo-element */
   position: absolute;
-  /* position it absolutely within the container */
   left: 0;
   bottom: 0;
   width: 100%;
-  /* make it span the entire width of the container */
   height: 1px;
-  /* set the height to 1 pixel */
   background-color: #e0d9f1;
-  /* set the color to #E0D9F1 */
 }
 </style>
 
@@ -315,6 +308,10 @@ export default defineComponent({
   },
 
   methods: {
+    showhideSuccess(message : string, time: number = 5000) {
+      this.successMessage = message;
+      setTimeout(() => { this.successMessage = ""; }, time);
+    },
     handleSearch(event: any): void {
       this.searchInput = event.searchInput;
       this.selectedOption = event.selectedOption;
@@ -339,7 +336,7 @@ export default defineComponent({
 
     clearTemplateInputs(): void {
       this.templateTitle = '';
-      this.templateText = '';
+      this.templateText = '<p> </p>';
     },
 
     // CRUD
@@ -374,7 +371,8 @@ export default defineComponent({
       }, {
         withCredentials: true,
       }).then((results) => {
-        this.successMessage = 'განცხადების ნიმუში წარმატებით დაემატა!';
+        this.showhideSuccess('განცხადების ნიმუში წარმატებით დაემატა!');
+
         this.isLoading = false;
         this.clearTemplateInputs();
       }).catch((error) => {
@@ -395,10 +393,9 @@ export default defineComponent({
       }, {
         withCredentials: true,
       }).then((results) => {
-        this.successMessage = 'განცხადება წარმატებით განახლდა!';
+        this.showhideSuccess('განცხადება წარმატებით განახლდა!');
         this.isLoading = false;
         this.getRecentPetitions();
-        this.deselectPetition();
       }).catch((error) => {
         this.errorMessage = error.response.data.message;
         this.isLoading = false;
@@ -416,6 +413,7 @@ export default defineComponent({
       if (!this.searchInput) {
         return;
       }
+      
       switch (this.selectedOption) {
         case "publicNumber":
           this.searchByPublicNumber();

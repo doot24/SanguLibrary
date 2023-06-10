@@ -3,47 +3,23 @@
   <loadingSpinner v-if="isLoading" />
   <headerBar />
 
-  <div
-    class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground"
-  >
+  <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
     <div id="tableContainer" class="mt-5 d-flex flex-column">
-      <div
-        v-if="successMessage"
-        class="alert alert-success alert-dismissible fade show mt-3"
-        role="alert"
-      >
+      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
         <i class="bi bi-info-circle-fill"></i>
         {{ successMessage }}
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          @click="successMessage = ''"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="successMessage = ''"
+          aria-label="Close"></button>
       </div>
 
-      <div
-        v-if="errorMessage"
-        class="alert alert-danger alert-dismissible fade show mt-3"
-        role="alert"
-      >
+      <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
         <i class="bi bi-info-circle-fill"></i>
         {{ errorMessage }}
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          @click="errorMessage = ''"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
+          aria-label="Close"></button>
       </div>
       <div class="align-self-end mt-2 mb-4">
-        <button
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#sendNotificationModal"
-        >
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">
           ახალი შეტყობინება
         </button>
       </div>
@@ -62,13 +38,8 @@
           <tbody>
             <tr v-for="meta in notifications">
               <td>{{ meta.title }}</td>
-              <td
-                :id="meta._id"
-                class="text-truncate"
-                @click="toggleTruncation(meta._id)"
-                style="max-width: 300px; cursor: pointer"
-              >
-                {{ meta.text }}
+              <td :id="meta._id" class="text-truncate" @click="toggleTruncation(meta._id)"
+                style="max-width: 300px; cursor: pointer" v-html="meta.text">
               </td>
               <td class="text-center">{{ meta.author }}</td>
               <td class="text-center">{{ formatDate(meta.created) }}</td>
@@ -81,14 +52,8 @@
       <!-- Begin, Pagination -->
       <div class="d-flex flex-row align-content-center gap-3">
         <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="pageSizeDropdown"
-            data-bs-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="pageSizeDropdown" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             {{ pageSize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="pageSizeDropdown">
@@ -102,11 +67,7 @@
 
         <nav v-if="paginationData.totalPages">
           <ul class="pagination pagination-sm gap-1">
-            <li
-              class="page-item"
-              v-for="index in paginationData.totalPages"
-              :key="index"
-            >
+            <li class="page-item" v-for="index in paginationData.totalPages" :key="index">
               <a class="page-link" href="#" v-on:click="selectPage(index)">
                 {{ index }}
               </a>
@@ -118,47 +79,7 @@
     </div>
 
     <!-- Begin, Send notification -->
-    <div class="d-flex justify-content-center align-content-center gap-2">
-      <div>
-        <div
-          class="modal"
-          id="sendNotificationModal"
-          tabindex="-1"
-          role="dialog"
-          style="display: block"
-          v-show="showEditor"
-        >
-          <div class="modal-dialog" role="document" style="max-width: 60%">
-            <div class="modal-content" style="border: none">
-              <div class="modal-header" style="border: none">
-                <h5 class="modal-title" style="color: black">
-                  შეტყობინების დამატება
-                </h5>
-              </div>
-              <div class="modal-body" style="border: none">
-                <div class="form-group">
-                  <!-- <label class="form-label" for="title">სათაური</label> -->
-                  <input type="text" placeholder="სათაური" v-model="title" class="form-control" id="title" required>
-              </div>
-                <texteditor />
-              </div>
-              <div
-                class="modal-footer d-flex justify-content-between"
-                style="border: none"
-              >
-                <button :disabled="selectedOption === ''" style="color: #FFFFFF; font-weight: 600; "
-              v-on:click="!canSubmit();" class="btn btn-danger"
-              data-bs-dismiss="modal">დამატება</button>
-                <button class="btn btn-outline-danger" v-on:click="clearInputs();"
-              data-bs-dismiss="modal">გაუქმება</button>
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <!-- </div> -->
-    <!-- <div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel"
+    <div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel"
       aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -174,7 +95,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="text">ტექსტი</label>
-                <textarea type="text" rows="10" v-model="text" class="form-control" id="text" required></textarea>
+                <texteditor v-model:content="text" />
               </div>
 
               <div class="mt-3 d-flex flex-column gap-2 justify-content-center align-items-center">
@@ -188,7 +109,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- End, Send notification -->
   </div>
 </template>
@@ -266,7 +187,7 @@ export default defineComponent({
     },
     clearInputs(): void {
       this.title = "";
-      this.text = "";
+      this.text = "<p></p>";
     },
     setPageSize(size: number): void {
       this.pageSize = size;
@@ -321,7 +242,7 @@ export default defineComponent({
       axios
         .post(
           getApiConnectionString() +
-            "/admin/notificationmanagement/createglobal",
+          "/admin/notificationmanagement/createglobal",
           body,
           {
             withCredentials: true,

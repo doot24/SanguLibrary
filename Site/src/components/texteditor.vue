@@ -22,7 +22,7 @@
   background-color: white;
 }
 .dark .ql-editor {
-  color: rgb(255, 255, 255);
+  color: black;
 }
 
 </style>
