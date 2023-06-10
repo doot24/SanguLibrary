@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="addBook(resource); pressed = true">შენახვა</button>
+          <button type="button" class="btn btn-primary" @click="addBook(resource)">შენახვა</button>
         </div>
       </div>
     </div>
@@ -128,7 +128,7 @@ export default defineComponent({
   },
   methods: {
     addBook() {
-      let resource = {
+      let resource : any = {
         title: this.title,
         subtitle: this.subtitle,
         resume: this.resume,
@@ -144,7 +144,8 @@ export default defineComponent({
         category: this.category,
         description: this.description
       }
-      this.$emit('add_pressed', resource);
+      let book : Book = new Book(resource);
+      this.$emit('add_pressed', book);
     },
     addAuthor() {
       this.authors.push(this.authorInput);

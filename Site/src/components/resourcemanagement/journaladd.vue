@@ -75,7 +75,7 @@
           </div>
           <div class="form-group">
             <label for="isbn">ISSN</label>
-            <input type="text" class="form-control" id="isbnInput" v-model=" isbn ">
+            <input type="text" class="form-control" id="isbnInput" v-model=" issn ">
           </div>
           <div class="form-group">
             <label for="publisher">გამომცემლობა</label>
@@ -90,10 +90,6 @@
             <input type="text" class="form-control" id="publicationYearInput" v-model=" publicationYear ">
           </div>
           <div class="form-group">
-            <label for="summary">რეზიუმე</label>
-            <input type="text" class="form-control" id="summaryInput" v-model=" resume ">
-          </div>
-          <div class="form-group">
             <label for="keywords">რიმარკი</label>
             <input type="text" class="form-control" id="keywordsInput" v-model=" remark ">
           </div>
@@ -103,7 +99,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="addJournal(resource);">შენახვა</button>
+          <button type="button" class="btn btn-primary" @click="addJournal();">შენახვა</button>
         </div>
       </div>
     </div>
@@ -113,6 +109,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ResourceType } from '@/interfaces/Resource';
+import { Journal } from '@/interfaces/Journal';
 
 export default defineComponent({
   name: 'JournalAdd',
@@ -132,13 +129,12 @@ export default defineComponent({
 
       title: '' as String,
       subtitle: '' as String,
-      resume: '' as String,
       remark: '' as String,
       number: 0 as Number,
 
       category: '' as String,
       description: '' as String,
-      isbn: '' as String,
+      issn: '' as String,
       collegues: [] as any,
       authors: [] as any,
       editors: [] as any,
@@ -150,13 +146,12 @@ export default defineComponent({
   },
   methods: {
     addJournal() {
-      let resource = {
+      let resource : any = {
         title: this.title,
         subtitle: this.subtitle,
-        resume: this.resume,
         remark: this.remark,
         resourceType: this.resourceType,
-        isbn: this.resume,
+        issn: this.issn,
         number: this.number,
         collegues: this.collegues,
         authors: this.authors,
@@ -168,15 +163,8 @@ export default defineComponent({
         category: this.category,
         description: this.description
       }
-      this.$emit('add_pressed', resource);
-    },
-    addAuthor() {
-      this.authors.push(this.authorInput);
-      this.authorInput = '';
-    },
-    addEditor() {
-      this.editors.push(this.editorInput);
-      this.editorInput = '';
+      let journal : Journal = new Journal(resource);
+      this.$emit('add_pressed', journal);
     },
     ClearInputs() {
         this.authorInput = '';
@@ -185,9 +173,8 @@ export default defineComponent({
         
         this.title = '';
         this.subtitle = '';
-        this.resume = '';
         this.remark = '';
-        this.isbn = '';
+        this.issn = '';
         this.authors = [];
         this.editors = [];
         this.collegues = [];

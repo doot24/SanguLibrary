@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="addDissertation(resource)">შენახვა</button>
+          <button type="button" class="btn btn-primary" @click="addDissertation()">შენახვა</button>
         </div>
       </div>
     </div>
@@ -45,6 +45,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ResourceType } from '@/interfaces/Resource';
+import { Dissertation } from '@/interfaces/Dissertation';
 
 export default defineComponent({
   name: 'DissertationAdd',
@@ -68,7 +69,7 @@ export default defineComponent({
   },
   methods: {
     addDissertation() {
-      let resource = {
+      let resource : any = {
         title: this.title,
         subTitle: this.subtitle,
         resourceType: this.resourceType.Dissertation,
@@ -77,7 +78,8 @@ export default defineComponent({
         publicationYear: this.publicationYear,
         saveCipher: this.saveCipher
       }
-      this.$emit('add_pressed', resource);
+      let dissertation : Dissertation = new Dissertation(resource);
+      this.$emit('add_pressed', dissertation);
     },
     ClearInputs() {
         this.title = '',

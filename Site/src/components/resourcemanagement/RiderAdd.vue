@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="addRider(resource);">შენახვა</button>
+          <button type="button" class="btn btn-primary" @click="addRider();">შენახვა</button>
         </div>
       </div>
     </div>
@@ -40,6 +40,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ResourceType } from '@/interfaces/Resource';
+import { Rider } from '@/interfaces/Rider';
 
 export default defineComponent({
   name: 'RiderAdd',
@@ -62,7 +63,7 @@ export default defineComponent({
   },
   methods: {
     addRider() {
-      let resource = {
+      let resource : any = {
         title: this.title,
         subtitle: this.subtitle,
         author: this.author,
@@ -70,7 +71,8 @@ export default defineComponent({
         resourceType: this.resourceType,
         saveCipher: this.saveCipher
       }
-      this.$emit('add_pressed', resource);
+      let rider : Rider = new Rider(resource)
+      this.$emit('add_pressed', rider);
     },
     ClearInputs() {
         this.title = '';

@@ -14,7 +14,7 @@
           </div>
           <div class="form-group ">
             <label for="subtitle">ქვესათაური</label>
-            <input type="text" class="form-control" id="subtitleInput" v-model="resource.subtitle" required>
+            <input type="text" class="form-control" id="subtitleInput" v-model="resource.subTitle" required>
           </div>
           <div class="form-group ">
             <label for="subtitle">ავტორი</label>
@@ -38,6 +38,7 @@
 </template>
   
 <script lang="ts">
+import { Rider } from '@/interfaces/Rider';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -48,7 +49,7 @@ export default defineComponent({
       default: (resource: any) => { }
     },
     resource: {
-      type: Object,
+      type: Rider,
       default: {}
     }
   },

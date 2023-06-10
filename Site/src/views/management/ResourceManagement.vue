@@ -34,7 +34,7 @@
     </div>
 
     <div class="w-100 rounded d-flex align-items-center flex-column gap-5">
-      <div class="p-3" style="width:90%;height:600px; overflow-y: scroll; background-color: #646074;">
+      <div class="p-3 rounded" style="width:90%;height:600px; overflow-y: scroll; background-color: #646074;">
         <div v-if="resources.length === 0" class="alert alert-warning" role="alert">
           <i class="p-1 bi bi-info-circle-fill"></i>
           რესურსები ვერ მოიძებნა!

@@ -21,7 +21,7 @@
             <div>
               <div class="d-flex gap-2">
                 <input type="text" class="form-control" id="authorsInput" v-model="authorInput" required>
-                <button :disabled="!authorInput" @click="resource.authors.push(authorInput); authorInput = ''"
+                <button :disabled="!authorInput" @click="resource.authors.push(String(authorInput)); authorInput = ''"
                   class="btn btn-primary">+</button>
               </div>
               <div class="d-flex flex-column bg-light mt-2 p-2 rounded">
@@ -38,7 +38,7 @@
             <div>
               <div class="d-flex gap-2">
                 <input type="text" class="form-control" id="authorsInput" v-model=" editorInput " required>
-                <button :disabled=" !editorInput " @click=" resource.editors.push(editorInput); editorInput = '' "
+                <button :disabled=" !editorInput " @click=" resource.editors.push(String(editorInput)); editorInput = '' "
                   class="btn btn-primary">+</button>
               </div>
               <div class="d-flex flex-column bg-light mt-2 p-2 rounded">
@@ -96,6 +96,7 @@
 </template>
   
 <script lang="ts">
+import { Book } from '@/interfaces/Book';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -106,7 +107,7 @@ export default defineComponent({
       default: (resource: any) => { }
     },
     resource: {
-      type: Object,
+      type: Book,
       default: {}
     }
   },
@@ -124,14 +125,6 @@ export default defineComponent({
   methods: {
     addBook() {
       this.$emit('add_pressed', this.resource);
-    },
-    addAuthor() {
-      this.resource.authors.push(this.authorInput);
-      this.authorInput = '';
-    },
-    addEditor() {
-      this.resource.editors.push(this.editorInput);
-      this.editorInput = '';
     },
     ClearInputs() {
       this.authorInput = '';

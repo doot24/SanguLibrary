@@ -42,6 +42,7 @@
 </template>
   
 <script lang="ts">
+import { Dissertation } from '@/interfaces/Dissertation';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -52,7 +53,7 @@ export default defineComponent({
       default: (resource: any) => { }
     },
     resource: {
-      type: Object,
+      type: Dissertation,
       default: {}
     }
   },

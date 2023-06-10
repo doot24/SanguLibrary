@@ -96,10 +96,6 @@
             <input type="text" class="form-control" id="publicationYearInput" v-model=" resource.publicationYear ">
           </div>
           <div class="form-group">
-            <label for="summary">რეზიუმე</label>
-            <input type="text" class="form-control" id="summaryInput" v-model=" resource.resume ">
-          </div>
-          <div class="form-group">
             <label for="keywords">რიმარკი</label>
             <input type="text" class="form-control" id="keywordsInput" v-model=" resource.remark ">
           </div>
@@ -117,6 +113,7 @@
 </template>
   
 <script lang="ts">
+import { Journal } from '@/interfaces/Journal';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -127,7 +124,7 @@ export default defineComponent({
       default: (resource: any) => { }
     },
     resource: {
-      type: Object,
+      type: Journal,
       default: {}
     }
   },
