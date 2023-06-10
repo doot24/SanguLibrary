@@ -5,20 +5,24 @@
 
   <div class="container-fluid d-flex min-vh-100 justify-content-center Bodybackground">
     <div id="tableContainer" class=" mt-5 d-flex flex-column">
-      <div v-if="SearchErrors" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-info-circle-fill"></i>
-        {{ SearchErrors }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="SearchErrors = ''"
+        {{ errorMessage }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
           aria-label="Close"></button>
       </div>
 
-      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      <div v-if="successMessage" class="alert alert-success alert-dismissible w-50 align-self-center fade show" role="alert">
         <i class="bi bi-info-circle-fill"></i>
         {{ successMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" @click="successMessage = ''"
           aria-label="Close"></button>
       </div>
 
+      <div v-if="users.length === 0" class="alert alert-danger w-50 align-self-center" role="alert">
+    <i class="p-1 bi bi-info-circle-fill"></i>
+    მომხმარებელი ვერ მოიძებნა!
+  </div>
       <div class="d-flex justify-content-center align-items-center mb-3 ">
         <search class="w-75" :options="options" @cleared="onInputCleared" @search="handleSearch" />
       </div>
@@ -192,7 +196,6 @@ export default defineComponent({
 
       userData: {} as User,
 
-      SearchErrors: '' as string,
       successMessage: '' as string,
       errorMessage: '' as string,
       searchInput: '' as string,
@@ -208,6 +211,10 @@ export default defineComponent({
     this.loadUser()
   },
   methods: {
+    showhideSuccess(message : string, time: number = 5000) {
+      this.successMessage = message;
+      setTimeout(() => { this.successMessage = ""; }, time);
+    },
     handleSearch(event: any) {
       this.searchInput = event.searchInput;
       this.selectedOption = event.selectedOption;
@@ -287,9 +294,8 @@ export default defineComponent({
 
     searchByPublicNumber(): void {
       this.isLoading = true;
-      axios.get(getApiConnectionString() + '/admin/usermanagement/search/publicnum?publicNum=' + this.searchInput, { withCredentials: true },).then((results) => {
-        this.users = []
-        this.users.push(results.data.user);
+      axios.get(getApiConnectionString() + '/admin/usermanagement/search/?publicNumber=' + this.searchInput, { withCredentials: true },).then((results) => {
+        this.users = results.data.user
         this.paginationData = results.data;
         this.isLoading = false;
       }).catch(() => {
@@ -299,9 +305,8 @@ export default defineComponent({
 
     searchByPhoneNumber(): void {
       this.isLoading = true;
-      axios.get(getApiConnectionString() + '/admin/usermanagement/search/phoneNum?phoneNum=' + this.searchInput, { withCredentials: true },).then((results) => {
-        this.users = []
-        this.users.push(results.data.user);
+      axios.get(getApiConnectionString() + '/admin/usermanagement/search/?phoneNumber=' + this.searchInput, { withCredentials: true },).then((results) => {
+        this.users = results.data.user
         this.paginationData = results.data;
         this.isLoading = false;
       }).catch(() => {
@@ -312,10 +317,10 @@ export default defineComponent({
     updateUserRoles(_id: string, Roles: any): void {
       this.isLoading = true;
 
-      axios.post(getApiConnectionString() + '/admin/usermanagement/setroles', { _id: _id, roles: JSON.stringify(Roles) }, { withCredentials: true },).then(() => {
+      axios.post(getApiConnectionString() + '/admin/usermanagement/setroles', { id: _id, roles: JSON.stringify(Roles) }, { withCredentials: true },).then(() => {
         this.isLoading = false;
         this.selectedUser = null;
-        this.successMessage = "მომხმარებელის როლი წარმატებით განახლდა!";
+        this.showhideSuccess("მომხმარებელის როლი წარმატებით განახლდა!");
         this.loadUser();
       }).catch((error) => {
         this.errorMessage = error.response.data.message;
@@ -329,10 +334,11 @@ export default defineComponent({
       axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { _id: this.selectedUser?._id }, { withCredentials: true },).then(() => {
         this.isLoading = false;
         this.selectedUser = null;
-        this.successMessage = "მომხმარებელის წარმატებით წაიშალა!";
+        this.showhideSuccess("მომხმარებელის წარმატებით წაიშალა!");
         this.loadUser();
       }).catch((error) => {
         this.errorMessage = error.response.data.message;
+        
         this.isLoading = false;
       })
     }
