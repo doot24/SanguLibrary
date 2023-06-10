@@ -82,21 +82,9 @@
             <label for="encryption">შენახვის შიფრი</label>
             <input type="text" class="form-control" id="encryptionInput" v-model=" saveCipher ">
           </div>
-          <div class="form-group">
-            <label for="fileUploadCover">ყდის ფაილი</label>
-            <input type="file" class="form-control" id="fileUploadCoverInput" @change="HandleCoverUpload">
-          </div>
-          <div class="form-group d-flex gap-2">
-            <label for="fileUploadCover">ციფრული მასალა</label>
-            <input type="checkbox" class="form-check-input" v-model=" digital ">
-          </div>
-          <div v-if=" digital " class="">
-            <label for="fileUploadBook">წიგნის ფაილი</label>
-            <input type="file" class="form-control" id="fileUploadBookInput" @change="HandleFileUpload">
-          </div>
         </div>
         <div class="modal-footer">
-          <button v-bind:disabled="pressed" type="button" class="btn btn-primary" @click="addBook(resource); pressed = true">შესახვა</button>
+          <button type="button" class="btn btn-primary" @click="addBook(resource); pressed = true">შენახვა</button>
         </div>
       </div>
     </div>
@@ -106,6 +94,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ResourceType } from '@/interfaces/Resource';
+import { Book } from '@/interfaces/Book';
 
 export default defineComponent({
   name: 'BookAdd',
@@ -120,42 +109,27 @@ export default defineComponent({
       authorInput: '' as String,
       editorInput: '' as String,
 
-      pressed : false as boolean,
       resourceType : ResourceType,
-
-      title: '',
-      digital: false,
-      subtitle: '',
-      resume: '',
-      remark: '',
-      category: '',
-      description: '',
-      isbn: '',
+      
+      title: '' as String,
+      subtitle: '' as String,
+      resume: '' as String,
+      remark: '' as String,
+      category: '' as String,
+      description: '' as String,
+      isbn: '' as String,
       authors: [] as any,
       editors: [] as any,
-      publication: '',
-      publicationYear: '',
-      publicationLocation: '',
-      saveCipher: '',
-
-      fileBuffer :  null as any,
-      coverBuffer : null as any,
+      publication: '' as String,
+      publicationYear: '' as String,
+      publicationLocation: '' as String,
+      saveCipher: '' as String
     };
   },
   methods: {
-    HandleFileUpload(event : any)
-    {
-      this.fileBuffer = event.target.files[0]
-    },
-    HandleCoverUpload(event : any)
-    {
-      this.coverBuffer = event.target.files[0]
-      console.log(this.coverBuffer)
-    },
     addBook() {
       let resource = {
         title: this.title,
-        digital: this.digital,
         subtitle: this.subtitle,
         resume: this.resume,
         remark: this.remark,
@@ -168,9 +142,7 @@ export default defineComponent({
         publicationLocation: this.publicationLocation,
         saveCipher: this.saveCipher,
         category: this.category,
-        description: this.description,
-        file : this.fileBuffer,
-        cover: this.coverBuffer
+        description: this.description
       }
       this.$emit('add_pressed', resource);
     },
@@ -187,7 +159,6 @@ export default defineComponent({
         this.editorInput = '',
 
         this.title = '',
-        this.digital = false,
         this.subtitle = '',
         this.resume = '',
         this.remark = '',
@@ -199,12 +170,7 @@ export default defineComponent({
         this.publicationLocation = '',
         this.saveCipher = '',
         this.category = '',
-        this.description = '',
-
-        this.fileBuffer = '';
-        this.coverBuffer = '';
-
-        this.pressed = false
+        this.description = ''
     }
   },
 });

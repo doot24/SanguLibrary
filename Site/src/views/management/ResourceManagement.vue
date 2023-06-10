@@ -8,9 +8,10 @@
       <i class="p-1 bi bi-info-circle-fill"></i>
       {{ errorMessage }}
     </div>
-    <div v-if="showSuccess" class="alert w-75 alert-success" role="alert">
-      <i class="p-1 bi bi-info-circle-fill"></i>
+    <div v-if="showSuccess" class="alert alert-success alert-dismissible fade show w-50" role="alert">
+      <i class="bi bi-info-circle-fill"></i>
       მოთხოვნა წარმატებით შესრულდა!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <search :options="options" @cleared="onInputCleared" @search="handleSearch" class="w-50" />
     <div class="d-flex  mt-3 mb-3 gap-3 justify-content-end" style="width: 90%;">
@@ -20,73 +21,80 @@
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJournalModal">
         ჟურნალის დამატება
       </button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDissertationModal">
+        დისერტაციის დამატება
+      </button>
     </div>
     <div class="w-100 rounded d-flex align-items-center flex-column gap-5">
       <div class="p-3" style="width:90%;height:600px; overflow-y: scroll; background-color: #646074;">
-        <div v-if="resources.length === 0" class="alert alert-danger" role="alert">
+        <div v-if="resources.length === 0" class="alert alert-warning" role="alert">
           <i class="p-1 bi bi-info-circle-fill"></i>
           რესურსები ვერ მოიძებნა!
         </div>
         <div v-for="resource in resources">
-          <div class="d-flex py-2"  v-if="resource.resourceType === resourceType.Book">
-            <book v-bind:resource="resource"/>
+          <div class="d-flex py-2" v-if="resource.resourceType === resourceType.Book">
+            <book v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
-                <button @click="DeleteResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DeleteResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-trash3"></button>
-                <button v-if="resource.digital" @click="DownloadResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-download"></button>
-                <button @click="DuplicateResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DuplicateResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-clipboard2"></button>
               </div>
             </div>
           </div>
 
           <div class="d-flex py-2" v-if="resource.resourceType === resourceType.Journal">
-            <journal v-bind:resource="resource"/>
+            <journal v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateJournalModal" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateJournalModal"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
-                <button @click="DeleteResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DeleteResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-trash3"></button>
-                <button v-if="resource.digital" @click="DownloadResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-download"></button>
-                <button @click="DuplicateResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DuplicateResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-clipboard2"></button>
               </div>
             </div>
           </div>
 
           <div v-if="resource.resourceType === resourceType.Dissertation" class="d-flex py-2">
-            <dissertation  v-bind:resource="resource"/>
+            <dissertation v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateDissertationModal"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
-                <button @click="DeleteResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DeleteResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-trash3"></button>
-                <button v-if="resource.digital" @click="DownloadResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-download"></button>
-                <button @click="DuplicateResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DuplicateResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-clipboard2"></button>
               </div>
             </div>
           </div>
 
           <div v-if="resource.resourceType === resourceType.Rider" class="d-flex py-2">
-            <rider v-bind:resource="resource"/>
+            <rider v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
-                <button @click="DeleteResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DeleteResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-trash3"></button>
-                <button v-if="resource.digital" @click="DownloadResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-download"></button>
-                <button @click="DuplicateResource(resource)" style="font-size:1.4em; background-color: transparent; border: none;"
+                <button @click="DuplicateResource(resource)"
+                  style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-clipboard2"></button>
               </div>
             </div>
@@ -121,11 +129,15 @@
       </nav>
     </div>
     <!-- End, Pagination -->
-    <bookadd @add_pressed="AddResource"></bookadd>
-    <bookupdate @add_pressed="UpdateResource" :resource="selectedResource"></bookupdate>
+    <bookadd @add_pressed="AddResource"/>
+    <bookupdate @add_pressed="UpdateResource" :resource="selectedResource"/>
 
-    <journaladd @add_pressed="AddResource"/>
-    <journalupdate @add_pressed="UpdateResource" :resource="selectedResource"/>
+    <journaladd @add_pressed="AddResource" />
+    <journalupdate @add_pressed="UpdateResource" :resource="selectedResource" />
+
+    <dissertationadd @add_pressed="AddResource"/>
+    <dissertationupdate @add_pressed="UpdateResource" :resource="selectedResource" />
+
   </div>
 </template>
 
@@ -152,6 +164,8 @@ import bookupdate from '@/components/resourcemanagement/bookupdate.vue'
 
 import journaladd from '@/components/resourcemanagement/journaladd.vue'
 import journalupdate from '@/components/resourcemanagement/journalupdate.vue'
+import dissertationadd from '@/components/resourcemanagement/dissertationadd.vue'
+import dissertationupdate from '@/components/resourcemanagement/dissertationupdate.vue'
 
 export default defineComponent({
   components: {
@@ -167,7 +181,11 @@ export default defineComponent({
     bookupdate,
 
     journaladd,
-    journalupdate
+    journalupdate,
+
+    dissertationadd,
+    dissertationupdate
+
   },
   data() {
     return {
@@ -183,14 +201,18 @@ export default defineComponent({
       errorMessage: "" as String,
       showSuccess: false as Boolean,
 
-      resourceType : ResourceType,
-      selectedResource: {},
+      resourceType: ResourceType,
+      selectedResource: {} as any,
     }
   },
   mounted() {
     this.GetAllResources();
   },
   methods: {
+    showhideSuccess(time: number = 5000) {
+      this.showSuccess = true;
+      setTimeout(() => { this.showSuccess = false; }, time);
+    },
     handleSearch(event: any) {
       this.selectedOption = event.selectedOption;
 
@@ -234,7 +256,6 @@ export default defineComponent({
           this.resources = results.data.searchResults;
           this.paginationData = results.data.pagination;
           this.isLoading = false;
-          this.showSuccess = true;
         }).catch((error) => {
           this.errorMessage = error.data.message;
           this.isLoading = false;
@@ -243,32 +264,23 @@ export default defineComponent({
     },
 
     AddResource(resource: any) {
-      console.log(resource)
       this.isLoading = true;
-      const formData = new FormData();
-      console.log(resource.resourceType)
       this.errorMessage = "";
 
-      if(resource.cover)
-      {
-        formData.append('cover', resource.cover);
-      }
-      if(resource.file)
-      {
-        formData.append('file', resource.file);
-      }
-      formData.append('type', resource.resourceType);
-      formData.append('resource', JSON.stringify(resource));
+      let body = {
+        resource: JSON.stringify(resource),
+        type: resource.resourceType,
+      };
 
-      axios.post(getApiConnectionString() + '/admin/resourcemanagement/add', formData, {
+      axios.post(getApiConnectionString() + '/admin/resourcemanagement/add', body, {
         withCredentials: true,
       }).then((results) => {
         this.isLoading = false;
-          this.showSuccess = true;
+        this.showhideSuccess();
         this.GetAllResources();
       }).catch((error) => {
-        this.errorMessage = error.data.message;
         this.isLoading = false;
+        this.errorMessage = error.message;
       });
     },
 
@@ -287,30 +299,8 @@ export default defineComponent({
         withCredentials: true,
       }).then((results) => {
         this.isLoading = false;
-        this.showSuccess = true;
+        this.showhideSuccess();
         this.GetAllResources();
-      }).catch((error) => {
-        this.errorMessage = error.data.message;
-        this.isLoading = false;
-      });
-    },
-
-    DownloadResource(resource: any) {
-      this.isLoading = true;
-      console.log(resource)
-      this.errorMessage = "";
-
-      let body = {
-        type: resource.resourceType,
-        _id: resource._id
-      };
-
-      axios.post(getApiConnectionString() + '/admin/resourcemanagement/download', body, {
-        withCredentials: true,
-      }).then((results) => {
-          this.showSuccess = true;
-        this.isLoading = false;
-        window.open(results.data.url, '_blank');
       }).catch((error) => {
         this.errorMessage = error.data.message;
         this.isLoading = false;
@@ -319,18 +309,17 @@ export default defineComponent({
 
     DeleteResource(resource: any) {
       this.isLoading = true;
-      console.log(resource)
       this.errorMessage = "";
 
       let body = {
         _id: resource._id,
         type: resource.resourceType
       };
-      console.log(resource._id)
-      axios.post(getApiConnectionString() + '/admin/resourcemanagement/delete', body, { headers :  { 'content-type': 'application/x-www-form-urlencoded' },
+      axios.post(getApiConnectionString() + '/admin/resourcemanagement/delete', body, {
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
         withCredentials: true,
       }).then((results) => {
-          this.showSuccess = true;
+        this.showhideSuccess();
         this.isLoading = false;
         this.GetAllResources();
       }).catch((error) => {
@@ -342,17 +331,15 @@ export default defineComponent({
     UpdateResource(resource: any) {
       this.isLoading = true;
       this.errorMessage = "";
-
       let body = {
         _id: resource._id,
         type: resource.resourceType,
-        resource : ""
+        resource: JSON.stringify(resource)
       };
-      body.resource = JSON.stringify(resource);
       axios.post(getApiConnectionString() + '/admin/resourcemanagement/update', body, {
         withCredentials: true,
       }).then((results) => {
-          this.showSuccess = true;
+        this.showhideSuccess();
         this.isLoading = false;
         this.GetAllResources();
       }).catch((error) => {
@@ -378,7 +365,6 @@ export default defineComponent({
         this.isLoading = false;
 
       }).catch((error) => {
-        console.log(error)
         this.errorMessage = error.data.message;
         this.isLoading = false;
       });

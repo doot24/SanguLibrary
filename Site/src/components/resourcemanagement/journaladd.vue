@@ -101,21 +101,9 @@
             <label for="encryption">შენახვის შიფრი</label>
             <input type="text" class="form-control" id="encryptionInput" v-model=" saveCipher ">
           </div>
-          <div class="form-group">
-            <label for="fileUploadCover">ყდის ფაილი</label>
-            <input type="file" class="form-control" id="fileUploadCoverInput" @change="HandleCoverUpload">
-          </div>
-          <div class="form-group d-flex gap-2">
-            <label for="fileUploadCover">ციფრული მასალა</label>
-            <input type="checkbox" class="form-check-input" v-model=" digital ">
-          </div>
-          <div v-if=" digital " class="">
-            <label for="fileUploadBook">წიგნის ფაილი</label>
-            <input type="file" class="form-control" id="fileUploadBookInput" @change="HandleFileUpload">
-          </div>
         </div>
         <div class="modal-footer">
-          <button v-bind:disabled="pressed" type="button" class="btn btn-primary" @click="addJournal(resource); pressed = true">შესახვა</button>
+          <button type="button" class="btn btn-primary" @click="addJournal(resource);">შენახვა</button>
         </div>
       </div>
     </div>
@@ -140,44 +128,30 @@ export default defineComponent({
       editorInput: '' as String,
       collegueInput: '' as String,
 
-      pressed : false as boolean,
       resourceType : ResourceType.Journal,
 
-      title: '',
-      digital: false,
-      subtitle: '',
-      resume: '',
-      remark: '',
-      number: 0,
+      title: '' as String,
+      subtitle: '' as String,
+      resume: '' as String,
+      remark: '' as String,
+      number: 0 as Number,
 
-      category: '',
-      description: '',
-      isbn: '',
+      category: '' as String,
+      description: '' as String,
+      isbn: '' as String,
       collegues: [] as any,
       authors: [] as any,
       editors: [] as any,
-      publication: '',
-      publicationYear: '',
-      publicationLocation: '',
-      saveCipher: '',
-
-      fileBuffer :  null as any,
-      coverBuffer : null as any,
+      publication: '' as String,
+      publicationYear: '' as String,
+      publicationLocation: '' as String,
+      saveCipher: '' as String
     };
   },
   methods: {
-    HandleFileUpload(event : any)
-    {
-      this.fileBuffer = event.target.files[0]
-    },
-    HandleCoverUpload(event : any)
-    {
-      this.coverBuffer = event.target.files[0]
-    },
     addJournal() {
       let resource = {
         title: this.title,
-        digital: this.digital,
         subtitle: this.subtitle,
         resume: this.resume,
         remark: this.remark,
@@ -192,9 +166,7 @@ export default defineComponent({
         publicationLocation: this.publicationLocation,
         saveCipher: this.saveCipher,
         category: this.category,
-        description: this.description,
-        file : this.fileBuffer,
-        cover: this.coverBuffer
+        description: this.description
       }
       this.$emit('add_pressed', resource);
     },
@@ -212,7 +184,6 @@ export default defineComponent({
         this.collegueInput = '';
         
         this.title = '';
-        this.digital = false;
         this.subtitle = '';
         this.resume = '';
         this.remark = '';
@@ -227,11 +198,6 @@ export default defineComponent({
         this.category = '';
         this.description = '';
         this.number = 0;
-
-        this.fileBuffer = '';
-        this.coverBuffer = '';
-
-        this.pressed = false
     }
   },
 });
