@@ -14,17 +14,25 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <search :options="options" @cleared="onInputCleared" @search="handleSearch" class="w-50" />
-    <div class="d-flex  mt-3 mb-3 gap-3 justify-content-end" style="width: 90%;">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
-        წიგნის დამატება
-      </button>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJournalModal">
-        ჟურნალის დამატება
-      </button>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDissertationModal">
-        დისერტაციის დამატება
-      </button>
+    <div class="d-flex mt-3 mb-3 gap-3 justify-content-end" style="width: 90%;">
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="addDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          მასალის დამატება
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="addDropdown">
+          <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addBookModal">წიგნის
+              დამატება</button></li>
+          <li><button class="dropdown-item" type="button" data-bs-toggle="modal"
+              data-bs-target="#addJournalModal">ჟურნალის დამატება</button></li>
+          <li><button class="dropdown-item" type="button" data-bs-toggle="modal"
+              data-bs-target="#addDissertationModal">დისერტაციის დამატება</button></li>
+          <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addRiderModal">რიდერის
+              დამატება</button></li>
+        </ul>
+      </div>
     </div>
+
     <div class="w-100 rounded d-flex align-items-center flex-column gap-5">
       <div class="p-3" style="width:90%;height:600px; overflow-y: scroll; background-color: #646074;">
         <div v-if="resources.length === 0" class="alert alert-warning" role="alert">
@@ -70,7 +78,8 @@
             <dissertation v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateDissertationModal"
+                <button @click="selectedResource = resource" data-bs-toggle="modal"
+                  data-bs-target="#updateDissertationModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
@@ -87,7 +96,7 @@
             <rider v-bind:resource="resource" />
             <div style="height: fit-content">
               <div class="d-flex gap-2 flex-column text-light">
-                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal"
+                <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateRiderModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
                   class="text-light bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
@@ -129,15 +138,17 @@
       </nav>
     </div>
     <!-- End, Pagination -->
-    <bookadd @add_pressed="AddResource"/>
-    <bookupdate @add_pressed="UpdateResource" :resource="selectedResource"/>
+    <BookAdd @add_pressed="AddResource" />
+    <BookUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
 
-    <journaladd @add_pressed="AddResource" />
-    <journalupdate @add_pressed="UpdateResource" :resource="selectedResource" />
+    <JournalAdd @add_pressed="AddResource" />
+    <JournalUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
 
-    <dissertationadd @add_pressed="AddResource"/>
-    <dissertationupdate @add_pressed="UpdateResource" :resource="selectedResource" />
+    <DissertationAdd @add_pressed="AddResource" />
+    <DissertationUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
 
+    <RiderAdd @add_pressed="AddResource" />
+    <RiderUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
   </div>
 </template>
 
@@ -156,16 +167,22 @@ import dissertation from '@/components/resources/dissertation.vue'
 import rider from '@/components/resources/rider.vue'
 
 import { PaginationData } from "@/interfaces/PaginationData";
-import { SearchOptions } from '@/interfaces/SearchOptions';
 import { Resource, ResourceType } from '@/interfaces/Resource';
 
-import bookadd from '@/components/resourcemanagement/bookadd.vue'
-import bookupdate from '@/components/resourcemanagement/bookupdate.vue'
+import BookAdd from '@/components/resourcemanagement/BookAdd.vue';
+import BookUpdate from '@/components/resourcemanagement/BookUpdate.vue';
 
-import journaladd from '@/components/resourcemanagement/journaladd.vue'
-import journalupdate from '@/components/resourcemanagement/journalupdate.vue'
-import dissertationadd from '@/components/resourcemanagement/dissertationadd.vue'
-import dissertationupdate from '@/components/resourcemanagement/dissertationupdate.vue'
+import JournalAdd from '@/components/resourcemanagement/JournalAdd.vue';
+import JournalUpdate from '@/components/resourcemanagement/JournalUpdate.vue';
+
+import DissertationAdd from '@/components/resourcemanagement/DissertationAdd.vue';
+import DissertationUpdate from '@/components/resourcemanagement/DissertationUpdate.vue';
+
+import RiderAdd from '@/components/resourcemanagement/RiderAdd.vue';
+import RiderUpdate from '@/components/resourcemanagement/RiderUpdate.vue';
+
+import { Journal } from '@/interfaces/Journal'
+import { Dissertation } from '@/interfaces/Dissertation'
 
 export default defineComponent({
   components: {
@@ -177,15 +194,18 @@ export default defineComponent({
     journal,
     dissertation,
     rider,
-    bookadd,
-    bookupdate,
 
-    journaladd,
-    journalupdate,
+    BookAdd,
+    BookUpdate,
+    JournalAdd,
+    JournalUpdate,
+    DissertationAdd,
+    DissertationUpdate,
+    RiderAdd,
+    RiderUpdate,
 
-    dissertationadd,
-    dissertationupdate
-
+    Journal,
+    Dissertation
   },
   data() {
     return {
@@ -194,9 +214,6 @@ export default defineComponent({
       isLoading: false as boolean,
       paginationData: {} as PaginationData,
       resources: [] as Array<Resource>,
-
-      options: [{ Label: 'თავისუფალი', Value: 'free' }, { Label: 'შენახვის შიფრი', Value: 'saveCipher' }] as SearchOptions[],
-      selectedOption: 'free' as string,
 
       errorMessage: "" as String,
       showSuccess: false as Boolean,
@@ -214,13 +231,7 @@ export default defineComponent({
       setTimeout(() => { this.showSuccess = false; }, time);
     },
     handleSearch(event: any) {
-      this.selectedOption = event.selectedOption;
-
-      if (this.selectedOption === "free") {
-        this.SearchResource(event);
-        return;
-      }
-      //todo: search cipher
+      this.SearchResource(event);
     },
     onInputCleared(event: any): void {
       this.resources = [];

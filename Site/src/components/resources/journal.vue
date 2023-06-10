@@ -24,12 +24,6 @@
         <div class="p-2" style="background-color: rgba(61, 55, 71, 0.43);"><span>ISSN : {{ resource?.issn }}</span></div>
       </div>
     </div>
-    <div class="d-flex gap-2 flex-column text-light">
-      <button v-if="editMethod" @click="edit" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-pencil-square"></button>
-      <button v-if="deleteMethod" @click="remove" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-trash3"></button>
-      <button v-if="downloadMethod" @click="download" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-download"></button>
-      <button v-if="clipboardMethod" @click="copyToClipboard" style="font-size:1.4em; background-color: transparent; border: none;" class="text-light bi-clipboard2"></button>
-    </div>
   </div>
 </template>
 

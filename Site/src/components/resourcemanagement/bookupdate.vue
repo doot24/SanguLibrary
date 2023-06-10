@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addBookModalLabel">წიგნის დამატება</h5>
+          <h5 class="modal-title" id="addBookModalLabel">წიგნის განახლება</h5>
           <button type="button" class="btn btn-secondary" @click="ClearInputs()" data-bs-dismiss="modal">X</button>
         </div>
         <div class="modal-body d-flex flex-column gap-3">

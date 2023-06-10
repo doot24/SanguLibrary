@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex gap-4">
+  <div class="d-flex gap-4 w-100">
     <div>
       <img style="width: 130px;" src="@/assets/images/person.png">
     </div>
