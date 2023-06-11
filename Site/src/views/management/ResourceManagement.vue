@@ -309,7 +309,7 @@ export default defineComponent({
 
       let body = {
         resource: resource,
-        type: 0,
+        type: resource.resourceType,
         _id: resource._id
       };
 
