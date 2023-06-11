@@ -10,6 +10,7 @@ import notificationmanagement from "../routes/admin/NotificationManagement"
 import usermanagement from "../routes/admin/UserManagement";
 import petitionmanagement from "../routes/admin/PetitionManagement";
 import checkoutManagement from "../routes/admin/CheckoutManagement";
+import categoryManagement from "../routes/admin/CategoryManagement";
 
 //search
 import resourceSearch from "../routes/ResourceSearch"
@@ -25,6 +26,8 @@ export function InitializeRouters(app: express.Application) {
     app.use("/checkouts", checkouts);
 
     app.use("/admin/resourcemanagement", resurceManagement);
+    app.use("/admin/resourcemanagement/category/", categoryManagement);
+
     app.use("/admin/notificationmanagement", notificationmanagement);
     app.use("/admin/usermanagement", usermanagement);
     app.use("/admin/petitionmanagement", petitionmanagement);
