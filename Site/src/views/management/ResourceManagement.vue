@@ -29,6 +29,8 @@
               data-bs-target="#addDissertationModal">დისერტაციის დამატება</button></li>
           <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addRiderModal">რიდერის
               დამატება</button></li>
+              <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addCategoryModal">კატეგორიის
+              დამატება</button></li>
         </ul>
       </div>
     </div>
@@ -149,6 +151,8 @@
 
     <RiderAdd @add_pressed="AddResource" />
     <RiderUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
+
+    <CategoryCrud/>
   </div>
 </template>
 
@@ -184,6 +188,8 @@ import RiderUpdate from '@/components/resourcemanagement/RiderUpdate.vue';
 import { Journal } from '@/interfaces/Journal'
 import { Dissertation } from '@/interfaces/Dissertation'
 
+import CategoryCrud from '@/components/resourcemanagement/CategoryCrud.vue'
+
 export default defineComponent({
   components: {
     hamburger,
@@ -205,7 +211,9 @@ export default defineComponent({
     RiderUpdate,
 
     Journal,
-    Dissertation
+    Dissertation,
+
+    CategoryCrud
   },
   data() {
     return {
