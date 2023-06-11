@@ -1,120 +1,74 @@
 <template>
   <hamburger @click="hamburgerActive = !hamburgerActive" />
   <headerBar />
-  <div class="container-fluid d-flex flex-column d-none d-lg-block d-xl-block d-sm-none min-vh-100 py-5 Bodybackground">
-<!-- Begin for pc screen -->
-    <div class="row" style="margin-bottom: 10px; margin-left: 60px;">
-      <h3 class="text-light mb-5">შეტყობინებები</h3>
-      <div class="row">
-        <div class="col-md-5 col-xl-3 d-flex justify-content-between align-items-center">
-          <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }"
-            class="smallButton p-3 flex-grow-2" v-on:click="setReadValue(1); selectedSection = 'read'">წაკითხული</button>
-          <button :class="{ 'smallButtonHighlight': selectedSection == 'notread' }" class="smallButton p-3 flex-grow-2"
-            v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
+  <!-- Begin, Notification Settings -->
+  <div class="container-fluid d-flex flex-column min-vh-100 Bodybackground py-5">
+    <div v-if="errorMessage" class="alert alert-danger w-50 align-self-center alert-dismissible fade show mt-3" role="alert">
+          <i class="bi bi-info-circle-fill"></i>
+          {{ errorMessage }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" @click="errorMessage = ''"
+            aria-label="Close"></button>
         </div>
-        <div class="col-md-4 col-xl-3 mt-3 mt-md-0" style="margin-left: 400px;">
-          <span class="bi bi-clock headerText" style="position: absolute; top: 100px;"> დროის მიხედვით</span>
-          <select id="time-dropdown" class="d-flex justify-content-between smallButton p-3 text-center">
-            <option value="all_time" selected>ყველა</option>
-            <option value="last_week">ბოლო კვირა</option>
-            <option value="last_month">ბოლო თვე</option>
-            <option value="last_year">ბოლო წელი</option>
-          </select>
+    <div class="container d-flex flex-wrap" style="width: 99%;">
+      <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <h2 class="headerText mb-5 text-center">შეტყობინებები</h2>
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3 mb-md-0">
+            <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }" class="smallButton p-3 w-100"
+              v-on:click="setReadValue(1); selectedSection = 'read'">წაკითხული</button>
+          </div>
+          <div class="col-12 col-md-6">
+            <button :class=" { 'smallButtonHighlight': selectedSection == 'notread' } " class="smallButton p-3 w-100"
+              v-on:click=" setReadValue(0); selectedSection = 'notread' ">წაუკითხავი</button>
+          </div>
+          <div class="col-12 my-3">
+            <label for="time-dropdown" class="bi bi-clock headerText mb-3 d-block text-center"> დროის
+              მიხედვით</label>
+            <select id="time-dropdown" v-model=" selectedTime " class="smallButton p-3 w-100 text-center"
+              @change=" setByTime(selectedTime) ">
+              <option value="all_time">ყველა</option>
+              <option value="last_week">ბოლო კვირა</option>
+              <option value="last_month">ბოლო თვე</option>
+              <option value="last_year">ბოლო წელი</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
+    <!-- End, Notification Settings -->
 
-
-    <div class="mt-3 container-fluid notificationDisplay vh-100 rounded d-flex flex-column gap-2 p-5"
+    <!-- Begin, Notification Display -->
+    <div class="mt-3 notificationDisplay container-fluid vh-100 rounded d-flex flex-column gap-2 p-5"
       style="width: 90%; overflow-y: scroll;">
-      <div v-for="(meta) in notifications"
-        v-on:click="selectedNotificationMeta = meta; selectedNotification = meta.notification[0]; setRead();"
-        data-bs-toggle="modal" data-bs-target="#notificationModalsMobile" class="d-flex flex-column gap-2">
+      <div v-for="( meta ) in  notifications "
+        v-on:click=" selectedNotificationMeta = meta; selectedNotification = meta.notification[0]; setRead(); "
+        data-bs-toggle="modal" data-bs-target="#notificationModals" class="d-flex flex-column gap-2">
         <h3 class="headerText">{{ meta.notification[0].title }}</h3>
-        <span>{{ formatDate(meta.notification[0].created) }}</span>
+        <span style="color: #716E6E;">{{ formatDate(meta.notification[0].created) }}</span>
         <div class="table-border mt-3"></div>
       </div>
     </div>
+    <!-- End, Notification Display -->
 
-    <div class="modal fade" id="notificationModalsMobile" tabindex="-1" aria-labelledby="notificationModalsLabel"
+    <!-- Begin, Notification Modal -->
+    <div class="modal fade" id="notificationModals" tabindex="-1" aria-labelledby="notificationModalsLabel"
       aria-hidden="true">
-      <div class="modal-dialog modal-dialog-top">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background-color: #322E3D;">
           <div class="modal-header">
             <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification?.title }}
             </h5>
             <button type="button" class="btn-close"
-              v-on:click="selectedNotification = null; selectedNotificationMeta = null" data-bs-dismiss="modal"
+              v-on:click=" selectedNotification = null; selectedNotificationMeta = null " data-bs-dismiss="modal"
               aria-label="Close"></button>
           </div>
           <div class="modal-body" style="color: #B3B3B3;">
-            <p>{{ selectedNotification?.text }}</p>
+            <p v-html=" selectedNotification?.text "></p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Begin for phone screen -->
-  <div class="container-fluid d-flex flex-column d-block d-sm-block d-md-none min-vh-100 py-2 Bodybackground">
-
-    <div class="container-fluid d-flex flex-column min-vh-100 Bodybackground py-5">
-      <div class="container d-flex flex-wrap " style="width: 99%;">
-        <div class="col-12 col-md-8 col-lg-6">
-          <h2 class="headerText mb-5 text-center"> შეტყობინებები </h2>
-          <div class="row">
-            <div class="col-12 col-md-6 mb-3 mb-md-0">
-              <button id="read" :class="{ 'smallButtonHighlight': selectedSection == 'read' }"
-                class="smallButton p-3 w-100" v-on:click="setReadValue(1); selectedSection = 'read'">წაკითხული</button>
-            </div>
-            <div class="col-12 col-md-6">
-              <button :class="{ 'smallButtonHighlight': selectedSection == 'notread' }" class="smallButton p-3 w-100"
-                v-on:click="setReadValue(0); selectedSection = 'notread'">წაუკითხავი</button>
-            </div>
-            <div class="col-12 my-3">
-              <label for="time-dropdown" class="bi bi-clock headerText mb-3 d-block text-center"> დროის მიხედვით</label>
-              <select id="time-dropdown" v-model="selectedTime" class="d-flex smallButton p-3 w-100 text-center"
-                @change="setByTime(selectedTime)">
-                <option value="all_time">ყველა</option>
-                <option value="last_week">ბოლო კვირა</option>
-                <option value="last_month">ბოლო თვე</option>
-                <option value="last_year">ბოლო წელი</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="mt-3 notificationDisplay container-fluid vh-100 rounded d-flex flex-column gap-2 p-5"
-        style="width: 90%; overflow-y: scroll;">
-        <div v-for="(meta) in notifications"
-          v-on:click="selectedNotificationMeta = meta; selectedNotification = meta.notification[0]; setRead();"
-          data-bs-toggle="modal" data-bs-target="#notificationModals" class="d-flex flex-column gap-2">
-          <h3 class="headerText">{{ meta.notification[0].title }}</h3>
-          <span style="color: #716E6E;">{{ formatDate(meta.notification[0].created) }}</span>
-          <div class="table-border mt-3"></div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="notificationModals" tabindex="-1" aria-labelledby="notificationModalsLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content" style="background-color: #322E3D;">
-            <div class="modal-header">
-              <h5 class="modal-title" id="notificationModalsLabel" style="color:#D9D9D9">{{ selectedNotification?.title }}
-              </h5>
-              <button type="button" class="btn-close"
-                v-on:click="selectedNotification = null; selectedNotificationMeta = null" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="color: #B3B3B3;">
-              <p>{{ selectedNotification?.text }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End for phone screen -->
+    <!-- End, Notification Modal -->
   </div>
 </template>
 
@@ -128,7 +82,7 @@ import axios from 'axios';
 import { defineComponent } from 'vue'
 
 import { User } from '@/interfaces/User';
-import {Notification, NotificationMetaData} from '../interfaces/Notification'
+import { Notification, NotificationMetaData } from '../interfaces/Notification'
 import store from '@/store';
 export default defineComponent({
   components: {
@@ -148,14 +102,15 @@ export default defineComponent({
       read: 1 as number,
       time: 604800000 as number,
 
-      selectedTime : 'all_time' as string,
+      selectedTime: 'all_time' as string,
       selectedSection: "read" as string,
+
+      errorMessage : '' as string,
 
       userData: {} as User,
     }
   },
   created() {
-    // Retrieve the user object from the Vuex store and assign it to the userData property
     this.userData = store.getters.GetUser
   },
 
@@ -165,12 +120,14 @@ export default defineComponent({
   },
 
   methods: {
-    setReadValue(value : number) : void {
+    setReadValue(value: number): void {
       this.read = value;
 
       this.getNotifications();
     },
     getNotifications() {
+      this.errorMessage = "";
+
       const params = {
         read: this.read,
         time: this.time,
@@ -183,9 +140,10 @@ export default defineComponent({
       }).then((results) => {
         this.notifications = results.data.notifications;
       }).catch((error) => {
+        this.errorMessage = error.data.message;
       });
     },
-    setByTime(timeSpan : string) : void {
+    setByTime(timeSpan: string): void {
       switch (timeSpan) {
         case 'week':
           this.time = 604800000;
@@ -201,7 +159,8 @@ export default defineComponent({
       }
       this.getNotifications();
     },
-    setRead() : void {
+    setRead(): void {
+      this.errorMessage = "";
       const body = {
         notificationid: this.selectedNotificationMeta?._id
       };
@@ -210,9 +169,10 @@ export default defineComponent({
       }).then((results) => {
         this.getNotifications();
       }).catch((error) => {
+        this.errorMessage = error.data.message;
       });
     },
-    formatDate(timestamp : number) {
+    formatDate(timestamp: number) {
       var d = new Date(timestamp);
       const formattedDate = `${d.toLocaleTimeString("ka", { hour12: false })} ${d.toLocaleDateString()}`; // concatenate time and date string
       return formattedDate;
