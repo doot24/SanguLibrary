@@ -66,21 +66,7 @@
       <!--Begin, Books-->
       <div v-if="!showSearchResults" class="booksSection shadow-sm p-3 mt-4 rounded d-flex flex-column"
         style="height:800px; overflow-y: scroll;">
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
-        <carousel />
+        <carousel v-for="section in sections" :title="section.title" :section="section.data" />
       </div>
       <!--End, Section-->
     </div>
@@ -105,6 +91,8 @@ import search from '@/components/search.vue'
 import { getApiConnectionString } from '@/assets/js/utils'
 import { PaginationData } from '@/interfaces/PaginationData'
 
+import {Section} from "@/interfaces/Section"
+
 export default defineComponent({
   components: {
     hamburger,
@@ -128,9 +116,14 @@ export default defineComponent({
       showDropdown: false as boolean,
       petitionSent : false as boolean,
 
+      sections : [] as Array<Section>,
+
       books: [] as any[],
       paginationData: {} as PaginationData
     }
+  },
+  mounted() {
+      this.getSections();
   },
   methods: {
     
@@ -182,6 +175,19 @@ export default defineComponent({
           this.isLoading = false;
         });
       }
+    },
+    getSections(): void {
+        this.isLoading = true;
+
+        axios.get(getApiConnectionString() + '/home/sections', {
+          withCredentials: true,
+        }).then((results) => {
+          this.sections = results.data.sections;
+          this.isLoading = false;
+                  
+        }).catch((error) => {
+          this.isLoading = false;
+        });
     },
     checkoutResource(resource: any): void {
       if (this.searchInput) {

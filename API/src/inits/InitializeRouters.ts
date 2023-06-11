@@ -3,6 +3,7 @@ import user from "../routes/User";
 import notification from "../routes/Notification"
 import Petitions from "../routes/Petitions";
 import checkouts from "../routes/Checkouts";
+import home from "../routes/Home";
 
 //admin
 import resurceManagement from "../routes/admin/ResourceManagement";
@@ -24,6 +25,7 @@ export function InitializeRouters(app: express.Application) {
     app.use("/petitions", Petitions);
     app.use("/search", resourceSearch);
     app.use("/checkouts", checkouts);
+    app.use("/home", home);
 
     app.use("/admin/resourcemanagement", resurceManagement);
     app.use("/admin/resourcemanagement/category/", categoryManagement);
