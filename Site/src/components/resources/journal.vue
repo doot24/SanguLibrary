@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex gap-4">
     <div>
-      <img style="width: 130px;" src="@/assets/images/person.png">
+      <img style="width: 130px;" class="rounded" src="@/assets/images/resource.png">
     </div>
     <div class="d-flex gap-3 text-light">
       <div>

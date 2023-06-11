@@ -1,5 +1,5 @@
 <template>
-  <div v-if="section.length > 0" class="p-3 rounded d-flex flex-column">
+  <div v-if="section.length > 0" class="p-3 rounded d-flex flex-column" style="background-color: rgb(87, 82, 103);">
     <div class="d-flex gap-2">
       <!-- <i class="category-icon bi bi-graph-up rounded p-2" style="font-size:1.3em;"></i> -->
       <span class="align-self-center category-text"><strong>{{ title }}</strong></span>
@@ -16,7 +16,7 @@
             <div class="d-flex flex-row gap-3">
               <div v-for="(resource, resourceIndex) in slideItems" :key="resourceIndex" class="d-flex flex-column gap-3">
                 <div class="d-flex flex-row gap-5">
-                  <img width="130" height="180" src="@/assets/images/person.png" />
+                  <img width="130" height="180" class="rounded" src="@/assets/images/resource.png" />
                 </div>
                 <span class="text-light">{{ resource.title }}</span>
                 <span class="text-light" v-if="resource.authors">{{ resource.authors.join(",") }}</span>

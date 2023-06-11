@@ -66,7 +66,7 @@
       <!--Begin, Books-->
       <div v-if="!showSearchResults" class="booksSection shadow-sm p-3 mt-4 rounded d-flex flex-column"
         style="height:800px; overflow-y: scroll;">
-        <carousel v-for="section in sections" :title="section.title" :section="section.data" />
+        <carousel  v-for="(section, index) in sections" :title="section.title" :section="section.data" :class="{'mt-4': index !== 0}"/>
       </div>
       <!--End, Section-->
     </div>
