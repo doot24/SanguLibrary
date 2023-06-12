@@ -1,7 +1,9 @@
 <template>
   <div class="d-flex gap-4">
-    <div>
+    
+    <div class="d-flex flex-column gap-2">
       <img style="width: 130px;" class="rounded  shadow-sm" src="@/assets/images/resource.png">
+      <span class="badge badge-pill bg-danger badge-primary">წიგნი</span>
     </div>
     <div class="d-flex gap-3 text-light ">
       <div>
@@ -22,6 +24,7 @@
         <div class="p-2 shadow-sm" style="background-color: rgba(61, 55, 71, 0.43);"><span> ISBN : {{ resource?.isbn }}</span></div>
       </div>
     </div>
+    
   </div>
 </template>
 

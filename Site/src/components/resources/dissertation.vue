@@ -1,7 +1,8 @@
 <template>
   <div class="d-flex gap-4 w-100">
-    <div>
+    <div class="d-flex flex-column gap-2">
       <img style="width: 130px;" class="rounded  shadow-sm" src="@/assets/images/resource.png">
+      <span class="badge badge-pill bg-danger badge-primary">დისერტაცია</span>
     </div>
     <div class="d-flex gap-3 text-light">
       <div>

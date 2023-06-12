@@ -1,7 +1,8 @@
 <template>
   <div class="d-flex gap-4">
-    <div>
-      <img style="width: 130px;"  class="rounded  shadow-sm" src="@/assets/images/resource.png">
+    <div class="d-flex flex-column gap-2">
+      <img style="width: 130px;" class="rounded  shadow-sm" src="@/assets/images/resource.png">
+      <span class="badge badge-pill bg-danger badge-primary">რიდერი</span>
     </div>
     <div class="d-flex gap-3 text-light">
       <div>
