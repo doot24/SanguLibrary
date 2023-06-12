@@ -14,7 +14,10 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <search :options="options" @cleared="onInputCleared" @search="handleSearch" class="w-50" />
-    <div class="d-flex mt-3 mb-3 gap-3 justify-content-end" style="width: 90%;">
+    <div class="d-flex mt-3 mb-3 gap-2 justify-content-end" style="width: 90%;">
+      <button class="btn btn-primary" @click="DownloadLibrary()" type="button" aria-expanded="false">
+        მასალის გადმოწერა
+      </button>
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="addDropdown" data-bs-toggle="dropdown"
           aria-expanded="false">
@@ -29,7 +32,8 @@
               data-bs-target="#addDissertationModal">დისერტაციის დამატება</button></li>
           <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addRiderModal">რიდერის
               დამატება</button></li>
-              <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addCategoryModal">კატეგორიის
+          <li><button class="dropdown-item" type="button" data-bs-toggle="modal"
+              data-bs-target="#addCategoryModal">კატეგორიის
               დამატება</button></li>
         </ul>
       </div>
@@ -152,7 +156,7 @@
     <RiderAdd @add_pressed="AddResource" />
     <RiderUpdate @add_pressed="UpdateResource" :resource="selectedResource" />
 
-    <CategoryCrud/>
+    <CategoryCrud />
   </div>
 </template>
 
@@ -366,6 +370,32 @@ export default defineComponent({
         this.isLoading = false;
       });
     },
+
+    DownloadLibrary() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      axios
+        .get(getApiConnectionString() + '/admin/resourcemanagement/listing/excel', {
+          responseType: 'blob',
+          withCredentials: true,
+        })
+        .then((response) => {
+          const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.setAttribute('download', 'library.xlsx');
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          this.errorMessage = error.response.data.message;
+          this.isLoading = false;
+        });
+    },
+
 
     GetAllResources() {
       this.isLoading = true;

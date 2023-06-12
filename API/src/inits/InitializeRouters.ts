@@ -12,6 +12,7 @@ import usermanagement from "../routes/admin/UserManagement";
 import petitionmanagement from "../routes/admin/PetitionManagement";
 import checkoutManagement from "../routes/admin/CheckoutManagement";
 import categoryManagement from "../routes/admin/CategoryManagement";
+import listingManagement from "../routes/admin/ListingManagement";
 
 //search
 import resourceSearch from "../routes/ResourceSearch"
@@ -29,6 +30,7 @@ export function InitializeRouters(app: express.Application) {
 
     app.use("/admin/resourcemanagement", resurceManagement);
     app.use("/admin/resourcemanagement/category/", categoryManagement);
+    app.use("/admin/resourcemanagement/listing/", listingManagement);
 
     app.use("/admin/notificationmanagement", notificationmanagement);
     app.use("/admin/usermanagement", usermanagement);
