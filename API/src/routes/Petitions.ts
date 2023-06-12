@@ -41,7 +41,7 @@ router.get('/templates', IsAuthenticated, (req: Request, res: Response) => {
   });
 })
 
-router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
+router.get("/get", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pageSize").notEmpty().isNumeric(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });

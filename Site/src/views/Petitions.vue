@@ -200,7 +200,7 @@ export default defineComponent({
         page: 1,
         pageSize: 80
       };
-      axios.get(getApiConnectionString() + '/petitions/', {
+      axios.get(getApiConnectionString() + '/petitions/get', {
         params,
         withCredentials: true,
       }).then((results) => {
