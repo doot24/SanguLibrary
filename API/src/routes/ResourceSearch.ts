@@ -28,24 +28,41 @@ router.get('/resource/', IsAuthenticated, query("text").notEmpty().isString(), q
 
     for (const schema of collections) {
       const results = await schema.aggregate([
-        {
-          $match: {
-            $text: { $search: text }
+        [
+          {
+            $match: {
+              $text: { $search: text }
+            }
+          },
+          {
+            $lookup: {
+              from: "checkouts",
+              localField: "_id",
+              foreignField: "resource_id",
+              as: "checkout_info"
+            }
+          },
+          {
+            $lookup: {
+              from: "holds",
+              localField: "_id",
+              foreignField: "resource_id",
+              as: "hold_info"
+            }
+          },
+          {
+            $addFields: {
+              hold: { $gt: [{ $size: "$hold_info" }, 0] },
+              checkout: { $gt: [{ $size: "$checkout_info" }, 0] }
+            }
+          },
+          {
+            $project : {
+              "hold_info":0,
+              "checkout_info":0
+            }
           }
-        },
-        {
-          $lookup: {
-            from: "checkouts",
-            localField: "_id",
-            foreignField: "_id",
-            as: "checkout_info"
-          }
-        },
-        {
-          $match: {
-            "checkout_info": { $size: 0 } 
-          }
-        }
+        ]
       ]).allowDiskUse(true).exec();
 
       searchResults.push(...results);

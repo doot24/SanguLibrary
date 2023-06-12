@@ -12,10 +12,39 @@ const router = Router();
 router.get("/sections", IsAuthenticated,  async (req: Request, res: Response) => {
     try
     {
-        let booksResults : any = await BookSchema.find();
-        let journalsResults : any = await JournalSchema.find();
-        let dissertationsResults : any = await DissertationSchema.find();
-        let ridersResults : any = await RiderSchema.find();
+        let agg : any = [{
+            $lookup: {
+              from: "checkouts",
+              localField: "_id",
+              foreignField: "resource_id",
+              as: "checkout_info"
+            }
+          },
+          {
+            $lookup: {
+              from: "holds",
+              localField: "_id",
+              foreignField: "resource_id",
+              as: "hold_info"
+            }
+          },
+          {
+            $addFields: {
+              hold: { $gt: [{ $size: "$hold_info" }, 0] },
+              checkout: { $gt: [{ $size: "$checkout_info" }, 0] }
+            }
+          },
+          {
+            $project : {
+              "hold_info":0,
+              "checkout_info":0
+            }
+          }];
+
+        let booksResults : any = await BookSchema.aggregate(agg);
+        let journalsResults : any = await JournalSchema.aggregate(agg);
+        let dissertationsResults : any = await DissertationSchema.aggregate(agg);
+        let ridersResults : any = await RiderSchema.aggregate(agg);
 
         let response : any = [
             {title : "წიგნები", data : booksResults},

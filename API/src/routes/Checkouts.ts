@@ -5,6 +5,9 @@ import { CheckoutPetition } from "../interfaces/Petition";
 import { CheckoutSchema } from "../schemas/CheckoutSchema";
 import { CheckoutPetitionSchema } from "../schemas/PetitionSchema";
 
+import { Hold } from "../interfaces/Hold";
+import { HoldSchema } from "../schemas/HoldSchema";
+
 import { body, validationResult } from "express-validator";
 import { randomUUID } from "crypto";
 import { SendToSystem } from "../utils/Notification";
@@ -25,9 +28,25 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
         let result: any = await CheckoutSchema.findOne({ resource_id: req.body.resource_id });
 
         if (result) {
+            throw new Error("resource is already taken!")
+        }
+
+        let holdCheck : any = await HoldSchema.findOne({resource_id : req.body.resource_id});
+
+        if (holdCheck) {
             throw new Error("resource is already reserved!")
         }
 
+        let hold : Hold = new Hold();
+        hold._id = randomUUID();
+        hold.dateIssued = Date.now();
+        hold.resource_id = String(req.body.resource_id);
+        hold.resource = Number(req.body.type);
+        hold.student = String(req.session.user._id);
+        
+        await new HoldSchema(hold).save();
+
+        // send petition to user
         let checkoutPetition = new CheckoutPetition();
         checkoutPetition._id = randomUUID();
         checkoutPetition.timestamp = Date.now()
@@ -39,6 +58,7 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
         checkoutPetition.resource_id = String(req.body.resource_id);
         checkoutPetition.resource_type = Number(req.body.type);
 
+        // send petition to admin/librarian
         SendToSystem("ახალი განცხადება",["admin", "editor", "employee"],`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
 
         await new CheckoutPetitionSchema(checkoutPetition).save();
