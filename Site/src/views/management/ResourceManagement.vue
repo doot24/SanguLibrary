@@ -15,11 +15,11 @@
     </div>
     <search :options="options" @cleared="onInputCleared" @search="handleSearch" class="w-50" />
     <div class="d-flex mt-3 mb-3 gap-2 justify-content-end" style="width: 90%;">
-      <button class="btn btn-primary" @click="DownloadLibrary()" type="button" aria-expanded="false">
+      <button class="btn btn-secondary" @click="DownloadLibrary()" type="button" aria-expanded="false">
         მასალის გადმოწერა
       </button>
       <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="addDropdown" data-bs-toggle="dropdown"
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="addDropdown" data-bs-toggle="dropdown"
           aria-expanded="false">
           მასალის დამატება
         </button>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="w-100 rounded d-flex align-items-center flex-column gap-5">
-      <div class="p-3 rounded" style="width:90%;height:600px; overflow-y: scroll; background-color: #646074;">
+      <div class="p-3 rounded resourceDisplay shadow-sm" style="width:90%;height:600px; overflow-y: scroll; ">
         <div v-if="resources.length === 0" class="alert alert-warning" role="alert">
           <i class="p-1 bi bi-info-circle-fill"></i>
           რესურსები ვერ მოიძებნა!
@@ -159,6 +159,8 @@
     <CategoryCrud />
   </div>
 </template>
+
+<style src="@/assets/css/pages/resourceManagement.css" scoped/>
 
 <script lang="ts">
 import { defineComponent } from 'vue'

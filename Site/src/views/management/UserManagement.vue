@@ -19,7 +19,7 @@
           aria-label="Close"></button>
       </div>
 
-      <div v-if="users.length === 0" class="alert alert-danger w-50 align-self-center" role="alert">
+      <div v-if="errorMessage && users.length === 0" class="alert alert-danger w-50 align-self-center" role="alert">
     <i class="p-1 bi bi-info-circle-fill"></i>
     მომხმარებელი ვერ მოიძებნა!
   </div>

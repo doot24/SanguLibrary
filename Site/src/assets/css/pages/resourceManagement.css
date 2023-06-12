@@ -1,0 +1,9 @@
+.dark
+.resourceDisplay{
+  background-color: #646074;
+}
+
+.light
+.resourceDisplay{
+  background-color: #ffffff;
+}

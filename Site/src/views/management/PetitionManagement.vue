@@ -70,7 +70,7 @@
                 <span>{{ formatDate(petition.timestamp) }}</span>
               </td>
               <td :id="petition._id" class="text-truncate text-center" @click="toggleTruncation(petition._id)"
-                style="max-width: 300px; cursor: pointer;">{{ petition.text }}</td>
+                style="max-width: 300px; cursor: pointer;" v-html="petition.text"></td>
               <td class="text-center">
                 <span>{{ petition.user[0].firstName + " " + petition.user[0].lastName }}</span>
               </td>
@@ -85,9 +85,9 @@
               </td>
               <td>
                 <!-- Begin editor -->
-                <button data-bs-toggle="modal" data-bs-target="#editModal" @click="selectPetition(petition)"
-                  class="btn btn-light bi bi-pencil-square"></button>
                 <div class="d-flex justify-content-center align-content-center gap-2">
+                  <button data-bs-toggle="modal" data-bs-target="#editModal" @click="selectPetition(petition)"
+                    class="btn btn-light bi bi-pencil-square"></button>
                   <div>
                       <div class="modal fade" id="editModal" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-keyboard="false">

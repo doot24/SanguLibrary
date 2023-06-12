@@ -87,9 +87,9 @@
 
   <!-- Begin, comment modal -->
   <div class="modal fade" id="largeModal" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg bg-light rounded">
-      <div class="modal-content" style="background-color: #322E3D;">
-        <div class="p-3 text-light" style="min-height: 200px;">
+    <div class="modal-dialog modal-lg rounded">
+      <div class="modal-content commentModal" >
+        <div class="p-3" style="min-height: 200px;">
           <div v-html=" selectedPetition?.comment "></div>
         </div>
       </div>
@@ -99,9 +99,9 @@
 
   <!-- Begin, statement modal -->
   <div class="modal fade" id="statementModal" tabindex="-1" aria-labelledby="statementModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg bg-light rounded">
-      <div class="modal-content" style="background-color: #322E3D;">
-        <div class="p-3 text-light text-break" style="min-height: 200px;">
+    <div class="modal-dialog modal-lg rounded">
+      <div class="modal-content statementModal" >
+        <div class="p-3  text-break" style="min-height: 200px;">
           <p v-html="selectedPetition?.text" class="text-break"></p>
         </div>
       </div>
@@ -220,6 +220,7 @@ export default defineComponent({
         withCredentials: true,
       }).then(() => {
         this.isLoading = false;
+        this.clearInputs();
         this.loadPetitions();
       }).catch(() => {
         this.isLoading = false;

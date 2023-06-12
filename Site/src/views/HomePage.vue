@@ -17,10 +17,12 @@
         <div>
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
-              <img width="130" height="180" src="@/assets/images/person.png" />
+              <img width="130" height="180" src="@/assets/images/resource.png" />
               <div class="d-flex flex-column gap-2">
                 <span class="text-light"> {{ book.title }} </span>
-                <span class="text-light"> {{ "ავტორი:" + " " + book.authors }} </span>
+                <span class="text-light" v-if="book.author"> {{ "ავტორი:" + " " + book.author }} </span>
+                <span class="text-light" v-if="book.authors"> {{ "ავტორი:" + " " + book.authors.join(", ") }} </span>
+                <span class="text-light" v-if="book.editors"> {{ "რედაქტორი:" + " " + book.editors.join(", ") }} </span>
                 <span class="text-light"> {{ "გამოცემის წელი:" + " " + book.publicationYear }} </span>
               </div>
             </div>

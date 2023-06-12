@@ -28,6 +28,31 @@
 .sentPetitionsText {
     color: #222027;
 }
+
+.dark
+.statementModal {
+  background-color: #322E3D;
+  color: white;
+}
+
+.light
+.statementModal {
+  background-color: white;
+  color: black;
+}
+
+.dark
+.commentModal {
+  background-color: #322E3D;
+  color: white;
+}
+
+.light
+.commentModal {
+  background-color: #ffffff;
+  color: black;
+}
+
 @media screen and (max-width: 500px) {
     /* modify the table style for screens with a width of 500px or less */
     .table-responsive {
