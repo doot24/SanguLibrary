@@ -17,7 +17,11 @@
         <div>
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
-              <img width="130" height="180" src="@/assets/images/resource.png" />
+              <div class="d-flex flex-column gap-2">
+                <span class="badge badge-pill bg-danger badge-primary" v-if="book.hold">დაჯავშინლია</span>
+                <span class="badge badge-pill bg-danger badge-primary" v-if="book.checkout">გატანილია</span>
+                <img width="130" height="180" src="@/assets/images/resource.png" />
+              </div>
               <div class="d-flex flex-column gap-2">
                 <span class="text-light"> {{ book.title }} </span>
                 <span class="text-light" v-if="book.author"> {{ "ავტორი:" + " " + book.author }} </span>
@@ -27,7 +31,7 @@
               </div>
             </div>
             <div class="d-flex flex-column gap-2" style="width:130px">
-              <button class="btn btn-primary" v-on:click="checkoutResource(book)">გატანა</button>
+              <button :disabled="book.hold || book.checkout" class="btn btn-primary" v-on:click="checkoutResource(book)">გატანა</button>
             </div>
           </div>
           <div v-if="books.length <= 0" class="alert alert-danger" role="alert">

@@ -15,6 +15,8 @@
           <div v-for="(slideItems, slideIndex) in chunkArray(section, 4)" :class="{'carousel-item': true, 'active': slideIndex === 0}" :key="slideIndex">
             <div class="d-flex flex-row gap-3">
               <div v-for="(resource, resourceIndex) in slideItems" :key="resourceIndex" class="d-flex flex-column gap-3">
+                <span class="badge badge-pill bg-danger badge-primary" style="width:46%" v-if="resource.hold">დაჯავშინლია</span>
+                <span class="badge badge-pill bg-danger badge-primary" style="width:46%" v-if="resource.checkout">გატანილია</span>
                 <div class="d-flex flex-row gap-5">
                   <img width="130" height="180" class="rounded" src="@/assets/images/resource.png" />
                 </div>
