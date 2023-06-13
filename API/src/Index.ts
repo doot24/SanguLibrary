@@ -34,3 +34,6 @@ app.use(compression());
 // Initialize app & db connection
 import { InitializeMongo } from "./inits/InitializeMongo";
 InitializeMongo(app);
+
+import { InitializeScheduler } from "./inits/initCronScheduler";
+InitializeScheduler(app);
