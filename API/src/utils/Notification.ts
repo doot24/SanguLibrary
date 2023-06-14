@@ -25,6 +25,27 @@ export function SendToUser(_id: string, author: string, title: string, text: str
     });
 }
 
+export function SendToUserSystem(_id: string, title: string, text: string): Promise<any> {
+  let notification = new Notification();
+  notification._id = randomUUID();
+  notification.author = "სისტემა";
+  notification.created = Date.now();
+  notification.title = title;
+  notification.text = text;
+
+  let meta = new NotificationMetaData();
+  meta._id = randomUUID();
+  meta.attachedNotification = notification._id;
+  meta.receiver = _id;
+
+  return new NotificationSchema(notification)
+    .save()
+    .then(() => new NotificationMetaDataSchema(meta).save())
+    .catch(() => {
+      throw new Error('Failed to save the notification and its metadata.');
+    });
+}
+
 export function SendToSystem(title: string, receiverRoles : Array<string>, text: string): Promise<void> {
   let notification = new Notification();
   notification._id = randomUUID();

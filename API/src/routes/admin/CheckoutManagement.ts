@@ -10,7 +10,7 @@ import { BookSchema } from "../../schemas/ResourceSchemas/book";
 import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
-import { SendToUser } from "../../utils/Notification";
+import { SendToUserSystem } from "../../utils/Notification";
 
 const router = Router();
 
@@ -198,7 +198,6 @@ router.post("/setcheckout", IsAuthenticated, HasRoles(["admin", "editor"]), body
       }
 
       let status : String = req.body.status;
-      let notificationAuthor : string = req.session.user.firstName + " " + req.session.user.lastName;
       
       if(status === "confirmed")
       {
@@ -214,11 +213,11 @@ router.post("/setcheckout", IsAuthenticated, HasRoles(["admin", "editor"]), body
          await new CheckoutSchema(checkout).save();
          await HoldSchema.findOneAndDelete({_id : hold._id});
         
-         SendToUser(hold.student, notificationAuthor, "გატანის განცხადება", "მასალის გატანის განცხადება დადასტურდა მობრძანდით ბიბლიოთეკაში და გაიტანეთ! ");
+         SendToUserSystem(hold.student, "გატანის განცხადება", "მასალის გატანის განცხადება დადასტურდა მობრძანდით ბიბლიოთეკაში და გაიტანეთ! ");
 
          return res.status(200).json({ status: "success" });
       }
-      SendToUser(hold.student, notificationAuthor, "გატანის განცხადება", "მასალის გატანის მოთხოვნა ვერ დადასტურდა! ");
+      SendToUserSystem(hold.student, "გატანის განცხადება", "მასალის გატანის მოთხოვნა ვერ დადასტურდა! ");
       res.status(200).json({ status: "success" });
    }
    catch (error) {
