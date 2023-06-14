@@ -6,7 +6,7 @@ export const IsAuthenticated = (req: express.Request, res: express.Response, nex
     if (req.session.user) {
       next();
     } else {
-      res.status(401).json({ status:"error" ,message: "თქვენ არ გაქვთ ჩართული შესაბამისი უფლება" }).end();
+      res.status(401).json({ status:"error" ,message: "სესიას ვადა გაუვიდა ავტორიზაცია თავიდან გაიარეთ" }).end();
     }
 };
   
