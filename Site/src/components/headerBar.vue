@@ -53,6 +53,9 @@
         <div class="modal-body" style="color: #B3B3B3;">
           <p v-html="selectedNotification.text"></p>
         </div>
+        <div class="modal-footer" style="color: #B3B3B3;">
+          <p>{{ selectedNotificationMeta.author}}</p>
+        </div>
       </div>
     </div>
   </div>

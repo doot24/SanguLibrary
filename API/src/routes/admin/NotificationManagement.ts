@@ -28,6 +28,41 @@ router.get("/", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), quer
       }
     },
     {
+      $lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: '_id',
+        as: 'authorDetails'
+      }
+    },
+    {
+      $addFields: {
+        author: {
+          $arrayElemAt: [
+            {
+              $map: {
+                input: '$authorDetails',
+                as: 'a',
+                in: {
+                  $concat: [
+                    '$$a.firstName',
+                    ' ',
+                    '$$a.lastName'
+                  ]
+                }
+              }
+            },
+            0
+          ]
+        }
+      }
+    },
+    {
+      $project: {
+        'authorDetails': 0 // Exclude the authorDetails field if desired
+      }
+    },
+    {
       $skip: startIndex
     },
     {
@@ -66,7 +101,7 @@ router.post("/createglobal", IsAuthenticated, HasRoles(["admin", "editor"]), bod
 
   let notification: Notification = new Notification();
   notification._id = randomUUID();
-  notification.author = req.session.user.firstName + " " + req.session.user.lastName;
+  notification.author = req.session.user._id;
   notification.title = req.body.title;
   notification.text = req.body.text;
 

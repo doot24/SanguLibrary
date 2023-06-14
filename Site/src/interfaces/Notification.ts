@@ -3,7 +3,13 @@ export class Notification {
     title: string = "";
     created : number = 0;
     text: string = "";
-    author: string = "";
+    author: Author = new Author;
+}
+
+export class Author
+{
+    firstName : string = "";
+    lastName : string = "";
 }
 
 export class NotificationMetaData {

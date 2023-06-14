@@ -27,46 +27,89 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
     const endDate = Date.now();
 
     // add pagination stages to the pipeline
-    let pipeline : Array<PipelineStage> = [];
+    let pipeline: Array<PipelineStage> = [];
 
-    pipeline.push({ $match: { receiver: req.session.user._id } });
-    if(req.query.read)
-    {
-        pipeline.push({ $match: { read: readStatus } });
-    }
-    pipeline.push({
-      $lookup: {
-        from: 'notifications',
-        localField: 'attachedNotification',
-        foreignField: '_id',
-        as: 'notification'
+pipeline.push({ $match: { receiver: req.session.user._id } });
+
+if (req.query.read) {
+  pipeline.push({ $match: { read: readStatus } });
+}
+
+pipeline.push({
+  $lookup: {
+    from: 'notifications',
+    localField: 'attachedNotification',
+    foreignField: '_id',
+    as: 'notification'
+  },
+});
+
+pipeline.push({
+  $lookup: {
+    from: 'users',
+    localField: 'notification.author',
+    foreignField: '_id',
+    as: 'author'
+  },
+});
+
+if (req.query.time) {
+  pipeline.push({
+    $match: {
+      'notification.created': {
+        $gte: startDate,
+        $lte: endDate
       }
-    });
-    if(req.query.time)
-    {
-        pipeline.push({
-          $match: {
-            'notification.created': {
-              $gte: startDate,
-              $lte: endDate
-            }
-          }
-        });
     }
-    pipeline.push({$sort : {'notification.created': -1}});
-    pipeline.push({ $skip: startIndex });
-    pipeline.push({ $limit: pageSize });
-    pipeline.push({
-        $facet: {
-          totalCount: [
-            { $count: 'count' }
-          ],
-          results: [
-            { $skip: startIndex },
-            { $limit: pageSize }
-          ]
+  });
+}
+
+pipeline.push({ $sort: { 'notification.created': -1 } });
+pipeline.push({ $skip: startIndex });
+pipeline.push({ $limit: pageSize });
+pipeline.push({
+  $facet: {
+    totalCount: [
+      { $count: 'count' }
+    ],
+    results: [
+      {
+        $skip: startIndex
+      },
+      {
+        $limit: pageSize
+      },
+      {
+        $addFields: {
+          author: {
+            $arrayElemAt: [
+              {
+                $map: {
+                  input: '$author',
+                  as: 'a',
+                  in: {
+                    $concat: [
+                      '$$a.firstName',
+                      ' ',
+                      '$$a.lastName'
+                    ]
+                  }
+                }
+              },
+              0
+            ]
+          }
         }
-    });
+      },
+      {
+        $project: {
+          'author._id': 0 // Exclude the _id field from the author object if desired
+        }
+      }
+    ]
+  }
+});
+
 
     // execute the aggregation pipeline with pagination stages
     NotificationMetaDataSchema.aggregate(pipeline).then((results) => {
@@ -82,8 +125,8 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
             });
         }
         const totalCount = results[0].totalCount[0].count;
-        const data = results[0].results;
-      
+        let data = results[0].results;
+
         return res.status(200).json({
           status: "success",
           notifications: data,
@@ -93,7 +136,8 @@ router.get("/", IsAuthenticated, query("page").notEmpty().isNumeric(), query("pa
           hasPreviousPage: page > 1,
           hasNextPage: endIndex < totalCount
         });
-      }).catch(() => {
+      }).catch((err) => {
+        console.error(err)
         res.status(400).json({
           status: "fail",
           message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
