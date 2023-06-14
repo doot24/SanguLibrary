@@ -11,9 +11,11 @@
       <search class="w-75 align-self-center" @cleared="onInputCleared" @search="handleSearch" />
       <!--Begin, Search Results-->
       <div v-if="showSearchResults" class="mt-4 booksSection container-fluid  p-3 rounded d-flex flex-column">
-        <div v-if="showSearchResults && petitionSent" class="alert alert-success" role="alert">
-          განცხადება გაიგზავნა!
-        </div>
+        <div v-if="showSuccess" class="alert alert-success alert-dismissible fade show w-100" role="alert">
+      <i class="bi bi-info-circle-fill"></i>
+      გატანის მოთხოვნა მიღებულია, პასუხს მიიღებთ შეტყობინების სახით.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
         <div>
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
@@ -31,7 +33,7 @@
               </div>
             </div>
             <div class="d-flex flex-column gap-2" style="width:130px">
-              <button :disabled="book.hold || book.checkout" class="btn btn-primary" v-on:click="checkoutResource(book)">გატანა</button>
+              <button :disabled="book.hold || book.checkout" class="btn btn-primary" v-on:click="checkoutResource(book)">გატანის მოთხოვნა</button>
             </div>
           </div>
           <div v-if="books.length <= 0" class="alert alert-danger" role="alert">
@@ -120,8 +122,7 @@ export default defineComponent({
       showSearchResults: false as boolean,
       hamburgerVisible: true as boolean,
       showDropdown: false as boolean,
-      petitionSent : false as boolean,
-
+      showSuccess : false as boolean,
       sections : [] as Array<Section>,
 
       books: [] as any[],
@@ -156,12 +157,11 @@ export default defineComponent({
     onInputCleared(event: any): void {
       this.books = [];
       this.showSearchResults = false;
-      this.petitionSent = false;
+      this.getSections();
     },
     searchResources(): void {
       if (this.searchInput) {
         this.isLoading = true;
-
         const params = {
           text: this.searchInput,
           page: this.page,
@@ -195,6 +195,10 @@ export default defineComponent({
           this.isLoading = false;
         });
     },
+    showhideSuccess(time: number = 10000) {
+      this.showSuccess = true;
+      setTimeout(() => { this.showSuccess = false; }, time);
+    },
     checkoutResource(resource: any): void {
       if (this.searchInput) {
         this.isLoading = true;
@@ -206,8 +210,9 @@ export default defineComponent({
         axios.post(getApiConnectionString() + '/checkouts/create', body, {
           withCredentials: true,
         }).then((results) => {
-          this.petitionSent = true;
           this.isLoading = false;
+          this.showhideSuccess();
+          this.searchResources();
         }).catch((error) => {
           this.isLoading = false;
         });
