@@ -1,9 +1,7 @@
 import { Router, Request, Response } from "express";
 import { IsAuthenticated } from "../utils/AuthGuards";
-import { CheckoutPetition } from "../interfaces/Petition";
 
 import { CheckoutSchema } from "../schemas/CheckoutSchema";
-import { CheckoutPetitionSchema } from "../schemas/PetitionSchema";
 
 import { Hold } from "../interfaces/Hold";
 import { HoldSchema } from "../schemas/HoldSchema";
@@ -11,10 +9,16 @@ import { HoldSchema } from "../schemas/HoldSchema";
 import { body, validationResult } from "express-validator";
 import { randomUUID } from "crypto";
 import { SendToSystem } from "../utils/Notification";
-
+import { ResourceType } from "../interfaces/Resources";
+import { BookSchema } from "../schemas/ResourceSchemas/book";
+import { JournalSchema } from "../schemas/ResourceSchemas/Journal";
+import { DissertationSchema } from "../schemas/ResourceSchemas/Dissertation";
+import { RiderSchema } from "../schemas/ResourceSchemas/Rider";
 const router = Router();
 
 router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("type").notEmpty(), async (req: Request, res: Response) => {
+    let errorMSG = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
+
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -22,20 +26,40 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
         }
         let checkouts: number = await CheckoutSchema.countDocuments({ student: req.session.user._id });
         if (checkouts > 3) {
-            throw new Error("limit reached");
+            errorMSG = "გატანის ლიმიტს მიწვდით";
+            throw new Error(errorMSG);
         }
 
         let result: any = await CheckoutSchema.findOne({ resource_id: req.body.resource_id });
 
         if (result) {
-            throw new Error("resource is already taken!")
+            errorMSG = "მოცემული რესურსი გატანილია";
+            throw new Error(errorMSG)
         }
 
         let holdCheck : any = await HoldSchema.findOne({resource_id : req.body.resource_id});
 
         if (holdCheck) {
-            throw new Error("resource is already reserved!")
+            errorMSG = "მოცემული რესურსი დაჯავშნილია";
+            throw new Error(errorMSG)
         }
+
+         let results : any;
+
+        switch (Number(req.body.resource_type)) {
+            case ResourceType.Book:
+                results = await BookSchema.findOne({_id:req.body.resource_id})
+               break;
+            case ResourceType.Journal:
+                results = await JournalSchema.findOne({_id:req.body.resource_id})
+               break;
+            case ResourceType.Dissertation:
+                results = await DissertationSchema.findOne({_id:req.body.resource_id})
+               break;
+            case ResourceType.Rider:
+                results = await RiderSchema.findOne({_id:req.body.resource_id})
+               break;
+         }
 
         let hold : Hold = new Hold();
         hold._id = randomUUID();
@@ -46,27 +70,12 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
         
         await new HoldSchema(hold).save();
 
-        // send petition to user
-        let checkoutPetition = new CheckoutPetition();
-        checkoutPetition._id = randomUUID();
-        checkoutPetition.timestamp = Date.now()
-        checkoutPetition.owner = req.session.user._id
-        checkoutPetition.status = "pending";
-        checkoutPetition.text = "";
-        checkoutPetition.comment = "";
-        checkoutPetition.template = "sys_checkout";
-        checkoutPetition.resource_id = String(req.body.resource_id);
-        checkoutPetition.resource_type = Number(req.body.type);
-
-        // send petition to admin/librarian
-        SendToSystem("ახალი განცხადება",["admin", "editor", "employee"],`ბიბლიოთეკაში შემოვიდა ახალი განცხადება`);
-
-        await new CheckoutPetitionSchema(checkoutPetition).save();
+        SendToSystem("ახალი გატანის მოთხოვნა",["admin", "editor", "employee"],`ბიბლიოთეკაში შემოვიდა ახალი გატანის მოთხოვნა`);
 
         res.status(200).json({ status: "success" });
     }
     catch (error) {
-        res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
+        res.status(400).json({ status: "fail", message: errorMSG });
     }
 });
 

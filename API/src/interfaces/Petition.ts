@@ -25,9 +25,3 @@ export class Petition {
     text: String = "";
     comment: String = "";
 }
-export class CheckoutPetition extends Petition implements ISystemPetition
-{
-    system : boolean = true;
-    resource_type : number = 0;
-    resource_id : string = "";
-}
