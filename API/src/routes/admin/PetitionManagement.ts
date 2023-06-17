@@ -29,6 +29,19 @@ router.post("/addtemplate", IsAuthenticated, HasRoles(["admin", "editor"]), body
   });
 });
 
+router.post("/deletetemplate", IsAuthenticated, HasRoles(["admin", "editor"]), body("id").notEmpty().isString(), (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
+  }
+
+   PetitionTemplateSchema.findOneAndDelete({_id : req.body.id}).then(() => {
+    res.status(200).json({ status: "success" });
+  }).catch(() => {
+    res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
+  });
+});
+
 router.post("/update", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), body("petitionid").notEmpty().isUUID(), (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
