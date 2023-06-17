@@ -9,6 +9,7 @@ import NotificationManagement from '../views/management/NotificationManagement.v
 import Petitions from '../views/Petitions.vue';
 import Notifications from '../views/Notifications.vue';
 import PetitionManagement from '../views/management/PetitionManagement.vue';
+import CheckoutManagement from '../views/management/CheckoutManagement.vue';
 
 import {
   isAuthenticated,
@@ -63,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/petitionsmanagement',
     component: PetitionManagement,
     beforeEnter: requireRoles(['editor', 'admin', 'employee']),
+  },
+  {
+    path: '/checkoutmanagement',
+    component: CheckoutManagement,
+    beforeEnter: requireRoles(['editor', 'admin']),
   },
 ];
 

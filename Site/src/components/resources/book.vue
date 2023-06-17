@@ -3,7 +3,7 @@
     
     <div class="d-flex flex-column gap-2">
       <img style="width: 130px;" class="rounded  shadow-sm" src="@/assets/images/resource.png">
-      <span class="badge badge-pill bg-danger badge-primary">წიგნი</span>
+      <span class="badge badge-pill bg-danger w-100 badge-primary">წიგნი</span>
     </div>
     <div class="d-flex gap-3 text-light ">
       <div>

@@ -49,6 +49,12 @@
           <span class="bi bi-app-indicator me-3 ms-1" style="font-size: 2em;"></span>
           <span class="mr-auto text-nowrap">შეტყობინებების მენეჯმენტი</span>
         </button>
+        <button @click="loadRoute('/checkoutmanagement')" v-if="userData.roles.includes('editor') || userData.roles.includes('admin')"
+          :class="{ 'selectedButton': $route.path === '/checkoutmanagement' }"
+          class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
+          <span class="bi bi-collection me-3 ms-1" style="font-size: 2em;"></span>
+          <span class="mr-auto text-nowrap">გატანის მენეჯმენტი</span>
+        </button>
         <!-- End, Editor panel -->
 
         <!-- Begin, Admin panel -->
@@ -119,6 +125,13 @@
           class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
           <span class="bi bi-app-indicator me-3 ms-3" style="font-size: 2em;"></span>
           <span class="mr-auto">შეტყობინებების მენეჯმენტი</span>
+        </button>
+
+        <button @click="loadRoute('/checkoutmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor')"
+          :class="{ 'selectedButton': $route.path === '/checkoutmanagement' }"
+          class="w-100 hamburgetButtonHover hamburgetButton menuButton d-flex align-items-center">
+          <span class="bi bi-collection me-3 ms-3" style="font-size: 2em;"></span>
+          <span class="mr-auto">გატანის მენეჯმენტი</span>
         </button>
 
         <button @click="loadRoute('/petitionsmanagement')" v-if="userData.roles.includes('admin') || userData.roles.includes('editor') || userData.roles.includes('employee')"

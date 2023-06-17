@@ -1,0 +1,139 @@
+<template>
+  <hamburger />
+  <loadingSpinner v-if="isLoading" />
+  <headerBar />
+
+  <div class="container-fluid d-flex vh-100 justify-content-center Bodybackground">
+    <div class="mt-5" style="width: 90%;">
+      <div class="d-flex gap-2 mb-4">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">
+          მასალის დაბრუნება
+        </button>
+      </div>
+      <!-- Begin, Holds -->
+      <div class="d-flex">
+        <div class="d-flex flex-column p-2 gap-2 text-light" style="background-color: rgba(61, 55, 71, 0.43);">
+          <span class="align-self-center mt-2 mb-2">რეზერვი</span>
+          <button class="btn btn-primary" @click="GetAllHolds"><i class="bi bi-arrow-clockwise"></i></button>
+          <div v-for="hold in holds" style="background-color: #3B3748;"
+            class="d-flex flex-column align-items-center">
+            <div class="d-flex p-1 gap-2">
+              <div class="d-flex flex-column">
+                <div>გატანის მოთხოვნა</div>
+                <div>{{ formatDate(hold.dateIssued) }}</div>
+              </div>
+              <button class="btn btn-primary" @click="selectedHold = hold" data-bs-toggle="modal"
+                data-bs-target="#reservationModal"><i class="bi bi-eye"></i></button>
+            </div>
+            <CheckoutConfirmation :hold="hold" />
+          </div>
+          <div v-if="holds.length === 0" class="alert alert-info fade show w-100" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            რეზერვი ცარიელია!
+          </div>
+          <!-- Begin, Pagination -->
+          <div v-if="paginationData.totalPages > 1" class="d-flex flex-row align-content-center gap-3">
+            <nav v-if="paginationData.totalPages">
+              <ul class="pagination pagination-sm gap-1">
+                <li class="page-item" v-for="index in paginationData.totalPages" :key="index">
+                  <a class="page-link" href="#" v-on:click="selectPageHolds(index)">
+                    {{ index }}
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- End, Pagination -->
+
+        </div>
+        <!-- End, Holds -->
+
+      </div>
+    </div>
+  </div>
+  <ReturnModal />
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import axios from "axios";
+
+import hamburger from "@/components/hamburger.vue";
+import loadingSpinner from "@/components/loadingSpinner.vue";
+import headerBar from "@/components/headerBar.vue";
+import texteditor from "@/components/texteditor.vue";
+
+import { getApiConnectionString } from "@/assets/js/utils";
+import ReturnModal from "@/components/checkoutmanagement/ReturnModal.vue";
+import CheckoutConfirmation from "@/components/checkoutmanagement/CheckoutConfirmation.vue";
+
+import { PaginationData } from "@/interfaces/PaginationData";
+
+export default defineComponent({
+  components: {
+    hamburger,
+    loadingSpinner,
+    headerBar,
+    texteditor,
+    ReturnModal,
+    CheckoutConfirmation
+  },
+  data() {
+    return {
+      pageHolds: 1 as number,
+      pageSizeHolds: 10 as number,
+      holds: [] as any[],
+      paginationData: {} as PaginationData,
+      selectedHold: {} as any,
+
+      successMessage: "" as string,
+      errorMessage: "" as string,
+
+      isLoading: false as boolean,
+    };
+  },
+  mounted() {
+    this.GetAllHolds();
+  },
+  methods: {
+    formatDate(timestamp: number) {
+      var d = new Date(timestamp);
+      const formattedDate = `${d.toLocaleTimeString("ka", {
+        hour12: false,
+      })} ${d.toLocaleDateString()}`; // concatenate time and date string
+      return formattedDate;
+    },
+
+    setPageSizeHolds(size: number): void {
+      this.pageSizeHolds = size;
+      this.GetAllHolds();
+    },
+    selectPageHolds(page: number): void {
+      this.pageHolds = page;
+      this.GetAllHolds();
+    },
+
+    GetAllHolds() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      const params = {
+        page: this.pageHolds,
+        pageSize: this.pageSizeHolds
+      };
+      axios.get(getApiConnectionString() + '/admin/checkoutmanagement/holds', {
+        params,
+        withCredentials: true,
+      }).then((results) => {
+        this.holds = results.data.holds;
+        this.paginationData = results.data.pagination;
+        this.isLoading = false;
+
+      }).catch((error) => {
+        this.errorMessage = error.data.message;
+        this.isLoading = false;
+      });
+    }
+  }
+});
+</script>

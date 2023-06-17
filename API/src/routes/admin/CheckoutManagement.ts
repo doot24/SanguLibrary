@@ -1,8 +1,8 @@
-import { Router, Request, Response, query } from "express";
+import { Router, Request, Response,  } from "express";
 import { HasRoles, IsAuthenticated } from "../../utils/AuthGuards";
 import { CheckoutSchema } from "../../schemas/CheckoutSchema";
 
-import { body, validationResult, check, param } from "express-validator";
+import { body, validationResult, check, query, param } from "express-validator";
 import { Checkout } from "../../interfaces/Checkout";
 import { randomUUID } from "crypto";
 
@@ -17,54 +17,6 @@ import { UserSchema } from "../../schemas/UserSchema";
 import { HoldSchema } from "../../schemas/HoldSchema";
 
 const router = Router();
-
-// used by editor to quckly create and confirm a checkout
-router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("cipher").notEmpty(), body("student").notEmpty().isUUID(), body("returnDate").notEmpty(), async (req: Request, res: Response) => {
-   var errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
-
-   try {
-
-      const bookPromise: any = await BookSchema.findOne({ saveCipher: req.body.cipher });
-      const journalPromise: any = await JournalSchema.findOne({ saveCipher: req.body.cipher });
-      const riderPromise: any = await RiderSchema.findOne({ saveCipher: req.body.cipher });
-      const dissertationPromise: any = await DissertationSchema.findOne({ saveCipher: req.body.cipher });
-
-      let resource: any = null;
-
-      if (bookPromise) {
-         resource = bookPromise;
-      } else if (journalPromise) {
-         resource = journalPromise;
-      } else if (riderPromise) {
-         resource = riderPromise;
-      } else if (dissertationPromise) {
-         resource = dissertationPromise;
-      }
-
-      let result: any = await CheckoutSchema.findOne({ resource_id: resource._id });
-
-      if (result) {
-         errorMSG = "მასალა გატანილია!";
-         throw new Error(errorMSG)
-      }
-
-      let newCheckout: Checkout = new Checkout();
-      newCheckout._id = randomUUID();
-      newCheckout.student = req.body.student;
-      newCheckout.employee = String(req.session.user._id);
-      newCheckout.dateIssued = Date.now();
-      newCheckout.returnDate = req.body.returnDate;
-      newCheckout.resource = Number(resource.resourceType);
-      newCheckout.resource_id = String(resource._id);
-
-      await new CheckoutSchema(newCheckout).save();
-
-      res.status(200).json({ status: "success" });
-   }
-   catch (error) {
-      res.status(400).json({ status: "fail", message: errorMSG });
-   }
-});
 
 router.get("/holds", IsAuthenticated, HasRoles(["admin", "editor"]), param("page").notEmpty(), param("pageSize").notEmpty(), async (req: Request, res: Response) => {
    var errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
@@ -172,96 +124,6 @@ router.get("/holds", IsAuthenticated, HasRoles(["admin", "editor"]), param("page
    }
    catch (error) {
       console.error(error)
-      res.status(400).json({ status: "fail", message: errorMSG });
-   }
-});
-
-router.get("/checkouts", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), body("publicNumber").notEmpty().isNumeric(), async (req: Request, res: Response) => {
-   let errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
-
-   try {
-
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-         errorMSG = "მოთხოვნის ფორმატი არასწორია!";
-         throw new Error(errorMSG);
-      }
-
-      const agg = [
-         {
-            $match: {
-               publicNumber: req.body.publicNumber
-            }
-         },
-         {
-            $lookup: {
-               from: 'checkouts',
-               localField: '_id',
-               foreignField: 'student',
-               as: 'checkout'
-            }
-         }
-      ];
-
-      let userResult = await UserSchema.aggregate(agg);
-      if (userResult.length === 0 || userResult[0].checkout.length === 0) {
-         errorMSG = "მომხმარებელს მასალა გატანილი არ აქვს!";
-         throw new Error(errorMSG);
-       }
-
-      let resource = userResult[0].checkout[0].resource;
-      let resourceType = Number(resource);
-
-
-      switch (resourceType) {
-         case ResourceType.Book:
-            agg.push({
-               $lookup: {
-                  from: 'books',
-                  localField: 'checkout.resource_id',
-                  foreignField: '_id',
-                  as: 'attachedResource'
-               }
-            });
-            break;
-         case ResourceType.Journal:
-            agg.push({
-               $lookup: {
-                  from: 'journals',
-                  localField: 'checkout.resource_id',
-                  foreignField: '_id',
-                  as: 'attachedResource'
-               }
-            });
-            break;
-         case ResourceType.Dissertation:
-            agg.push({
-               $lookup: {
-                  from: 'dissertations',
-                  localField: 'checkout.resource_id',
-                  foreignField: '_id',
-                  as: 'attachedResource'
-               }
-            });
-            break;
-         case ResourceType.Rider:
-            agg.push({
-               $lookup: {
-                  from: 'riders',
-                  localField: 'checkout.resource_id',
-                  foreignField: '_id',
-                  as: 'attachedResource'
-               }
-            });
-            break;
-      }
-
-      let updatedUserResult = await UserSchema.aggregate(agg);
-
-      res.status(200).json({ status: "success", result: updatedUserResult });
-   }
-   catch (err) {
       res.status(400).json({ status: "fail", message: errorMSG });
    }
 });
