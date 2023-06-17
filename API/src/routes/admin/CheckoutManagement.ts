@@ -11,6 +11,10 @@ import { JournalSchema } from "../../schemas/ResourceSchemas/Journal";
 import { RiderSchema } from "../../schemas/ResourceSchemas/Rider";
 import { DissertationSchema } from "../../schemas/ResourceSchemas/Dissertation";
 import { SendToUserSystem } from "../../utils/Notification";
+import { ResourceType } from "../../interfaces/Resources";
+import { Pagination } from "../../interfaces/Pagination";
+import { UserSchema } from "../../schemas/UserSchema";
+import { HoldSchema } from "../../schemas/HoldSchema";
 
 const router = Router();
 
@@ -62,110 +66,103 @@ router.post("/create", IsAuthenticated, HasRoles(["admin", "editor"]), body("cip
    }
 });
 
-import { ResourceType } from "../../interfaces/Resources";
-
-// used by editor check who and what is requesting
-router.get("/holdinfo", IsAuthenticated, HasRoles(["admin", "editor"]), param("holdid").notEmpty(), param("resource_type").notEmpty(), async (req: Request, res: Response) => {
-   var errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
-
-   try {
-
-      let pipeline: any = [
-         {
-            '$match':
-            {
-               "_id": req.query.holdid
-            }
-
-         },
-         {
-            '$lookup': {
-               'from': 'users',
-               'localField': 'student',
-               'foreignField': '_id',
-               'as': 'student'
-            }
-         },
-         {
-            '$lookup': {
-               'from': 'checkouts',
-               'localField': 'student',
-               'foreignField': 'student',
-               'as': 'checkoutHistory'
-            }
-         }
-      ]
-
-      switch (Number(req.query.resource_type)) {
-         case ResourceType.Book:
-            pipeline.push({
-               '$lookup': {
-                  'from': 'books',
-                  'localField': 'resource_id',
-                  'foreignField': '_id',
-                  'as': 'requestedResource'
-               }
-            },)
-            break;
-         case ResourceType.Journal:
-            pipeline.push({
-               '$lookup': {
-                  'from': 'journals',
-                  'localField': 'resource_id',
-                  'foreignField': '_id',
-                  'as': 'requestedResource'
-               }
-            },)
-            break;
-         case ResourceType.Dissertation:
-            pipeline.push({
-               '$lookup': {
-                  'from': 'dissertations',
-                  'localField': 'resource_id',
-                  'foreignField': '_id',
-                  'as': 'requestedResource'
-               }
-            },)
-            break;
-         case ResourceType.Rider:
-            pipeline.push({
-               '$lookup': {
-                  'from': 'riders',
-                  'localField': 'resource_id',
-                  'foreignField': '_id',
-                  'as': 'requestedResource'
-               }
-            },)
-            break;
-      }
-      pipeline.push({
-         '$match': {
-            'requestedResource': {
-               '$ne': []
-            }
-         }
-      });
-      let holdInfo: any = await HoldSchema.aggregate(pipeline);
-      res.status(200).json({ status: "success", holdInfo });
-   }
-   catch (error) {
-      res.status(400).json({ status: "fail", message: errorMSG });
-   }
-});
-
-import { Pagination } from "../../interfaces/Pagination";
 router.get("/holds", IsAuthenticated, HasRoles(["admin", "editor"]), param("page").notEmpty(), param("pageSize").notEmpty(), async (req: Request, res: Response) => {
    var errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
    const { page, pageSize }: any = req.query;
 
    try {
 
-      let holds: any = await HoldSchema.find();
+      let agg = [
+         {
+            '$match': { }
+          },
+         {
+           '$lookup': {
+             'from': 'users',
+             'localField': 'student',
+             'foreignField': '_id',
+             'as': 'studentInfo'
+           }
+         },
+         {
+           '$lookup': {
+             'from': 'checkouts',
+             'localField': 'student',
+             'foreignField': 'student',
+             'as': 'checkoutHistory'
+           }
+         },
+         {
+           '$lookup': {
+             'from': 'journals',
+             'let': { 'resource_id': '$resource_id' },
+             'pipeline': [
+               { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+             ],
+             'as': 'journalResources'
+           }
+         },
+         {
+           '$lookup': {
+             'from': 'books',
+             'let': { 'resource_id': '$resource_id' },
+             'pipeline': [
+               { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+             ],
+             'as': 'bookResources'
+           }
+         },
+         {
+           '$lookup': {
+             'from': 'dissertations',
+             'let': { 'resource_id': '$resource_id' },
+             'pipeline': [
+               { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+             ],
+             'as': 'dissertationResources'
+           }
+         },
+         {
+           '$lookup': {
+             'from': 'riders',
+             'let': { 'resource_id': '$resource_id' },
+             'pipeline': [
+               { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+             ],
+             'as': 'riderResources'
+           }
+         },
+         {
+            '$addFields': {
+              'attachedResource': {
+                '$concatArrays': [
+                  '$journalResources',
+                  '$bookResources',
+                  '$dissertationResources',
+                  '$riderResources'
+                ]
+              }
+            }
+          },
+          {
+            '$project': {
+              'journalResources': 0,
+              'bookResources': 0,
+              'dissertationResources': 0,
+              'riderResources': 0
+            }
+          }
+       ];
+       
+       
+       
+      let holds: any = await HoldSchema.aggregate(agg);
+
       const totalResults = holds.length;
       const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       const paginatedResults = holds.slice(startIndex, endIndex);
-
+      
       const pagination: Pagination = {
          totalPages: Math.ceil(totalResults / pageSize),
          currentPage: page,
@@ -174,13 +171,12 @@ router.get("/holds", IsAuthenticated, HasRoles(["admin", "editor"]), param("page
       res.status(200).json({ status: "success", holds: paginatedResults, pagination });
    }
    catch (error) {
+      console.error(error)
       res.status(400).json({ status: "fail", message: errorMSG });
    }
 });
 
-import { UserSchema } from "../../schemas/UserSchema";
-
-router.get("/checkout", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), body("publicNumber").notEmpty().isNumeric(), async (req: Request, res: Response) => {
+router.get("/checkouts", IsAuthenticated, HasRoles(["admin", "editor", "employee"]), body("publicNumber").notEmpty().isNumeric(), async (req: Request, res: Response) => {
    let errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
 
    try {
@@ -269,8 +265,6 @@ router.get("/checkout", IsAuthenticated, HasRoles(["admin", "editor", "employee"
       res.status(400).json({ status: "fail", message: errorMSG });
    }
 });
-
-import { HoldSchema } from "../../schemas/HoldSchema";
 
 router.post("/setcheckout", IsAuthenticated, HasRoles(["admin", "editor"]), body("holdid").notEmpty(), body("resource_type").notEmpty(), body("status").notEmpty(), body("returnDate").notEmpty(), async (req: Request, res: Response) => {
    let errorMSG = "მოთხოვნის დამუშავება ვერ მოხერხდა!"
