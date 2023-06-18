@@ -16,6 +16,11 @@
       გატანის მოთხოვნა მიღებულია, პასუხს მიიღებთ შეტყობინების სახით.
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+      <i class="bi bi-info-circle-fill"></i>
+      {{ errorMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
         <div>
           <div v-for="(book) in books" class="d-flex align-self-center flex-column gap-2">
             <div class="d-flex flex-row gap-2 mt-3">
@@ -117,6 +122,7 @@ export default defineComponent({
       pageSize: 10 as number,
 
       searchInput: '' as string,
+      errorMessage: '' as string,
 
       isLoading: false as boolean,
       showSearchResults: false as boolean,
@@ -157,9 +163,13 @@ export default defineComponent({
     onInputCleared(event: any): void {
       this.books = [];
       this.showSearchResults = false;
+      this.errorMessage = '';
+      this.showSuccess = false;
       this.getSections();
     },
     searchResources(): void {
+      this.errorMessage = '';
+
       if (this.searchInput) {
         this.isLoading = true;
         const params = {
@@ -179,6 +189,7 @@ export default defineComponent({
                   
         }).catch((error) => {
           this.isLoading = false;
+          this.errorMessage = error.response.data.message;
         });
       }
     },
@@ -193,6 +204,8 @@ export default defineComponent({
                   
         }).catch((error) => {
           this.isLoading = false;
+          this.errorMessage = error.response.data.message;
+
         });
     },
     showhideSuccess(time: number = 10000) {
@@ -200,6 +213,7 @@ export default defineComponent({
       setTimeout(() => { this.showSuccess = false; }, time);
     },
     checkoutResource(resource: any): void {
+      this.errorMessage = '';
       if (this.searchInput) {
         this.isLoading = true;
 
@@ -215,6 +229,7 @@ export default defineComponent({
           this.searchResources();
         }).catch((error) => {
           this.isLoading = false;
+          this.errorMessage = error.response.data.message;
         });
       }
     }

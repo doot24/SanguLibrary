@@ -5,19 +5,9 @@
     data-bs-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog  modal-xl modal-dialog-centered">
       <div class="modal-content">
-        <div v-if="errorMessage" class="d-flex flex-column align-items-center">
-          <div class="alert d-flex align-items-center w-100 alert-danger" role="alert">
-            <i class="p-1 bi bi-info-circle-fill"></i>
-            {{ errorMessage }}
-          </div>
-          <div v-if="showSuccess" class="alert alert-success fade show w-100" role="alert">
-            <i class="bi bi-info-circle-fill"></i>
-            მოთხოვნა წარმატებით შესრულდა!
-          </div>
-        </div>
         <div class="modal-header">
           <h5 class="modal-title" id="reservationModalLabel">რეზერვის ნახვა</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="returnDate = ''"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="ClearInput"></button>
         </div>
         <div class="d-flex gap-2  p-3">
           <div class="modal-body  bg-light border">
@@ -84,9 +74,9 @@
         </div>
 
         <div class="modal-footer justify-content-center flex-column">
-          <button v-bind:disabled="!returnDate" type="button" class="btn btn-secondary  w-25"
-            @click="SetCheckout('confirmed', hold); returnDate = ''">გატანის დადასტურება</button>
-          <button v-bind:disabled="!returnDate" type="button" class="btn btn-danger  w-25"
+          <button :disabled="!CanSubmit" type="button" class="btn btn-secondary  w-25"
+            @click="SetCheckout('confirmed', hold);">გატანის დადასტურება</button>
+          <button v-bind:disabled="pressed" type="button" class="btn btn-danger  w-25"
             @click="SetCheckout('rejected',hold);">გატანის უარყოფა</button>
         </div>
       </div>
@@ -109,16 +99,29 @@ export default defineComponent({
   props: {
     hold: Object
   },
+  emits: ['checkout-pressed', 'close-pressed'],
   data() {
     return {
       saveCipher: "" as String,
       isLoading: false as boolean,
       returnDate: "" as String,
-
-      showSuccess: false as boolean,
-      errorMessage: "" as string,
+      pressed : false as boolean
     }
   },
+  computed: {
+  CanSubmit() {
+    if (this.pressed) {
+      return false;
+    }
+
+    if (!this.returnDate) {
+      return false;
+    }
+
+    return true;
+  },
+},
+
   methods: {
     convertToUnixTimestamp(dateString: string) {
       const date = new Date(dateString);
@@ -126,7 +129,6 @@ export default defineComponent({
 
       return unixTimestampMs;
     },
-
     GetType(type: number): String {
       let value: string = "";
       switch (type) {
@@ -146,9 +148,7 @@ export default defineComponent({
       return value;
     },
     SetCheckout(status: String, hold: any): void {
-      this.showSuccess = false;
-      this.errorMessage = "";
-
+      this.pressed = true;
       let time = this.convertToUnixTimestamp(String(this.returnDate));
       const body = {
         holdid: hold._id,
@@ -168,17 +168,19 @@ export default defineComponent({
         )
         .then((results) => {
           this.isLoading = false;
-          this.showSuccess = true;
+          this.$emit('checkout-pressed', true, "მოთხოვნა წარმატებით შესრულდა.");
         })
         .catch((error) => {
-          this.errorMessage = error.response.data.message;
           this.isLoading = false;
+          this.pressed = false;
+          this.$emit('checkout-pressed', false, error.response.data.message);
         });
     },
     ClearInput(): void {
+      this.$emit('close-pressed');
       this.saveCipher = "";
-      this.showSuccess = false;
-      this.errorMessage = "";
+      this.returnDate = "";
+      this.pressed = false;
     }
   }
 });

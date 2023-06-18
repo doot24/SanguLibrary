@@ -397,8 +397,6 @@ export default defineComponent({
           this.isLoading = false;
         });
     },
-
-
     GetAllResources() {
       this.isLoading = true;
       this.errorMessage = "";

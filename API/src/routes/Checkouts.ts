@@ -25,22 +25,30 @@ router.post("/create", IsAuthenticated, body("resource_id").notEmpty(), body("ty
             return res.status(400).json({ status: "error", message: "მოთხოვნის ფორმატი არასწორია!" });
         }
         let checkouts: number = await CheckoutSchema.countDocuments({ student: req.session.user._id });
-        if (checkouts > 3) {
-            errorMSG = "გატანის ლიმიტს მიწვდით";
+        let holds: number = await HoldSchema.countDocuments({ student: req.session.user._id });
+
+        if(holds === 1)
+        {
+            errorMSG = "დაჯავშნის ლიმიტს მიწვდით!";
+            throw new Error(errorMSG);
+        }
+
+        if (checkouts === 3) {
+            errorMSG = "გატანის ლიმიტს მიწვდით!";
             throw new Error(errorMSG);
         }
 
         let result: any = await CheckoutSchema.findOne({ resource_id: req.body.resource_id });
 
         if (result) {
-            errorMSG = "მოცემული რესურსი გატანილია";
+            errorMSG = "მოცემული რესურსი გატანილია!";
             throw new Error(errorMSG)
         }
 
         let holdCheck : any = await HoldSchema.findOne({resource_id : req.body.resource_id});
 
         if (holdCheck) {
-            errorMSG = "მოცემული რესურსი დაჯავშნილია";
+            errorMSG = "მოცემული რესურსი დაჯავშნილია!";
             throw new Error(errorMSG)
         }
 

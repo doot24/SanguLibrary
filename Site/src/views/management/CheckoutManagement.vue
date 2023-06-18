@@ -5,6 +5,18 @@
 
   <div class="container-fluid d-flex vh-100 justify-content-center Bodybackground">
     <div class="mt-5" style="width: 90%;">
+      <div v-if="errorMessage" class="alert d-flex align-items-center gap-2 w-100 alert-danger" role="alert">
+        <i class="p-1 bi bi-info-circle-fill"></i>
+        {{ errorMessage }}
+        <button type="button" class="btn-close align-self-end" data-bs-dismiss="alert" @click="errorMessage = ''"
+          style="margin-left: auto;" aria-label="Close"></button>
+      </div>
+      <div v-if="successMessage" class="alert d-flex alert-success gap-2 fade show w-100" role="alert">
+        <i class="bi bi-info-circle-fill"></i>
+        {{ successMessage }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" @click="successMessage = ''" aria-label="Close"
+          style="margin-left: auto;"></button>
+      </div>
       <div class="d-flex gap-2 mb-4">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">
           მასალის დაბრუნება
@@ -15,9 +27,8 @@
         <div class="d-flex flex-column p-2 gap-2 text-light" style="background-color: rgba(61, 55, 71, 0.43);">
           <span class="align-self-center mt-2 mb-2">რეზერვი</span>
           <button class="btn btn-primary" @click="GetAllHolds"><i class="bi bi-arrow-clockwise"></i></button>
-          <div v-for="hold in holds" style="background-color: #3B3748;"
-            class="d-flex flex-column align-items-center">
-            <div class="d-flex p-1 gap-2">
+          <div v-for="hold in holds" style="background-color: #3B3748;" class="d-flex flex-column align-items-center">
+            <div class="d-flex p-2 gap-2">
               <div class="d-flex flex-column">
                 <div>გატანის მოთხოვნა</div>
                 <div>{{ formatDate(hold.dateIssued) }}</div>
@@ -25,7 +36,7 @@
               <button class="btn btn-primary" @click="selectedHold = hold" data-bs-toggle="modal"
                 data-bs-target="#reservationModal"><i class="bi bi-eye"></i></button>
             </div>
-            <CheckoutConfirmation :hold="hold" />
+            <CheckoutConfirmation :hold="hold" @checkout-pressed="OnCheckoutPressed" @close-pressed="onCheckoutClosed" />
           </div>
           <div v-if="holds.length === 0" class="alert alert-info fade show w-100" role="alert">
             <i class="bi bi-info-circle-fill"></i>
@@ -51,7 +62,7 @@
       </div>
     </div>
   </div>
-  <ReturnModal />
+  <ReturnModal @return-pressed="OnReturnPressed" />
 </template>
 
 <script lang="ts">
@@ -100,10 +111,18 @@ export default defineComponent({
       var d = new Date(timestamp);
       const formattedDate = `${d.toLocaleTimeString("ka", {
         hour12: false,
-      })} ${d.toLocaleDateString()}`; // concatenate time and date string
+      })} ${d.toLocaleDateString()}`;
       return formattedDate;
     },
-
+    OnReturnPressed(success : boolean, message : string)
+    {
+      if (success) {
+        this.successMessage = message;
+      }
+      else {
+        this.errorMessage = message;
+      }
+    },
     setPageSizeHolds(size: number): void {
       this.pageSizeHolds = size;
       this.GetAllHolds();
@@ -112,7 +131,6 @@ export default defineComponent({
       this.pageHolds = page;
       this.GetAllHolds();
     },
-
     GetAllHolds() {
       this.isLoading = true;
       this.errorMessage = "";
@@ -130,9 +148,20 @@ export default defineComponent({
         this.isLoading = false;
 
       }).catch((error) => {
-        this.errorMessage = error.data.message;
+        this.errorMessage = error.response.data.message;
         this.isLoading = false;
       });
+    },
+    OnCheckoutPressed(success: boolean, message: string) {
+      if (success) {
+        this.successMessage = message;
+      }
+      else {
+        this.errorMessage = message;
+      }
+    },
+    onCheckoutClosed() {
+      this.GetAllHolds();
     }
   }
 });

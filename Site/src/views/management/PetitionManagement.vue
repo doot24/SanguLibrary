@@ -23,6 +23,8 @@
       <div class="d-flex justify-content-end mb-2 mt-2">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> ახალი განცხადების სახე
         </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#displayTemplates"> განცხადებების ნიმუშები
+        </button>
       </div>
       <div class="rounded table-responsive">
         <table class="table table-borderless table-default">
@@ -198,11 +200,31 @@
           </div>
         </div>
       </div>
-    </div>
+     </div>
     <!-- End, add template modal -->
 
-
-  </div>
+    <div class="modal fade" id="displayTemplates" tabindex="-1" role="dialog" data-bs-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">განცხადების ნიმუშები</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+          </div>
+          <div class="modal-body">
+            <div v-for="template in templates" :key="template.id" class="card mt-2">
+              <h5 class="card-title p-3 border" v-html="template.title"></h5>
+              <div class="card-body">
+                <p class="card-text" v-html="template.text"></p>
+              </div>
+              <button type="button" class="btn btn-danger" @click="deletePetitionTempate(template._id)">
+                <i class="bi bi-trash-fill"></i> 
+              </button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <style scoped>
@@ -290,6 +312,8 @@ export default defineComponent({
       templateTitle: '' as string,
       templateText: '' as string,
 
+      templates : [] as any,
+
       options: [{ Label: 'პირადი ნომერი', Value: 'publicNumber' }, { Label: 'მობილური ნომერი', Value: 'phoneNumber' }] as SearchOptions[],
       searchInput: '' as string,
       selectedOption: "publicNumber" as string,
@@ -297,7 +321,8 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.getRecentPetitions()
+    this.getRecentPetitions();
+    this.loadTemplates();
   },
   watch: {
     searchInput(newValue): void {
@@ -340,6 +365,19 @@ export default defineComponent({
     },
 
     // CRUD
+    loadTemplates(): void {
+      this.isLoading = true;
+      axios.get(getApiConnectionString() + '/petitions/templates', {
+        withCredentials: true,
+      }).then((results) => {
+        this.isLoading = false;
+        this.templates = results.data.templates.filter((template: { system: boolean }) => !template.system);
+        console.log(this.templates)
+      }).catch(() => {
+        this.isLoading = false;
+      })
+
+    },
     getRecentPetitions(): void {
       const params = {
         page: this.page,
@@ -375,6 +413,28 @@ export default defineComponent({
 
         this.isLoading = false;
         this.clearTemplateInputs();
+        this.loadTemplates();
+
+      }).catch((error) => {
+        this.errorMessage = error.response.data.message;
+        this.isLoading = false;
+      })
+    },
+    deletePetitionTempate(id : string): void {
+      this.isLoading = true;
+
+      this.successMessage = '';
+      this.errorMessage = '';
+
+      axios.post(getApiConnectionString() + '/admin/petitionmanagement/deletetemplate', {
+        id: id,
+      }, {
+        withCredentials: true,
+      }).then((results) => {
+        this.showhideSuccess('განცხადების ნიმუში წარმატებით წაიშალა!');
+        this.getRecentPetitions();
+        this.loadTemplates();
+        this.isLoading = false;
       }).catch((error) => {
         this.errorMessage = error.response.data.message;
         this.isLoading = false;

@@ -163,6 +163,7 @@ router.post("/setcheckout", IsAuthenticated, HasRoles(["admin", "editor"]), body
 
          return res.status(200).json({ status: "success" });
       }
+      await HoldSchema.findOneAndDelete({_id : req.body.holdid});
       SendToUserSystem(hold.student, "გატანის განცხადება", "მასალის გატანის მოთხოვნა ვერ დადასტურდა! ");
       res.status(200).json({ status: "success" });
    }

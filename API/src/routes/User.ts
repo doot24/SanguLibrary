@@ -95,11 +95,10 @@ router.get("/checkouts", IsAuthenticated, async (req: Request, res: Response) =>
           ];
 
           let checkouts : any = await CheckoutSchema.aggregate(agg);
-          res.status(400).json({ status: "success", checkouts });
+          res.status(200).json({ status: "success", checkouts });
     }
     catch(error)
     {
-        console.log(error)
         res.status(400).json({ status: "fail", message: "მოთხოვნის დამუშავება ვერ მოხერხდა!" });
     }
     // CheckoutSchema.find({student : req.session.user._id}).then((Result) => {
