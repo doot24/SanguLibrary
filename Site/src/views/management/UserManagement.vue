@@ -37,8 +37,6 @@
               <th scope="col" class="text-center" style="width: 10%;">პირადი ნომერი</th>
               <th scope="col" class="text-center" style="width: 10%;">მობილურის ნომერი</th>
               <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">როლები</th>
-              <th v-if="userData.roles.includes('admin')" scope="col" class="text-center" style="width: 10%;">ქმედებები
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -70,12 +68,6 @@
                   <input class="form-check-input" :checked="user.roles.includes('employee')"
                     v-on:click="addRemoveRoleValue(user, 'employee')" type="checkbox" id="flexSwitchCheckDefault">
                   <label class="form-check-label" for="flexSwitchCheckDefault">თანამშრომელი</label>
-                </div>
-              </td>
-              <td v-if="userData.roles.includes('admin')">
-                <div class="d-flex justify-content-center align-content-center gap-2">
-                  <button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-light bi bi-trash3-fill"
-                    v-on:click="selectedUser = user"></button>
                 </div>
               </td>
             </tr>
@@ -112,37 +104,6 @@
       </div>
       <!-- End, Pagination -->
     </div>
-
-    <!-- Begin, Delete Modal -->
-    <div class="modal fade " id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog " role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-
-            <h5 class="modal-title">გსურთ ამ მომხმარებლის წაშლა?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="form-check">
-              <input v-model="confirmedDelete" class="form-check-input" type="checkbox">
-              <label class="form-check-label" for="confirmDelete">
-                დადასტურება
-              </label>
-            </div>
-          </div>
-          <div class="modal-footer">
-
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              v-on:click="confirmedDelete = false">არა</button>
-            <button :disabled="!confirmedDelete" type="button" class="btn btn-dark" data-bs-dismiss="modal"
-              v-on:click="deleteUser(); confirmedDelete = false">დიახ</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End, Delete Modal -->
-
   </div>
 </template>
 
@@ -324,21 +285,6 @@ export default defineComponent({
         this.loadUser();
       }).catch((error) => {
         this.errorMessage = error.response.data.message;
-        this.isLoading = false;
-      })
-    },
-
-    deleteUser(): void {
-      this.isLoading = true;
-
-      axios.post(getApiConnectionString() + '/admin/usermanagement/delete', { _id: this.selectedUser?._id }, { withCredentials: true },).then(() => {
-        this.isLoading = false;
-        this.selectedUser = null;
-        this.showhideSuccess("მომხმარებელის წარმატებით წაიშალა!");
-        this.loadUser();
-      }).catch((error) => {
-        this.errorMessage = error.response.data.message;
-        
         this.isLoading = false;
       })
     }
