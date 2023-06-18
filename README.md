@@ -1,6 +1,7 @@
 # SanguLibrary
 
 Library Management System developed using Vue, MongoDB and Express. It offers a user-friendly interface to efficiently manage and organize library resources, including books, magazines, and journals. 
+created for Saint Andrews Georgian University.
 
 # Features
 * User Authentication: Users can register and log in to the system, granting them access to its features. 🔒
@@ -8,11 +9,12 @@ Library Management System developed using Vue, MongoDB and Express. It offers a 
 * Book Management: Users can easily add, edit, and delete books within the library. 👓
 * Search and Filtering: Users can search for books based on title, author, or category. 🔍
 * Borrowing and Returning Books: Users can borrow books from the library and return them once they are finished. 📙
+* Comprehensive notification system designed to allow effective communication between users and library staff. 🔔
 * Support for Light and Dark modes 🌗
 
 # Project Authors
 * Mariam Dokhnadze
-* Akaki Khurtsidze
+* [Akaki Khurtsidze](https://www.linkedin.com/in/akaki-khurtsidze-a80425251/)
 * Mate Askilashvili
 
 ![Screenshot 2023-06-12 014623](https://github.com/doot24/SanguLibrary/assets/46562098/597312e7-f24b-4a73-960d-fe65dff32117)
