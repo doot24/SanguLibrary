@@ -80,9 +80,10 @@ router.get('/resource/', IsAuthenticated, query("text").notEmpty().isString(), q
 
     res.status(200).json({ searchResults: paginatedResults, pagination });
   } catch (error) {
-    
-    res.status(500).json({ message: 'An error occurred while searching.' });
-  }
+    res.status(400).json({
+      status: "fail",
+      message: "მოთხოვნის დამუშავება ვერ მოხერხდა!"
+    });  }
 });
 
 export default router;
