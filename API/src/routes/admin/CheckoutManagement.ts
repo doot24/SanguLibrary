@@ -128,6 +128,122 @@ router.get("/holds", IsAuthenticated, HasRoles(["admin", "editor"]), param("page
    }
 });
 
+router.get("/checkouts", IsAuthenticated, HasRoles(["admin", "editor"]), param("page").notEmpty(), param("pageSize").notEmpty(), async (req: Request, res: Response) => {
+  var errorMSG: string = "მოთხოვნის დამუშავება ვერ მოხერხდა!";
+  const { page, pageSize }: any = req.query;
+
+  try {
+
+     let agg = [
+        {
+          '$lookup': {
+            'from': 'users',
+            'localField': 'student',
+            'foreignField': '_id',
+            'as': 'studentInfo'
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'users',
+            'localField': 'employee',
+            'foreignField': '_id',
+            'as': 'employeeInfo'
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'journals',
+            'let': { 'resource_id': '$resource_id' },
+            'pipeline': [
+              { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+            ],
+            'as': 'journalResources'
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'books',
+            'let': { 'resource_id': '$resource_id' },
+            'pipeline': [
+              { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+            ],
+            'as': 'bookResources'
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'dissertations',
+            'let': { 'resource_id': '$resource_id' },
+            'pipeline': [
+              { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+            ],
+            'as': 'dissertationResources'
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'riders',
+            'let': { 'resource_id': '$resource_id' },
+            'pipeline': [
+              { '$match': { '$expr': { '$eq': ['$_id', '$$resource_id'] } } }
+            ],
+            'as': 'riderResources'
+          }
+        },
+        {
+           '$addFields': {
+             'attachedResource': {
+               '$concatArrays': [
+                 '$journalResources',
+                 '$bookResources',
+                 '$dissertationResources',
+                 '$riderResources'
+               ]
+             }
+           }
+         },
+         {
+           '$project': {
+             'journalResources': 0,
+             'bookResources': 0,
+             'dissertationResources': 0,
+             'riderResources': 0,
+             'employee':0,
+             'student':0,
+             'resource':0,
+             'resource_id':0,
+             '__v0':0,
+             'studentInfo.roles':0,
+             'studentInfo.__v0':0,
+             'employeeInfo.roles':0,
+             'employeeInfo.__v0':0
+           }
+         }
+      ];
+      
+      
+      
+     let holds: any = await CheckoutSchema.aggregate(agg);
+
+     const totalResults = holds.length;
+     const startIndex = (page - 1) * pageSize;
+     const endIndex = startIndex + pageSize;
+     const paginatedResults = holds.slice(startIndex, endIndex);
+     
+     const pagination: Pagination = {
+        totalPages: Math.ceil(totalResults / pageSize),
+        currentPage: page,
+     };
+
+     res.status(200).json({ status: "success", checkouts: paginatedResults, pagination });
+  }
+  catch (error) {
+     console.error(error)
+     res.status(400).json({ status: "fail", message: errorMSG });
+  }
+});
+
 router.post("/setcheckout", IsAuthenticated, HasRoles(["admin", "editor"]), body("holdid").notEmpty(), body("resource_type").notEmpty(), body("status").notEmpty(), body("returnDate").notEmpty(), async (req: Request, res: Response) => {
    let errorMSG = "მოთხოვნის დამუშავება ვერ მოხერხდა!"
    try {

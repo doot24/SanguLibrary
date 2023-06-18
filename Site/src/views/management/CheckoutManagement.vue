@@ -23,8 +23,8 @@
         </button>
       </div>
       <!-- Begin, Holds -->
-      <div class="d-flex">
-        <div class="d-flex flex-column p-2 gap-2 text-light" style="background-color: rgba(61, 55, 71, 0.43);">
+      <div class="d-flex gap-3">
+        <div class="d-flex flex-column w-50 p-2 gap-2 text-light" style="background-color: rgba(61, 55, 71, 0.43);">
           <span class="align-self-center mt-2 mb-2">რეზერვი</span>
           <button class="btn btn-primary" @click="GetAllHolds"><i class="bi bi-arrow-clockwise"></i></button>
           <div v-for="hold in holds" style="background-color: #3B3748;" class="d-flex flex-column align-items-center">
@@ -59,8 +59,50 @@
         </div>
         <!-- End, Holds -->
 
+
+
+        <!-- Begin, Checkouts -->
+        <div class="d-flex flex-column w-50 p-2 gap-2 text-light" style="background-color: rgba(61, 55, 71, 0.43);">
+          <span class="align-self-center mt-2 mb-2">გატანილი მასალა</span>
+          <button class="btn btn-primary" @click="GetAllCheckouts"><i class="bi bi-arrow-clockwise"></i></button>
+          <div v-for="checkout in checkouts" class="card mb-3" style="background-color: #3B3748;">
+            <span v-if="ReturnLate(checkout)" class="badge badge-primary bg-danger">დაბრუნება დროა!</span>
+            <div class="card-body">
+
+              <h5 class="card-title">სათაური: {{ checkout.attachedResource[0].title }}</h5>
+              <p class="card-text">შენახვის შიფრი: {{ checkout.attachedResource[0].saveCipher }}</p>
+              <hr>
+              <p class="card-text">გაცემის თარიღი: {{ formatDate(checkout.dateIssued) }}</p>
+              <p class="card-text">დაბრუნების თარიღი: {{ formatDate(checkout.returnDate) }}</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal"
+              data-bs-target="#viewCheckout"><i class="bi bi-eye"></i></button>
+              <ViewCheckout :checkout="checkout"/>
+          </div>
+
+          <div v-if="checkouts.length === 0" class="alert alert-info fade show w-100" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            გატანები ცარიელია!
+          </div>
+          <!-- Begin, Pagination -->
+          <div v-if="paginationDataCheckouts.totalPages > 1" class="d-flex flex-row align-content-center gap-3">
+            <nav v-if="paginationDataCheckouts.totalPages">
+              <ul class="pagination pagination-sm gap-1">
+                <li class="page-item" v-for="index in paginationDataCheckouts.totalPages" :key="index">
+                  <a class="page-link" href="#" v-on:click="setPageSizeCheckouts(index)">
+                    {{ index }}
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- End, Pagination -->
+        </div>
+        <!-- End, Checkouts -->
+
       </div>
     </div>
+
   </div>
   <ReturnModal @return-pressed="OnReturnPressed" />
 </template>
@@ -77,6 +119,7 @@ import texteditor from "@/components/texteditor.vue";
 import { getApiConnectionString } from "@/assets/js/utils";
 import ReturnModal from "@/components/checkoutmanagement/ReturnModal.vue";
 import CheckoutConfirmation from "@/components/checkoutmanagement/CheckoutConfirmation.vue";
+import ViewCheckout from "@/components/checkoutmanagement/ViewCheckout.vue";
 
 import { PaginationData } from "@/interfaces/PaginationData";
 
@@ -87,15 +130,25 @@ export default defineComponent({
     headerBar,
     texteditor,
     ReturnModal,
-    CheckoutConfirmation
+    CheckoutConfirmation,
+    ViewCheckout
   },
   data() {
     return {
       pageHolds: 1 as number,
       pageSizeHolds: 10 as number,
+
+      pageCheckouts: 1 as number,
+      pageSizeCheckouts: 10 as number,
+
       holds: [] as any[],
+      checkouts: [] as any[],
+
       paginationData: {} as PaginationData,
+      paginationDataCheckouts: {} as PaginationData,
+
       selectedHold: {} as any,
+      selectedCheckout: {} as any,
 
       successMessage: "" as string,
       errorMessage: "" as string,
@@ -105,6 +158,7 @@ export default defineComponent({
   },
   mounted() {
     this.GetAllHolds();
+    this.GetAllCheckouts();
   },
   methods: {
     formatDate(timestamp: number) {
@@ -114,14 +168,18 @@ export default defineComponent({
       })} ${d.toLocaleDateString()}`;
       return formattedDate;
     },
-    OnReturnPressed(success : boolean, message : string)
+    ReturnLate(resource : any)
     {
+      return (Date.now() >= Number(resource.returnDate));
+    },
+    OnReturnPressed(success: boolean, message: string) {
       if (success) {
         this.successMessage = message;
       }
       else {
         this.errorMessage = message;
       }
+      this.GetAllCheckouts();
     },
     setPageSizeHolds(size: number): void {
       this.pageSizeHolds = size;
@@ -129,6 +187,14 @@ export default defineComponent({
     },
     selectPageHolds(page: number): void {
       this.pageHolds = page;
+      this.GetAllHolds();
+    },
+    setPageSizeCheckouts(size: number): void {
+      this.pageSizeCheckouts = size;
+      this.GetAllHolds();
+    },
+    selectPageCheckouts(page: number): void {
+      this.pageCheckouts = page;
       this.GetAllHolds();
     },
     GetAllHolds() {
@@ -148,7 +214,28 @@ export default defineComponent({
         this.isLoading = false;
 
       }).catch((error) => {
-        this.errorMessage = error.response.data.message;
+        this.errorMessage = error.response.message;
+        this.isLoading = false;
+      });
+    },
+    GetAllCheckouts() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      const params = {
+        page: this.pageCheckouts,
+        pageSize: this.pageSizeCheckouts
+      };
+      axios.get(getApiConnectionString() + '/admin/checkoutmanagement/checkouts', {
+        params,
+        withCredentials: true,
+      }).then((results) => {
+        this.checkouts = results.data.checkouts;
+        this.paginationDataCheckouts = results.data.pagination;
+        this.isLoading = false;
+
+      }).catch((error) => {
+        this.errorMessage = error.response.message;
         this.isLoading = false;
       });
     },
