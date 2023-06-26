@@ -37,7 +37,9 @@ router.get("/sections", IsAuthenticated,  async (req: Request, res: Response) =>
           {
             $project : {
               "hold_info":0,
-              "checkout_info":0
+              "checkout_info":0,
+              "resourceMeta":0,
+              "__v":0,
             }
           }];
 

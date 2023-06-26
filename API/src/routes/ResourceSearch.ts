@@ -59,7 +59,9 @@ router.get('/resource/', IsAuthenticated, query("text").notEmpty().isString(), q
           {
             $project : {
               "hold_info":0,
-              "checkout_info":0
+              "checkout_info":0,
+              "resourceMeta":0,
+              "__v":0
             }
           }
         ]

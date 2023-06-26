@@ -95,7 +95,13 @@ router.get("/checkouts", IsAuthenticated, async (req: Request, res: Response) =>
                  'journalResources': 0,
                  'bookResources': 0,
                  'dissertationResources': 0,
-                 'riderResources': 0
+                 'riderResources': 0,
+                 '__v': 0,
+                 'attachedResource.resourceMeta': 0,
+                 'attachedResource._id': 0,
+                 'attachedResource.resourceType': 0,
+                 'attachedResource.__v': 0
+
                }
              }
           ];
