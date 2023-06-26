@@ -372,7 +372,6 @@ export default defineComponent({
       }).then((results) => {
         this.isLoading = false;
         this.templates = results.data.templates.filter((template: { system: boolean }) => !template.system);
-        console.log(this.templates)
       }).catch(() => {
         this.isLoading = false;
       })
