@@ -19,7 +19,13 @@ router.get("/profile", IsAuthenticated, (req: Request, res: Response) => {
 
 router.get("/active", (req: Request, res: Response) => {
     const isActive: boolean = (req.session.user) === undefined;
-    res.status(200).json({active : !isActive});
+    const expires = req.session.cookie.expires;
+    let maintimeout : any = "0";
+    if (expires) {
+    const timeout = new Date(expires);
+    maintimeout = timeout.toLocaleString('en-US', { timeZone: 'Asia/Tbilisi' });
+    } 
+    res.status(200).json({active : !isActive, timeout : maintimeout});
 });
 
 import { CheckoutSchema } from "../schemas/CheckoutSchema";

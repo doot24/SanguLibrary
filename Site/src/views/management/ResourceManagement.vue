@@ -49,16 +49,16 @@
           <div class="d-flex py-2" v-if="resource.resourceType === resourceType.Book">
             <book v-bind:resource="resource" />
             <div style="height: fit-content">
-              <div class="d-flex gap-2 flex-column text-light">
+              <div class="d-flex gap-2 flex-column">
                 <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateBookModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-pencil-square"></button>
+                  class="handlerButton bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-trash3"></button>
+                  class="handlerButton bi-trash3"></button>
                 <button @click="DuplicateResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-clipboard2"></button>
+                  class="handlerButton bi-clipboard2"></button>
               </div>
             </div>
           </div>
@@ -66,16 +66,16 @@
           <div class="d-flex py-2" v-if="resource.resourceType === resourceType.Journal">
             <journal v-bind:resource="resource" />
             <div style="height: fit-content">
-              <div class="d-flex gap-2 flex-column text-light">
+              <div class="d-flex gap-2 flex-column">
                 <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateJournalModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-pencil-square"></button>
+                  class="handlerButton bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-trash3"></button>
+                  class="handlerButton bi-trash3"></button>
                 <button @click="DuplicateResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-clipboard2"></button>
+                  class="handlerButton bi-clipboard2"></button>
               </div>
             </div>
           </div>
@@ -83,17 +83,17 @@
           <div v-if="resource.resourceType === resourceType.Dissertation" class="d-flex py-2">
             <dissertation v-bind:resource="resource" />
             <div style="height: fit-content">
-              <div class="d-flex gap-2 flex-column text-light">
+              <div class="d-flex gap-2 flex-column">
                 <button @click="selectedResource = resource" data-bs-toggle="modal"
                   data-bs-target="#updateDissertationModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-pencil-square"></button>
+                  class="handlerButton bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-trash3"></button>
+                  class="handlerButton bi-trash3"></button>
                 <button @click="DuplicateResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-clipboard2"></button>
+                  class="handlerButton bi-clipboard2"></button>
               </div>
             </div>
           </div>
@@ -101,16 +101,16 @@
           <div v-if="resource.resourceType === resourceType.Rider" class="d-flex py-2">
             <rider v-bind:resource="resource" />
             <div style="height: fit-content">
-              <div class="d-flex gap-2 flex-column text-light">
+              <div class="d-flex gap-2 flex-column">
                 <button @click="selectedResource = resource" data-bs-toggle="modal" data-bs-target="#updateRiderModal"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-pencil-square"></button>
+                  class="handlerButton bi-pencil-square"></button>
                 <button @click="DeleteResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-trash3"></button>
+                  class="handlerButton bi-trash3"></button>
                 <button @click="DuplicateResource(resource)"
                   style="font-size:1.4em; background-color: transparent; border: none;"
-                  class="text-light bi-clipboard2"></button>
+                  class="handlerButton bi-clipboard2"></button>
               </div>
             </div>
           </div>

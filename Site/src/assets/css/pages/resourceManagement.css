@@ -7,3 +7,13 @@
 .resourceDisplay{
   background-color: #ffffff;
 }
+
+.dark
+.handlerButton{
+  color: #ffffff;
+}
+
+.light
+.handlerButton{
+  color: #222222;
+}

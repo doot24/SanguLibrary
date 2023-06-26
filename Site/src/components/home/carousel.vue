@@ -18,7 +18,7 @@
                 <div class="d-flex flex-column gap-2">
                   <span class="badge badge-pill bg-danger badge-primary" style="width: 130px;" v-if="resource.hold">დაჯავშინლია</span>
                   <span class="badge badge-pill bg-danger badge-primary" style="width: 130px;" v-if="resource.checkout">გატანილია</span>
-                  <img width="130" height="180" class="rounded" src="@/assets/images/resource.png" />
+                  <img width="130" height="180" class="rounded shadow-sm" src="@/assets/images/resource.png" />
                 </div>
                 <span>სათაური : {{ resource.title }}</span>
                 <span v-if="resource.authors">ავტორი : {{ resource.authors.join(", ") }}</span>

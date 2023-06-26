@@ -2,16 +2,19 @@ import store from '../store/index'
 import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 async function isAuthenticated(): Promise<boolean> {
-  if (store.getters.GetUser === null) {
-    try {
-      await store.dispatch('GetProfile');
-      return true;
-    } catch (error) {
+  if (!store.getters.GetAuthenticated) {
+    let status = await store.dispatch('GetActive');
+    if(!status)
+    {
       return false;
     }
+    await store.dispatch('GetProfile');
+    return Boolean(status);
   } else {
+    await store.dispatch('GetProfile');
     return true;
   }
+
 }
 
 function requireAuth(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext): void {

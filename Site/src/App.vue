@@ -1,18 +1,21 @@
 <template>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <router-view />
-
-
+  <div>
+    <SessionTimer />
+    <router-view />
+  </div>
 </template>
 
 <style>
-
+/* Add your global styles here */
 </style>
 
-<script langu="ts">
+<script lang="ts">
+import SessionTimer from '@/components/sessiontimer.vue';
+
 export default {
-  name: "App"
-
-}
-
+  name: 'App',
+  components: {
+    SessionTimer,
+  },
+};
 </script>

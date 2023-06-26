@@ -6,6 +6,9 @@ import { User } from "../interfaces/User"
 
 interface State {
   user: User | null;
+  authenticated : Boolean,
+  activeInfo : {}
+  
 }
 
 interface Credentials {
@@ -19,16 +22,30 @@ interface ResponseData {
 
 const store: Store<State> = createStore({
   state: {
-    user: null
+    user: null,
+    authenticated: false,
+    activeInfo : {}
   },
   getters: {
     GetUser(state: State): User | null {
       return state.user;
+    },
+    GetAuthenticated(state: State): Boolean {
+      return state.authenticated;
+    },
+    GetActiveInfo(state: State): {} {
+      return state.activeInfo;
     }
   },
   mutations: {
     SetUser(state: State, user: User | null): void {
       state.user = user;
+    },
+    SetAuthentication(state: State, loginstate: boolean): void {
+      state.authenticated = loginstate;
+    },
+    SetActiveInfo(state: State, activeinfo: boolean): void {
+      state.activeInfo = activeinfo;
     }
   },
   actions: {
@@ -59,6 +76,17 @@ const store: Store<State> = createStore({
         const response: AxiosResponse<ResponseData> = await axios.get(getApiConnectionString() + '/user/profile');
         commit('SetUser', response.data.user);
         return response.data.user;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async GetActive({ commit }: { commit: Function }): Promise<any> {
+      try {
+        axios.defaults.withCredentials = true;
+        const response = await axios.get(getApiConnectionString() + '/user/active');
+        commit('SetAuthentication', response.data.active);
+        commit("SetActiveInfo",response.data);
+        return response.data.active;
       } catch (error) {
         throw error;
       }

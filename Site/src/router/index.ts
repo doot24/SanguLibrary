@@ -71,7 +71,6 @@ const routes: Array<RouteRecordRaw> = [
     beforeEnter: requireRoles(['editor', 'admin']),
   },
 ];
-
 const router = createRouter({
   history: createWebHistory(),
   routes,

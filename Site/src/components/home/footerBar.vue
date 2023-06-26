@@ -38,7 +38,7 @@
     <!--Begin, PC Version-->
     <div class="d-none d-sm-none d-md-block">
       <div class="container-fluid mt-3">
-          <div class="footer rounded p-2 ">
+          <div class="footer rounded p-2 shadow-sm">
             <div class="">
               <div class="footer-section p-2">
                 <h5 class="fw-bold mb-1">საკონტაქტო ინფორმაცია:</h5>

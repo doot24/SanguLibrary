@@ -239,11 +239,12 @@ export default defineComponent({
       }
     },
     LogOut() {
-      this.$store.dispatch('Logout', { email: this.email, password: this.password })
+      this.$store.dispatch('Logout')
         .then(() => {
           this.$router.push({ path: '/login' });
         })
         .catch(error => {
+          this.$router.push({ path: '/login' });
         })
     }
   }
