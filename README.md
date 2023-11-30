@@ -13,9 +13,9 @@ created for Saint Andrews Georgian University.
 * Support for Light and Dark modes 🌗
 
 # Project Authors
-* Mariam Dokhnadze
+* Maryam Dokhnadze
 * [Akaki Khurtsidze](https://www.linkedin.com/in/akaki-khurtsidze-a80425251/)
-* Mate Askilashvili
+* [Mate Askilashvili](https://www.linkedin.com/in/matthew-askilashvili-180941291/)
 
 ![Screenshot 2023-06-12 014623](https://github.com/doot24/SanguLibrary/assets/46562098/597312e7-f24b-4a73-960d-fe65dff32117)
 ![Screenshot 2023-06-12 014645](https://github.com/doot24/SanguLibrary/assets/46562098/af6677fc-4e5f-4345-a065-f459625c57a2)
